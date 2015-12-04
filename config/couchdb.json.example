@@ -1,0 +1,8 @@
+{
+    "protocol": "http",
+    "host": "xxx.xxx.xxx.xxx",
+    "port": "xxxxx",
+    "username": "xxxxxx",
+    "password": "xxxxxx",
+    "site_code": "xxx"
+}
