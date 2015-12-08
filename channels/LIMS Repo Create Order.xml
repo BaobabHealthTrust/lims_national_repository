@@ -1,0 +1,1464 @@
+<channel version="3.3.1">
+  <id>d007fd7d-b2a5-41e3-b979-a02fdda601a3</id>
+  <nextMetaDataId>2</nextMetaDataId>
+  <name>LIMS Repo Create Order</name>
+  <description></description>
+  <enabled>true</enabled>
+  <lastModified>
+    <time>1449555704583</time>
+    <timezone>Africa/Blantyre</timezone>
+  </lastModified>
+  <revision>43</revision>
+  <sourceConnector version="3.3.1">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="3.3.1">
+      <pluginProperties/>
+      <listenerConnectorProperties version="3.3.1">
+        <host>0.0.0.0</host>
+        <port>3016</port>
+      </listenerConnectorProperties>
+      <sourceConnectorProperties version="3.3.1">
+        <responseVariable>d1</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <resourceIds class="singleton-set">
+          <string>Default Resource</string>
+        </resourceIds>
+      </sourceConnectorProperties>
+      <xmlBody>false</xmlBody>
+      <parseMultipart>true</parseMultipart>
+      <includeMetadata>false</includeMetadata>
+      <binaryMimeTypes>application/.*(?&lt;!json|xml)$|image/.*|video/.*|audio/.*</binaryMimeTypes>
+      <binaryMimeTypesRegex>false</binaryMimeTypesRegex>
+      <responseContentType>text/plain</responseContentType>
+      <responseDataTypeBinary>false</responseDataTypeBinary>
+      <responseStatusCode>200</responseStatusCode>
+      <responseHeaders class="linked-hash-map"/>
+      <charset>DEFAULT_ENCODING</charset>
+      <contextPath>create_order</contextPath>
+      <timeout>0</timeout>
+      <staticResources/>
+    </properties>
+    <transformer version="3.3.1">
+      <steps>
+        <step>
+          <sequenceNumber>0</sequenceNumber>
+          <name>accession_number</name>
+          <script>var mapping;
+
+try {
+	mapping = msg[&apos;QRD&apos;][&apos;QRD.8&apos;][&apos;QRD.8.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;accession_number&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+          <type>Mapper</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>accession_number</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;QRD&apos;][&apos;QRD.8&apos;][&apos;QRD.8.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+            <entry>
+              <string>isGlobal</string>
+              <string>channel</string>
+            </entry>
+          </data>
+        </step>
+      </steps>
+      <inboundTemplate encoding="base64">TVNIfF5+XCZ8fHx8fHx8UVJZXlIwMnx8UHwyLjIKUVJEfFlZWVlNTURESEhtbXNzfFJ8SXxBQ0Nf
+TlVNfHx8MV5SRHxBQ0NfTlVNfFJFUw==</inboundTemplate>
+      <outboundTemplate encoding="base64"></outboundTemplate>
+      <inboundDataType>HL7V2</inboundDataType>
+      <outboundDataType>HL7V2</outboundDataType>
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.3.1">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.3.1">
+          <handleRepetitions>true</handleRepetitions>
+          <handleSubcomponents>true</handleSubcomponents>
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <stripNamespaces>true</stripNamespaces>
+          <segmentDelimiter>\r</segmentDelimiter>
+          <convertLineBreaks>true</convertLineBreaks>
+        </serializationProperties>
+        <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.3.1">
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <segmentDelimiter>\r</segmentDelimiter>
+        </deserializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.3.1">
+          <splitType>MSH_Segment</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+        <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.3.1">
+          <segmentDelimiter>\r</segmentDelimiter>
+          <successfulACKCode>AA</successfulACKCode>
+          <successfulACKMessage></successfulACKMessage>
+          <errorACKCode>AE</errorACKCode>
+          <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+          <rejectedACKCode>AR</rejectedACKCode>
+          <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+          <msh15ACKAccept>false</msh15ACKAccept>
+          <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+        </responseGenerationProperties>
+        <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.3.1">
+          <successfulACKCode>AA,CA</successfulACKCode>
+          <errorACKCode>AE,CE</errorACKCode>
+          <rejectedACKCode>AR,CR</rejectedACKCode>
+          <validateMessageControlId>true</validateMessageControlId>
+          <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+          <originalIdMapVariable></originalIdMapVariable>
+        </responseValidationProperties>
+      </inboundProperties>
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.3.1">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.3.1">
+          <handleRepetitions>true</handleRepetitions>
+          <handleSubcomponents>true</handleSubcomponents>
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <stripNamespaces>true</stripNamespaces>
+          <segmentDelimiter>\r</segmentDelimiter>
+          <convertLineBreaks>true</convertLineBreaks>
+        </serializationProperties>
+        <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.3.1">
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <segmentDelimiter>\r</segmentDelimiter>
+        </deserializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.3.1">
+          <splitType>MSH_Segment</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+        <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.3.1">
+          <segmentDelimiter>\r</segmentDelimiter>
+          <successfulACKCode>AA</successfulACKCode>
+          <successfulACKMessage></successfulACKMessage>
+          <errorACKCode>AE</errorACKCode>
+          <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+          <rejectedACKCode>AR</rejectedACKCode>
+          <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+          <msh15ACKAccept>false</msh15ACKAccept>
+          <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+        </responseGenerationProperties>
+        <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.3.1">
+          <successfulACKCode>AA,CA</successfulACKCode>
+          <errorACKCode>AE,CE</errorACKCode>
+          <rejectedACKCode>AR,CR</rejectedACKCode>
+          <validateMessageControlId>true</validateMessageControlId>
+          <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+          <originalIdMapVariable></originalIdMapVariable>
+        </responseValidationProperties>
+      </outboundProperties>
+    </transformer>
+    <filter version="3.3.1">
+      <rules/>
+    </filter>
+    <transportName>HTTP Listener</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector version="3.3.1">
+      <metaDataId>1</metaDataId>
+      <name>Destination 1</name>
+      <properties class="com.mirth.connect.connectors.http.HttpDispatcherProperties" version="3.3.1">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.3.1">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="singleton-set">
+            <string>Default Resource</string>
+          </resourceIds>
+        </destinationConnectorProperties>
+        <host>http://localhost:3014/create_order</host>
+        <useProxyServer>false</useProxyServer>
+        <proxyAddress></proxyAddress>
+        <proxyPort></proxyPort>
+        <method>post</method>
+        <headers class="linked-hash-map"/>
+        <parameters class="linked-hash-map"/>
+        <responseXmlBody>false</responseXmlBody>
+        <responseParseMultipart>true</responseParseMultipart>
+        <responseIncludeMetadata>false</responseIncludeMetadata>
+        <responseBinaryMimeTypes>application/.*(?&lt;!json|xml)$|image/.*|video/.*|audio/.*</responseBinaryMimeTypes>
+        <responseBinaryMimeTypesRegex>true</responseBinaryMimeTypesRegex>
+        <multipart>false</multipart>
+        <useAuthentication>false</useAuthentication>
+        <authenticationType>Basic</authenticationType>
+        <usePreemptiveAuthentication>false</usePreemptiveAuthentication>
+        <username></username>
+        <password></password>
+        <content>${message.encodedData}</content>
+        <contentType>application/json</contentType>
+        <dataTypeBinary>false</dataTypeBinary>
+        <charset>UTF-8</charset>
+        <socketTimeout>30000</socketTimeout>
+      </properties>
+      <transformer version="3.3.1">
+        <steps>
+          <step>
+            <sequenceNumber>0</sequenceNumber>
+            <name>npid</name>
+            <script>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;national_patient_id&apos;] = validate(msg[&apos;PID&apos;][&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;national_patient_id&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>1</sequenceNumber>
+            <name>first name</name>
+            <script>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;first_name&apos;] = validate(msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;first_name&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>2</sequenceNumber>
+            <name>middle name</name>
+            <script>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;middle_name&apos;] = validate(msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;middle_name&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>3</sequenceNumber>
+            <name>last name</name>
+            <script>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;last_name&apos;] = validate(msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;last_name&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>4</sequenceNumber>
+            <name>dob</name>
+            <script>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;date_of_birth&apos;] = validate(msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;date_of_birth&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>5</sequenceNumber>
+            <name>gender</name>
+            <script>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;gender&apos;] = validate(msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;gender&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>6</sequenceNumber>
+            <name>specimen type</name>
+            <script>tmp[&apos;data&apos;][&apos;sample_type&apos;] = validate(msg[&apos;SPM&apos;][&apos;SPM.4&apos;][&apos;SPM.4.2&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;sample_type&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;SPM&apos;][&apos;SPM.4&apos;][&apos;SPM.4.2&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>7</sequenceNumber>
+            <name>orderer</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString() + &quot; &quot; +  msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString() + &quot; - &quot; + msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;orderer&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>orderer</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString() + &quot; &quot; +  msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString() + &quot; - &quot; + msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>8</sequenceNumber>
+            <name>order timestamp </name>
+            <script>tmp[&apos;data&apos;][&apos;date_time&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;date_time&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>9</sequenceNumber>
+            <name>sending facility</name>
+            <script>tmp[&apos;data&apos;][&apos;sending_facility&apos;] = validate(msg[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;sending_facility&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>10</sequenceNumber>
+            <name>receiving facility</name>
+            <script>tmp[&apos;data&apos;][&apos;receiving_facility&apos;] = validate(msg[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;receiving_facility&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>11</sequenceNumber>
+            <name>npid</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;PID&apos;][&apos;PID.2&apos;][&apos;PID.2.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;npid&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>npid</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.2&apos;][&apos;PID.2.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>12</sequenceNumber>
+            <name>first_name</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;first_name&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>first_name</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>13</sequenceNumber>
+            <name>middle_name</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;middle_name&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>middle_name</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>14</sequenceNumber>
+            <name>last_name</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;last_name&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>last_name</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>15</sequenceNumber>
+            <name>dob</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;dob&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>dob</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>16</sequenceNumber>
+            <name>gender</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;gender&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>gender</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>17</sequenceNumber>
+            <name>specimen_type</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;SPM&apos;][&apos;SPM.4&apos;][&apos;SPM.4.2&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;specimen_type&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>specimen_type</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;SPM&apos;][&apos;SPM.4&apos;][&apos;SPM.4.2&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>18</sequenceNumber>
+            <name>order_timestamp</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;order_timestamp&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>order_timestamp</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>19</sequenceNumber>
+            <name>sending_facility</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;sending_facility&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>sending_facility</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>20</sequenceNumber>
+            <name>receiving_facility</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;receiving_facility&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>receiving_facility</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>21</sequenceNumber>
+            <name>test type</name>
+            <script>tmp[&apos;data&apos;][&apos;test_type&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;test_type&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>22</sequenceNumber>
+            <name>test_type</name>
+            <script>var mapping;
+
+try {
+	mapping = msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString(); 
+} catch (e) {
+	logger.error(e);
+	mapping = &apos;&apos;;
+}
+
+channelMap.put(&apos;test_type&apos;, validate( mapping , &apos;&apos;, new Array()));</script>
+            <type>Mapper</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>test_type</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+              <entry>
+                <string>isGlobal</string>
+                <string>channel</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>23</sequenceNumber>
+            <name>who ordered fname</name>
+            <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;first_name&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;first_name&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>24</sequenceNumber>
+            <name>who ordered lname</name>
+            <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;last_name&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;last_name&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>25</sequenceNumber>
+            <name>who ordered id</name>
+            <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;id_number&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString(), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;id_number&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString()</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+        </steps>
+        <inboundTemplate encoding="base64">TVNIfF5+Jnx8S0NIXjIuMTYuODQwLjEuMTEzODgzLjMuNTk4Ni4yLjE1XklTT3x8S0NIXjIuMTYu
+ODQwLjEuMTEzODgzLjMuNTk4Ni4yLjE1XklTT3wyMDE1MDIyMjIwMDQwMXx8T01MXk8yMV5PTUxf
+TzIxfDIwMTUwMjIyMjAwNDAxfFR8Mi41ClBJRHwxfHxQMTcwMDAwMDAwMDMxfHxQYXRpZW50XlRl
+c3ReTi9BfHwxOTkzMDcwMXxGCk9SQ3x8fHx8fHx8fHwxXlN1cGVyXlVzZXJ8fHxeXl5eXl5eXk1F
+RElDSU5FfHx8fHx8fHxLQ0gKVFExfDF8fHx8fHx8fFMKT0JSfDF8fHw1NzAyMS04XkZ1bGwgYmxv
+b2QgY291bnReTE9JTkN8fHwyMDE1MDIyMjIwMDQwMXx8fHx8fFJ1bGUgb3V0IGRpYWdub3Npc3x8
+fDQzOTIzNF5Nb3lvXkNocmlzClNQTXwxfHx8V2hvbGUgYmxvb2ReV2hvbGUgYmxvb2QKTlRFfDF8
+UHxEcmF3bgo=</inboundTemplate>
+        <outboundTemplate encoding="base64">ewoJImRhdGEiOnsKCQkiX2lkIjoiS0NIMTUxMjAwMDAwMSIsCgkJInBhdGllbnQiOnsKCQkJIm5h
+dGlvbmFsX3BhdGllbnRfaWQiOiJQMTcwMDAwMDAwMDMxIiwKCQkJImZpcnN0X25hbWUiOiJUZXN0
+IiwKCQkJIm1pZGRsZV9uYW1lIjoiTi9BIiwKCQkJImxhc3RfbmFtZSI6IlBhdGllbnQiLAoJCQki
+ZGF0ZV9vZl9iaXJ0aCI6IjE5OTMwNzAxIiwKCQkJImdlbmRlciI6IkYiCgkJfSwKCQkic2FtcGxl
+X3R5cGUiOiIiLAoJCSJ3aG9fb3JkZXJfdGVzdCI6ewoJCQkiZmlyc3RfbmFtZSI6IiIsCgkJCSJs
+YXN0X25hbWUiOiIiLAoJCQkiaWRfbnVtYmVyIjoiIgoJCX0sCgkJImRhdGVfdGltZSI6IiIsCgkJ
+InNlbmRpbmdfZmFjaWxpdHkiOiJLQ0giLAoJCSJyZWNlaXZpbmdfZmFjaWxpdHkiOiJLQ0giLAoJ
+CSJyZWFzb25fZm9yX3Rlc3QiOiIiLAoJCSJ0ZXN0X3R5cGUiOiIiLAoJCSJzdGF0dXMiOiJEcmF3
+biIsCgkJInJlc3VsdHMiOnt9Cgl9Cn0K</outboundTemplate>
+        <inboundDataType>HL7V2</inboundDataType>
+        <outboundDataType>JSON</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.3.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.3.1">
+            <handleRepetitions>true</handleRepetitions>
+            <handleSubcomponents>true</handleSubcomponents>
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <stripNamespaces>true</stripNamespaces>
+            <segmentDelimiter>\r</segmentDelimiter>
+            <convertLineBreaks>true</convertLineBreaks>
+          </serializationProperties>
+          <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.3.1">
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <segmentDelimiter>\r</segmentDelimiter>
+          </deserializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.3.1">
+            <splitType>MSH_Segment</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+          <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.3.1">
+            <segmentDelimiter>\r</segmentDelimiter>
+            <successfulACKCode>AA</successfulACKCode>
+            <successfulACKMessage></successfulACKMessage>
+            <errorACKCode>AE</errorACKCode>
+            <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+            <rejectedACKCode>AR</rejectedACKCode>
+            <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+            <msh15ACKAccept>false</msh15ACKAccept>
+            <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+          </responseGenerationProperties>
+          <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.3.1">
+            <successfulACKCode>AA,CA</successfulACKCode>
+            <errorACKCode>AE,CE</errorACKCode>
+            <rejectedACKCode>AR,CR</rejectedACKCode>
+            <validateMessageControlId>true</validateMessageControlId>
+            <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+            <originalIdMapVariable></originalIdMapVariable>
+          </responseValidationProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.3.1">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.3.1">
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.3.1">
+        <steps>
+          <step>
+            <sequenceNumber>0</sequenceNumber>
+            <name>accession number</name>
+            <script>tmp[&apos;SPM&apos;][&apos;SPM.2&apos;][&apos;SPM.2.1&apos;] = validate(msg[&apos;data&apos;], &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;SPM&apos;][&apos;SPM.2&apos;][&apos;SPM.2.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>msg[&apos;data&apos;]</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>1</sequenceNumber>
+            <name>npid</name>
+            <script>tmp[&apos;PID&apos;][&apos;PID.2&apos;][&apos;PID.2.1&apos;] = validate($(&apos;npid&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;PID&apos;][&apos;PID.2&apos;][&apos;PID.2.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;npid&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>2</sequenceNumber>
+            <name>first_name</name>
+            <script>tmp[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;] = validate($(&apos;first_name&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;first_name&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>3</sequenceNumber>
+            <name>middle_name</name>
+            <script>tmp[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;] = validate($(&apos;middle_name&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;middle_name&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>4</sequenceNumber>
+            <name>last_name</name>
+            <script>tmp[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;] = validate($(&apos;last_name&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;last_name&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>5</sequenceNumber>
+            <name>dob</name>
+            <script>tmp[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;] = validate($(&apos;dob&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;dob&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>6</sequenceNumber>
+            <name>gender</name>
+            <script>tmp[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;] = validate($(&apos;gender&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;gender&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>7</sequenceNumber>
+            <name>specimen_type</name>
+            <script>tmp[&apos;SPM&apos;][&apos;SPM.4&apos;][&apos;SPM.4.1&apos;] = validate($(&apos;specimen_type&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;SPM&apos;][&apos;SPM.4&apos;][&apos;SPM.4.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;specimen_type&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>8</sequenceNumber>
+            <name>timestamp</name>
+            <script>tmp[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;] = validate($(&apos;order_timestamp&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;order_timestamp&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>9</sequenceNumber>
+            <name>sending_facility</name>
+            <script>tmp[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;] = validate($(&apos;sending_facility&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;sending_facility&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>10</sequenceNumber>
+            <name>receiving_facility</name>
+            <script>tmp[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;] = validate($(&apos;receiving_facility&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;MSH&apos;][&apos;MSH.6&apos;][&apos;MSH.6.1&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;receiving_facility&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>11</sequenceNumber>
+            <name>test type</name>
+            <script>tmp[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;] = validate($(&apos;test_type&apos;), &apos;&apos;, new Array());</script>
+            <type>Message Builder</type>
+            <data>
+              <entry>
+                <string>Variable</string>
+                <string>tmp[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;]</string>
+              </entry>
+              <entry>
+                <string>Mapping</string>
+                <string>$(&apos;test_type&apos;)</string>
+              </entry>
+              <entry>
+                <string>DefaultValue</string>
+                <string></string>
+              </entry>
+              <entry>
+                <string>RegularExpressions</string>
+                <list/>
+              </entry>
+            </data>
+          </step>
+        </steps>
+        <inboundTemplate encoding="base64">ewogICJlcnJvciIgOiBmYWxzZSwKICAibWVzc2FnZSIgOiAiRG9uZSEiLAogICJkYXRhIiA6ICJL
+Q0gxNUM3MDAyIgp9</inboundTemplate>
+        <outboundTemplate encoding="base64">TVNIfF5+Jnx8fHx8fHxPTUxeTzIxXk9NTF9PMjF8fFR8Mi41ClBJRHwxfHx8fF5efHx8Ck9SQ3x8
+fHx8fHx8fHx8fHx8fHx8fHx8fApUUTF8MXx8fHx8fHx8Ck9CUnwxfHx8Xl58fHx8fHx8fHx8fHwK
+U1BNfDF8fHwKTlRFfDF8fA==</outboundTemplate>
+        <inboundDataType>JSON</inboundDataType>
+        <outboundDataType>HL7V2</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.3.1">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.3.1">
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.3.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.3.1">
+            <handleRepetitions>true</handleRepetitions>
+            <handleSubcomponents>true</handleSubcomponents>
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <stripNamespaces>true</stripNamespaces>
+            <segmentDelimiter>\r</segmentDelimiter>
+            <convertLineBreaks>true</convertLineBreaks>
+          </serializationProperties>
+          <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.3.1">
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <segmentDelimiter>\r</segmentDelimiter>
+          </deserializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.3.1">
+            <splitType>MSH_Segment</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+          <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.3.1">
+            <segmentDelimiter>\r</segmentDelimiter>
+            <successfulACKCode>AA</successfulACKCode>
+            <successfulACKMessage></successfulACKMessage>
+            <errorACKCode>AE</errorACKCode>
+            <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+            <rejectedACKCode>AR</rejectedACKCode>
+            <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+            <msh15ACKAccept>false</msh15ACKAccept>
+            <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+          </responseGenerationProperties>
+          <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.3.1">
+            <successfulACKCode>AA,CA</successfulACKCode>
+            <errorACKCode>AE,CE</errorACKCode>
+            <rejectedACKCode>AR,CR</rejectedACKCode>
+            <validateMessageControlId>true</validateMessageControlId>
+            <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+            <originalIdMapVariable></originalIdMapVariable>
+          </responseValidationProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.3.1">
+        <rules/>
+      </filter>
+      <transportName>HTTP Sender</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>// Modify the message variable below to pre process data
+return message;</preprocessingScript>
+  <postprocessingScript>// This script executes once after a message has been processed
+// Responses returned from here will be stored as &quot;Postprocessor&quot; in the response map
+
+return;</postprocessingScript>
+  <deployScript>// This script executes once when the channel is deployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</deployScript>
+  <undeployScript>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</undeployScript>
+  <properties version="3.3.1">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>DEVELOPMENT</messageStorageMode>
+    <encryptData>false</encryptData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>false</storeAttachments>
+    <tags class="linked-hash-set"/>
+    <metaDataColumns>
+      <metaDataColumn>
+        <name>SOURCE</name>
+        <type>STRING</type>
+        <mappingName>mirth_source</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>TYPE</name>
+        <type>STRING</type>
+        <mappingName>mirth_type</mappingName>
+      </metaDataColumn>
+    </metaDataColumns>
+    <attachmentProperties>
+      <type>None</type>
+      <properties/>
+    </attachmentProperties>
+    <archiveEnabled>true</archiveEnabled>
+    <resourceIds class="linked-hash-set">
+      <string>Default Resource</string>
+    </resourceIds>
+  </properties>
+  <codeTemplateLibraries/>
+</channel>

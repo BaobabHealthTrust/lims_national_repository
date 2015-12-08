@@ -1,8 +1,0 @@
-{
-    "protocol": "http",
-    "host": "localhost",
-    "port": "5984",
-    "username": "admin",
-    "password": "test",
-    "site_code": "QEC"
-}

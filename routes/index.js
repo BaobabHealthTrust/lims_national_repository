@@ -112,16 +112,26 @@ module.exports = function (router) {
 
             var date = (new Date());
 
+            var formattedDate = date.getFullYear() + padZeros(date.getMonth() + 1, 2) + padZeros(date.getDate(), 2);
+
             couch.db(db, 'read', {'_id': site}, function (err, pbody) {
 
                 if (!err) {
 
-                    var offset = pbody.offset;
+                    var offset = (pbody[formattedDate] ? pbody[formattedDate].offset : 1);
 
                     var id = site + date.getFullYear().toString().substring(2,4) + months[date.getMonth()] +
                         days[date.getDate()] + padZeros(offset, 3);
 
-                    pbody.offset = parseInt(offset) + 1;
+                    if(!pbody[formattedDate]) {
+
+                        pbody[formattedDate] = {
+                            offset: 2
+                        }
+
+                    }
+
+                    pbody[formattedDate].offset = parseInt(offset) + 1;
 
                     couch.db(db, 'save', pbody, function (error, body) {
 
@@ -151,8 +161,11 @@ module.exports = function (router) {
                         days[date.getDate()] + padZeros(offset, 3);
 
                     var params = {
-                        "_id": site,
-                        "offset": parseInt(offset) + 1
+                        "_id": site
+                    }
+
+                    params[formattedDate] = {
+                        offset: parseInt(offset) + 1
                     }
 
                     couch.db(db, 'save', params, function (error, body) {
@@ -219,6 +232,38 @@ module.exports = function (router) {
 
     }
 
+    function doReadByNPID(id, callback) {
+
+        console.log(id);
+
+        var site = JSON.parse(configs)["site_code"];
+
+        if(!site) {
+
+            return {};
+
+        }
+
+        var db = "lims_repo";
+
+        couch.db(db, 'view', id, function (err, pbody) {
+
+            if(!err) {
+
+                callback(pbody);
+
+            } else {
+
+                console.log(err);
+
+                callback({});
+
+            }
+
+        });
+
+    }
+
     function doUpdate(json, callback) {
 
         console.log(json);
@@ -259,7 +304,15 @@ module.exports = function (router) {
     router.route('/create_order')
         .post(function (req, res) {
 
-            doCreateRecord(req.body, function(result) {
+            var params = req.body;
+
+            if(params.data) {
+
+                params = params.data;
+
+            }
+
+            doCreateRecord(params, function(result) {
 
                 if(result.id == null) {
 
@@ -305,14 +358,33 @@ module.exports = function (router) {
 
         })
 
+    router.route('/query_order_by_npid/:id')
+        .get(function (req, res) {
+
+            doReadByNPID(req.params.id, function(result) {
+
+                res.status(200).json({data: result});
+
+            })
+
+        })
+
     router.route('/update_order')
         .post(function (req, res) {
 
-            doRead(req.body._id, function(result) {
+            var params = req.body;
+
+            if(params.data) {
+
+                params = params.data;
+
+            }
+
+            doRead(params._id, function(result) {
 
                 if(Object.keys(result).length > 0) {
 
-                    var json = req.body;
+                    var json = params;
 
                     json._id = result._id;
 
@@ -322,11 +394,11 @@ module.exports = function (router) {
 
                         if(success) {
 
-                            res.status(200).json({status: "SUCCESS"});
+                            res.status(200).json({status: "SUCCESS", data: json});
 
                         } else {
 
-                            res.status(200).json({status: "FAILED"});
+                            res.status(200).json({status: "FAILED", data: json});
 
                         }
 
@@ -334,7 +406,7 @@ module.exports = function (router) {
 
                 } else {
 
-                    res.status(200).json({status: "FAILED"});
+                    res.status(200).json({status: "FAILED", data: params});
 
                 }
 

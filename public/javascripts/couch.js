@@ -4,6 +4,8 @@
 
 var fs = require('fs');
 
+var async = require("async");
+
 var configs = fs.readFileSync(__dirname.trim().replace(/public\/javascripts$/, "config/couchdb.json"));
 
 var json = JSON.parse(configs);
@@ -44,19 +46,19 @@ var CouchDB = function () {
 
     var parent = this;
 
-    function prepareDB(db, method, params, callback){
+    function prepareDB(db, method, params, callback) {
 
-        nano.db.get(db, function(err, body) {
+        nano.db.get(db, function (err, body) {
 
             if (err) {
 
-                nano.db.create(db, function(err, body) {
+                nano.db.create(db, function (err, body) {
 
                     if (err) {
 
                         console.log('connection failed to initialize');
 
-                        if(callback != undefined) {
+                        if (callback != undefined) {
 
                             callback(err);
 
@@ -66,35 +68,39 @@ var CouchDB = function () {
 
                         // console.log('database ' + db + ' created!');
 
-                        if(method != undefined) {
+                        loadViews(db, function () {
 
-                            if(params != undefined) {
+                            if (method != undefined) {
 
-                                if(callback != undefined) {
+                                if (params != undefined) {
 
-                                    parent[method](db, params, callback);
+                                    if (callback != undefined) {
 
-                                } else {
+                                        parent[method](db, params, callback);
 
-                                    parent[method](db, params);
+                                    } else {
 
-                                }
+                                        parent[method](db, params);
 
-                            } else {
-
-                                if(callback != undefined) {
-
-                                    parent[method](db, callback);
+                                    }
 
                                 } else {
 
-                                    parent[method](db);
+                                    if (callback != undefined) {
+
+                                        parent[method](db, callback);
+
+                                    } else {
+
+                                        parent[method](db);
+
+                                    }
 
                                 }
 
                             }
 
-                        }
+                        });
 
                     }
 
@@ -104,11 +110,11 @@ var CouchDB = function () {
 
                 // console.log(body);
 
-                if(method != undefined) {
+                if (method != undefined) {
 
-                    if(params != undefined) {
+                    if (params != undefined) {
 
-                        if(callback != undefined) {
+                        if (callback != undefined) {
 
                             parent[method](db, params, callback);
 
@@ -120,7 +126,7 @@ var CouchDB = function () {
 
                     } else {
 
-                        if(callback != undefined) {
+                        if (callback != undefined) {
 
                             parent[method](db, callback);
 
@@ -140,13 +146,80 @@ var CouchDB = function () {
 
     }
 
+    function loadViews(db, callback) {
+
+        var couch = nano.use(db);
+
+        if(db.trim().toLowerCase() == "lims_repo") {
+
+            couch.insert(
+                {
+                    "views": {
+                        "by_npid": {
+                            "map": function (doc) {
+
+                                var tests = [];
+
+                                var keys = Object.keys(doc.results);
+
+                                for(var i = 0; i < keys.length; i++) {
+
+                                    var test = {
+                                        accession_number: doc._id,
+                                        test_name: keys[i],
+                                        result: doc.results[keys[i]].result,
+                                        units: doc.results[keys[i]].units,
+                                        reference_range: doc.results[keys[i]].reference_range,
+                                        entered_by: {
+                                            first_name: doc.results[keys[i]].entered_by.first_name,
+                                            last_name: doc.results[keys[i]].entered_by.last_name,
+                                            id_number: doc.results[keys[i]].entered_by.id_number
+                                        },
+                                        location_entered: doc.results[keys[i]].location_entered,
+                                        date_time: doc.results[keys[i]].date_time,
+                                        status: doc.results[keys[i]].status,
+                                        remark: doc.results[keys[i]].remark
+                                    }
+
+                                    tests.push(test);
+
+                                }
+
+                                emit(doc.patient.national_patient_id, tests);
+                            }
+                        }
+                    }
+                }, '_design/people', function (err, response) {
+
+                    if (!err) {
+
+                        callback();
+
+                    } else {
+
+                        console.log(err.message);
+
+                        callback(err);
+
+                    }
+
+                });
+
+        } else {
+
+            callback();
+
+        }
+
+    }
+
     function save(db, params, callback) {
 
         var couch = nano.use(db);
 
-        couch.insert(params, params._id, function(err, body) {
+        couch.insert(params, params._id, function (err, body) {
 
-            if(!err) {
+            if (!err) {
 
                 callback(undefined, body);
 
@@ -156,7 +229,7 @@ var CouchDB = function () {
 
                 console.log("First crash!");
 
-                if(callback != undefined) {
+                if (callback != undefined) {
 
                     callback(err);
 
@@ -172,9 +245,9 @@ var CouchDB = function () {
 
         var couch = nano.use(db);
 
-        couch.get(params._id, {revs_info: false}, function(err, body) {
+        couch.get(params._id, {revs_info: false}, function (err, body) {
 
-            if(!err) {
+            if (!err) {
 
                 callback(err, body);
 
@@ -182,7 +255,7 @@ var CouchDB = function () {
 
                 console.log(err);
 
-                if(callback != undefined) {
+                if (callback != undefined) {
 
                     callback(err);
 
@@ -198,9 +271,9 @@ var CouchDB = function () {
 
         var couch = nano.use(db);
 
-        couch.destroy(params._id, params._rev, function(err, body) {
+        couch.destroy(params._id, params._rev, function (err, body) {
 
-            if(!err) {
+            if (!err) {
 
                 callback(undefined, body);
 
@@ -208,7 +281,7 @@ var CouchDB = function () {
 
                 console.log(err);
 
-                if(callback != undefined) {
+                if (callback != undefined) {
 
                     callback(err);
 
@@ -222,7 +295,7 @@ var CouchDB = function () {
 
     function dbExists(db, callback) {
 
-        nano.db.list(function(err, body) {
+        nano.db.list(function (err, body) {
 
             // body is an array
             var result = body.includes(db);
@@ -230,8 +303,8 @@ var CouchDB = function () {
             callback(err, result);
 
             /*body.forEach(function(db) {
-                console.log(db);
-            });*/
+             console.log(db);
+             });*/
         });
 
     }
@@ -240,11 +313,11 @@ var CouchDB = function () {
 
         var couch = nano.use(db);
 
-        couch.list(undefined, function(err, body) {
+        couch.list(undefined, function (err, body) {
 
             var array = [];
 
-            body.rows.forEach(function(doc) {
+            body.rows.forEach(function (doc) {
 
                 array.push(doc.key);
 
@@ -262,11 +335,11 @@ var CouchDB = function () {
 
         var couch = nano.use(db);
 
-        couch.list(undefined, function(err, body) {
+        couch.list(undefined, function (err, body) {
 
             var array = [];
 
-            body.rows.forEach(function(doc) {
+            body.rows.forEach(function (doc) {
 
                 array.push(doc.key);
 
@@ -278,9 +351,42 @@ var CouchDB = function () {
 
     }
 
+    function view(db, id, callback) {
+
+        var couch = nano.use(db);
+
+        couch.view('people', 'by_npid', id, function (err, body) {
+
+            var results = {
+                "national_patient_id": id,
+                "results":[]
+            };
+
+            if (!err) {
+
+                body.rows.forEach(function (doc) {
+
+                    results.results = results.results.concat(doc.value);
+
+                });
+
+            } else {
+
+                console.log(err.message);
+
+            }
+
+            callback(err, results);
+
+        });
+
+    }
+
     this.save = save;
 
     this.read = read;
+
+    this.view = view;
 
     this.destroy = destroy;
 
