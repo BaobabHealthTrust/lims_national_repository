@@ -1,8 +1,19 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    -moz-user-select: none;
 }
 
 a {
   color: #00B7FF;
+}
+
+.text {
+    width: 100%;
+    padding: 1px;
+}
+
+.required {
+    color: red;
+    font-size: 18px;
 }

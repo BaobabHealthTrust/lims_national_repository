@@ -4,5 +4,8 @@
     "port": "xxxxx",
     "username": "xxxxxx",
     "password": "xxxxxx",
-    "site_code": "xxx"
+    "site_code": "xxx",
+    "mirth_host": "xxxxx",
+    "mirth_username": "xxxxxxx",
+    "mirth_password": "xxxxxxxxx"
 }
