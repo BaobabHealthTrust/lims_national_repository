@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.14.1",
+    "cors": "^2.7.1",
     "dateformat": "^1.0.12",
     "express": "^4.13.3",
     "http-auth": "^2.2.8",

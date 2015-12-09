@@ -7,11 +7,13 @@ module.exports = function (router) {
 
     var fs = require('fs');
 
-    var couch = require('../public/javascripts/couch.js');
+    var path = require("path");
+
+    var couch = require(path.resolve('public','javascripts','couch.js'));
 
     var url = require('url');
 
-    var configs = fs.readFileSync("./config/couchdb.json");
+    var configs = fs.readFileSync(path.resolve('config','couchdb.json'));
 
     var locks = require("locks");
 
@@ -411,6 +413,39 @@ module.exports = function (router) {
                 }
 
             })
+
+        })
+
+    router.route('/lab_order')
+        .get(function (req, res) {
+
+            var url_parts = url.parse(req.url, true);
+
+            var query = url_parts.query;
+
+            var sample_types = ['Dry Blood Spot', 'Whole Blood', 'Sputum', 'Pus'];
+
+            res.render('lab_order', {
+                first_name:             (query.first_name || ""),
+                last_name:              (query.last_name || ""),
+                middle_name:            (query.middle_name || ""),
+                gender:                 (query.gender || ""),
+                date_of_birth:          (query.date_of_birth || ""),
+                national_patient_id:    (query.national_patient_id || ""),
+                return_path:            (query.return_path || ""),
+                sample_types:           sample_types
+            });
+
+        })
+
+    router.route('/sample_tests/:id')
+        .get(function (req, res) {
+
+            var sample_types = {
+                "whole blood": ['FBC', 'WBC', 'VL', 'RBC']
+            };
+
+            res.status(200).json(sample_types[req.params.id.replace(/\+/g," ").toLowerCase()]);
 
         })
 

@@ -2,9 +2,14 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var portfinder = require('portfinder');
+var cors = require('cors');
+
+var path = require("path");
 
 var router = express.Router();
-var couch = require('./public/javascripts/couch.js');
+
+var couch = require(path.resolve('public', 'javascripts', 'couch.js'));
+
 var fs = require("fs");
 var md5 = require('md5');
 
@@ -12,9 +17,11 @@ var md5 = require('md5');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.set('views', __dirname + '/views');
+app.set('views', path.resolve('views'));
 app.set('view engine', 'jade');
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.resolve('public')));
+
+app.use(cors());
 
 app.set('view options', {
     layout: true
@@ -30,7 +37,9 @@ function encrypt(password, salt) {
 
 // Routes
 
-app.use('/', require("./routes/index.js")(router));
+// app.use('/', require("./routes/index.js")(router));
+
+app.use('/', require(path.resolve('routes','index.js'))(router));
 
 portfinder.basePort = 3014;
 

@@ -4,9 +4,9 @@
 
 var fs = require('fs');
 
-var async = require("async");
+var path = require("path");
 
-var configs = fs.readFileSync(__dirname.trim().replace(/public\/javascripts$/, "config/couchdb.json"));
+var configs = fs.readFileSync(path.resolve('config','couchdb.json'));
 
 var json = JSON.parse(configs);
 
