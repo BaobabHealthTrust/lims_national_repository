@@ -5,6 +5,7 @@
     "username": "xxxxxx",
     "password": "xxxxxx",
     "site_code": "xxx",
+    "district_code": "xxxxxxx",
     "mirth_host": "xxxxx",
     "mirth_username": "xxxxxxx",
     "mirth_password": "xxxxxxxxx"
