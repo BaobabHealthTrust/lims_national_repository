@@ -59,7 +59,7 @@ function validateForm() {
 
     var controls = ["district", "health_facility_name", "first_name", "last_name", "gender", "date_of_birth",
             "national_patient_id", "reason_for_test", "sample_collector_last_name", "sample_collector_first_name",
-            "sample_collector_phone_number", "sample_collector_id", "sample_type", "date_sample_drawn", "tests",
+            "sample_collector_id", "sample_type", "date_sample_drawn", "tests",
             "target_lab", "sample_order_location", "return_path"];
 
     for(var i = 0; i < controls.length; i++) {
