@@ -33,13 +33,42 @@ module.exports = function (router) {
 
     function doCreateRecord(json, callback) {
 
+        var personDb = "lims_repo";
+
+        var db = "sites";
+
+        var result = {
+            id: null,
+            err: true
+        };
+
         console.log(json);
+
+        if(json._id.trim().length > 0) {
+
+            couch.db(personDb, 'save', json, function (jerror, jbody) {
+
+                result.id = json._id;
+
+                result.err = false;
+
+                callback(result);
+
+            });
+
+            return;
+
+        }
 
         var site = JSON.parse(configs)["site_code"];
 
         if (!site) {
 
-            return null;
+            result.err = true;
+
+            callback(null);
+
+            return;
 
         }
 
@@ -49,18 +78,9 @@ module.exports = function (router) {
 
         }
 
-        var result = {
-            id: null,
-            err: true
-        };
-
         if (mutex[site].tryLock()) {
 
             console.log("locked mutex");
-
-            var personDb = "lims_repo";
-
-            var db = "sites";
 
             var months = {
                 0: "1",
@@ -313,7 +333,11 @@ module.exports = function (router) {
 
             }
 
+            console.log(params);
+
             doCreateRecord(params, function (result) {
+
+                console.log(result);
 
                 if (result.id == null) {
 
@@ -324,6 +348,8 @@ module.exports = function (router) {
                     res.status(200).json({error: true, message: "Process busy, please try again later!", data: null});
 
                 } else {
+
+                    console.log(result.id);
 
                     res.status(200).json({error: false, message: "Done!", data: result.id});
 
@@ -480,8 +506,8 @@ module.exports = function (router) {
                 "PID|1||~^^^^^^||^^|||\r" +
                 "ORC||||||||||^^^|||^^^^^^^^||||||||^^^|\r" +
                 "TQ1|1||||||||^^^\r" +
-                "SPM|1|||^\r"; /*+
-                "OBR|1|||^^||||||||||||^^\r" +
+                "SPM|1|||^\r";  /*+
+                "OBR|1|||^^||||||||||||^^^\r" +
                 "NTE|1|P|\r";*/
 
             var hl7e = require("hl7");
@@ -521,9 +547,9 @@ module.exports = function (router) {
 
             hl7[1][8][0][0] = (params.gender || "");
 
-            hl7[1][3][1][0] = (params.national_patient_id || "");
+            hl7[1][3][1][1] = (params.national_patient_id || "");
 
-            hl7[4][4][0][1] = (params.tests || "");
+            hl7[4][2][0][0] = (params.tracking_number || "");
 
             hl7[2][21][0][0] = (params.health_facility_name || "");
 
@@ -533,7 +559,7 @@ module.exports = function (router) {
 
             hl7[2][10][0][2] = (params.sample_collector_first_name || "");
 
-            hl7[2][10][0][3] = (params.sample_collector_phone_number || "");
+            hl7[2][14][0][0] = (params.sample_collector_phone_number || "");
 
             hl7[3][9][0][1] = (params.sample_priority || "");
 
@@ -620,17 +646,27 @@ module.exports = function (router) {
                 headers: {"Content-Type": "text/plain"}
             };
 
+            var trackingNumberExists = false;
+
+            if(params.tracking_number && params.tracking_number.trim().length > 0) {
+
+                trackingNumberExists = true;
+
+            }
+
             (new Client()).put(mirth.mirth_host, args, function (data, response) {
 
                 var output = data.toString();
+
+                console.log(output);
 
                 var resultHL7 = hl7e.parseString(output);
 
                 console.log(hl7e.serializeJSON(resultHL7).replace(/\r/g,'\n'));
 
-                var accession_number = resultHL7[5][2][0][0];
+                var tracking_number = resultHL7[4][2][0][0];
 
-                params.accession_number = accession_number;
+                params.tracking_number = tracking_number;
 
                 var link = params.return_path + "?";
 
@@ -646,9 +682,47 @@ module.exports = function (router) {
 
                 }
 
-                console.log(link);
+                if(params.return_json == 'true') {
 
-                res.redirect(link);
+                    res.status(200).json({'params' : params});
+
+                }else{
+
+                    if(!trackingNumberExists) {
+                        
+                        var label = "\n\N\nR215,0\nZT\n";
+
+                        label += 'A6,6,0,2,1,1,N,"Banda, Mary U"\n';
+
+                        label += 'A6,29,0,2,1,1,N,"Q23-HGF        12-SEP-1997 19y F"\n';
+
+                        label += 'B51,51,0,1A,2,2,76,N,"1600001234"\n';
+
+                        label += 'A51,131,0,2,1,1,N,"KCH-16-00001234 * 1600001234"\n';
+
+                        label += 'A6,150,0,2,1,1,N,"Col: 01-JAN-2016 14:21 byGD"\n';
+
+                        label += 'A6,172,0,2,1,1,N,"CHEM7,Ca,Mg"\n';
+
+                        label += 'P1\n';
+
+                        res.setHeader('Content-Length', label.length);
+
+                        res.setHeader('Content-disposition', 'attachment; filename=label.lbl');
+
+                        res.setHeader('Content-type', 'text/plain');
+
+                        res.send(label);
+
+                        res.end();
+
+                    } else {
+
+                        res.redirect(link);
+
+                    }
+
+                }
 
             });
 
