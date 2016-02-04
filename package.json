@@ -13,6 +13,7 @@
     "jade": "^1.11.0",
     "locks": "^0.2.2",
     "md5": "^2.0.0",
+    "moment": "^2.11.2",
     "nano": "^6.1.5",
     "node-rest-client": "^1.5.1",
     "portfinder": "^0.4.0"

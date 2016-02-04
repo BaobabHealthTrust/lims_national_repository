@@ -4,6 +4,8 @@
 
 module.exports = function (router) {
 
+    var moment = require("moment");
+
     var fs = require('fs');
 
     var path = require("path");
@@ -44,7 +46,7 @@ module.exports = function (router) {
 
         console.log(json);
 
-        if(json._id.trim().length > 0) {
+        if (json._id.trim().length > 0) {
 
             couch.db(personDb, 'save', json, function (jerror, jbody) {
 
@@ -135,13 +137,15 @@ module.exports = function (router) {
 
             var formattedDate = date.getFullYear() + padZeros(date.getMonth() + 1, 2) + padZeros(date.getDate(), 2);
 
+            var prefix = "X";
+
             couch.db(db, 'read', {'_id': site}, function (err, pbody) {
 
                 if (!err) {
 
                     var offset = (pbody[formattedDate] ? pbody[formattedDate].offset : 1);
 
-                    var id = site + date.getFullYear().toString().substring(2, 4) + months[date.getMonth()] +
+                    var id = prefix + site + date.getFullYear().toString().substring(2, 4) + months[date.getMonth()] +
                         days[date.getDate()] + padZeros(offset, 3);
 
                     if (!pbody[formattedDate]) {
@@ -178,7 +182,7 @@ module.exports = function (router) {
 
                     var offset = 1;
 
-                    var id = site + date.getFullYear().toString().substring(2, 4) + months[date.getMonth()] +
+                    var id = prefix + site + date.getFullYear().toString().substring(2, 4) + months[date.getMonth()] +
                         days[date.getDate()] + padZeros(offset, 3);
 
                     var params = {
@@ -472,7 +476,11 @@ module.exports = function (router) {
                 sample_priority: (query.sample_priority || ""),
                 sample_type: (query.sample_type || ""),
                 hide_demographics: (query.hide_demographics.toString().toLowerCase() == "true" ? true : false),
-                info: (query.return_path ? "" : "Missing return path. Can't proceed!")
+                info: (query.return_path ? "" : "Missing return path. Can't proceed!"),
+                art_start_date: (query.art_start_date || ""),
+                date_received: (query.date_received || ""),
+                date_dispatched: (query.date_dispatched || "")
+
             });
 
         })
@@ -488,7 +496,6 @@ module.exports = function (router) {
 
         })
 
-
     router.route('/create_hl7_order')
         .post(function (req, res) {
 
@@ -503,12 +510,13 @@ module.exports = function (router) {
             console.log(params);
 
             var template = "MSH|^~&||^^||^^|||OML^O21^OML_O21||T|2.5\r" +
-                "PID|1||~^^^^^^||^^|||\r" +
+                "PID|1||^^^^^^||^^|||\r" +
                 "ORC||||||||||^^^|||^^^^^^^^||||||||^^^|\r" +
                 "TQ1|1||||||||^^^\r" +
-                "SPM|1|||^\r";  /*+
-                "OBR|1|||^^||||||||||||^^^\r" +
-                "NTE|1|P|\r";*/
+                "SPM|1|||^\r";
+            /*+
+             "OBR|1|||^^||||||||||||^^^\r" +
+             "NTE|1|P|\r";*/
 
             var hl7e = require("hl7");
 
@@ -534,7 +542,7 @@ module.exports = function (router) {
 
             hl7[1][5][0][2] = (params.middle_name || "");
 
-            if(params.date_of_birth) {
+            if (params.date_of_birth) {
 
                 var dob = (new Date(params.date_of_birth));
 
@@ -547,7 +555,7 @@ module.exports = function (router) {
 
             hl7[1][8][0][0] = (params.gender || "");
 
-            hl7[1][3][1][1] = (params.national_patient_id || "");
+            hl7[1][3][0][0] = (params.national_patient_id || "");
 
             hl7[4][2][0][0] = (params.tracking_number || "");
 
@@ -565,46 +573,104 @@ module.exports = function (router) {
 
             hl7[4][4][0][1] = (params.sample_type || "");
 
-            for(var i = 0; i < params.tests.length; i++) {
+            for (var i = 0; i < params.tests.length; i++) {
 
                 hl7.push([
-                        'OBR',
-                        [ [ (i + 1).toString() ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '',
+                    'OBR',
+                    [
+                        [ (i + 1).toString() ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '',
                             '',
-                            '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '',
+                            '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '',
                             '',
                             '',
-                            ''] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ '' ] ],
-                        [ [ 'F' ] ],
-                        [ [ ' ' ] ] ]);
+                            '']
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ '' ]
+                    ],
+                    [
+                        [ 'F' ]
+                    ],
+                    [
+                        [ ' ' ]
+                    ] ]);
 
                 hl7.push([ 'NTE',
-                    [ [ (i + 1).toString() ] ],
-                    [ [ 'P' ] ],
-                    [ [ '' ] ] ]);
+                    [
+                        [ (i + 1).toString() ]
+                    ],
+                    [
+                        [ 'P' ]
+                    ],
+                    [
+                        [ '' ]
+                    ] ]);
 
                 hl7[5 + (2 * i)][4][0][1] = (params.tests[i] || "");
 
@@ -612,10 +678,35 @@ module.exports = function (router) {
 
                 var dateDrawn = ((new Date(params.date_sample_drawn)) || (new Date()));
 
-                var dateDrawnFormatted = dateDrawn.getFullYear() + (padZeros(dateDrawn.getMonth() + 1, 2)) + padZeros(dateDrawn.getDate(), 2) +
-                    padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) + padZeros(today.getSeconds(), 2);
+                var dateDrawnFormatted = dateDrawn.getFullYear() + (padZeros(dateDrawn.getMonth() + 1, 2)) +
+                    padZeros(dateDrawn.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(today.getSeconds(), 2);
 
                 hl7[5 + (2 * i)][7][0][0] = (dateDrawnFormatted || "");
+
+                var artStartDate = ((new Date(params.art_start_date)) || (new Date()));
+
+                var artStartDateFormatted = artStartDate.getFullYear() + (padZeros(artStartDate.getMonth() + 1, 2)) +
+                    padZeros(artStartDate.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(today.getSeconds(), 2);
+
+                hl7[5 + (2 * i)][6][0][0] = (artStartDateFormatted || "");
+
+                var dateReceived = ((new Date(params.date_received)) || (new Date()));
+
+                var dateReceivedFormatted = dateReceived.getFullYear() + (padZeros(dateReceived.getMonth() + 1, 2)) +
+                    padZeros(dateReceived.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(today.getSeconds(), 2);
+
+                hl7[5 + (2 * i)][14][0][0] = (dateReceivedFormatted || "");
+
+                var dateDispatched = ((new Date(params.date_dispatched)) || (new Date()));
+
+                var dateDispatchedFormatted = dateDispatched.getFullYear() + (padZeros(dateDispatched.getMonth() + 1, 2)) +
+                    padZeros(dateDispatched.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(today.getSeconds(), 2);
+
+                hl7[5 + (2 * i)][8][0][0] = (dateDispatchedFormatted || "");
 
                 hl7[5 + (2 * i)][13][0][0] = (params.reason_for_test || "");
 
@@ -648,7 +739,7 @@ module.exports = function (router) {
 
             var trackingNumberExists = false;
 
-            if(params.tracking_number && params.tracking_number.trim().length > 0) {
+            if (params.tracking_number && params.tracking_number.trim().length > 0) {
 
                 trackingNumberExists = true;
 
@@ -662,7 +753,7 @@ module.exports = function (router) {
 
                 var resultHL7 = hl7e.parseString(output);
 
-                console.log(hl7e.serializeJSON(resultHL7).replace(/\r/g,'\n'));
+                console.log(hl7e.serializeJSON(resultHL7).replace(/\r/g, '\n'));
 
                 var tracking_number = resultHL7[4][2][0][0];
 
@@ -672,49 +763,25 @@ module.exports = function (router) {
 
                 var keys = Object.keys(params);
 
-                for(var i = 0; i < keys.length; i++) {
+                for (var i = 0; i < keys.length; i++) {
 
                     var key = keys[i];
 
-                    if(key == "return_path") continue;
+                    if (key == "return_path") continue;
 
                     link += (link.trim().match(/\?$/) ? "" : "&") + key + "=" + encodeURI(params[key]);
 
                 }
 
-                if(params.return_json == 'true') {
+                if (params.return_json == 'true') {
 
-                    res.status(200).json({'params' : params});
+                    res.status(200).json({'params': params});
 
-                }else{
+                } else {
 
-                    if(!trackingNumberExists) {
-                        
-                        var label = "\n\N\nR215,0\nZT\n";
+                    if (!trackingNumberExists) {
 
-                        label += 'A6,6,0,2,1,1,N,"Banda, Mary U"\n';
-
-                        label += 'A6,29,0,2,1,1,N,"Q23-HGF        12-SEP-1997 19y F"\n';
-
-                        label += 'B51,51,0,1A,2,2,76,N,"1600001234"\n';
-
-                        label += 'A51,131,0,2,1,1,N,"KCH-16-00001234 * 1600001234"\n';
-
-                        label += 'A6,150,0,2,1,1,N,"Col: 01-JAN-2016 14:21 byGD"\n';
-
-                        label += 'A6,172,0,2,1,1,N,"CHEM7,Ca,Mg"\n';
-
-                        label += 'P1\n';
-
-                        res.setHeader('Content-Length', label.length);
-
-                        res.setHeader('Content-disposition', 'attachment; filename=label.lbl');
-
-                        res.setHeader('Content-type', 'text/plain');
-
-                        res.send(label);
-
-                        res.end();
+                        res.render("print", {id: params.tracking_number, path: link, params: params});
 
                     } else {
 
@@ -725,6 +792,82 @@ module.exports = function (router) {
                 }
 
             });
+
+        });
+
+    router.route('/print/:id')
+        .get(function (req, res) {
+
+            doRead(req.params.id, function (result) {
+
+                console.log(JSON.stringify(result));
+
+                var label = "\n\N\nR215,0\nZT\n";
+
+                label += 'A6,6,0,2,1,1,N,"' + (result.patient.last_name || "") + ', ' +
+                    (result.patient.first_name || "") + ' ' + ((result.patient.middle_name || "").trim().length > 3 ?
+                    (result.patient.middle_name || "").substring(0, 1) + '.' : (result.patient.middle_name || "")) + '"\n';
+
+                var age = "?";
+
+                if ((result.patient.date_of_birth || "").length > 0) {
+
+                    var dob = parseInt(result.patient.date_of_birth.substring(0, 4));
+
+                    console.log(result.patient.date_of_birth);
+
+                    age = ((new Date()).getFullYear() - dob);
+
+                    if (age <= 0) {
+
+                        age = "<1";
+
+                    }
+
+                }
+
+                label += 'A6,29,0,2,1,1,N,"' + (result.patient.national_patient_id || "") + '        ' +
+                    ((result.patient.date_of_birth || "").length > 0 ?
+                        (moment(result.patient.date_of_birth).format("DD-MMM-YYYY")) : "???") + ' ' + age + 'y F"\n';
+
+                label += 'B51,51,0,1A,2,2,76,N,"' + result._id + '"\n';
+
+                label += 'A51,131,0,2,1,1,N,"' + (result.accession_number || "") + ' * ' + result._id + '"\n';
+
+                label += 'A6,150,0,2,1,1,N,"Col: ' + ((result.date_drawn || "").length > 0 ?
+                    (moment(result.date_drawn).format("DD-MMM-YYYY H:M")) : "???") + ' by ' +
+                    (result.who_order_test.first_name || "").substring(0, 1) + "." +
+                    (result.who_order_test.last_name || "").substring(0, 1) + "." + '"\n';
+
+                label += 'A6,172,0,2,1,1,N,"' + (result.test_type || "") + '"\n';
+
+                label += 'P1\n';
+
+                res.setHeader('Content-Length', label.length);
+
+                var name = (new Date()).getTime();
+
+                res.setHeader('Content-disposition', 'attachment; filename=' + name + '.lbl');
+
+                res.setHeader('Content-type', 'text/plain');
+
+                res.send(label);
+
+                res.end();
+
+            })
+
+        });
+
+
+    router.route('/print')
+        .get(function (req, res) {
+
+            var url_parts = url.parse(req.url, true);
+
+            var query = url_parts.query;
+
+            res.render("print", {id: query.id, path: query.path, params: query.params});
 
         });
 

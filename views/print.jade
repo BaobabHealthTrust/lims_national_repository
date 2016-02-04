@@ -1,0 +1,18 @@
+//
+   Created by chimwemwe on 2/4/16.
+doctype html
+html
+    head
+        title
+            | Print Label
+    body
+        iframe(src="/print/#{id}" style="display: none;")
+
+        div(style='width: 100%; border: none; height: 100%; text-align: center; font-family: "Nimbus Sans L", "Arial Narrow", sans-serif; font-size: 36px; margin-top: 20%;')
+            | Printing. Please Wait...
+
+        script.
+            setTimeout(redirect, 6000);
+            function redirect() {
+                document.location = '#{path}';
+            }
