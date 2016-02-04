@@ -835,7 +835,7 @@ module.exports = function (router) {
                 label += 'A51,131,0,2,1,1,N,"' + (result.accession_number || "") + ' * ' + result._id + '"\n';
 
                 label += 'A6,150,0,2,1,1,N,"Col: ' + ((result.date_drawn || "").length > 0 ?
-                    (moment(result.date_drawn).format("DD-MMM-YYYY H:M")) : "???") + ' by ' +
+                    (moment(result.date_drawn).format("DD-MMM-YYYY HH:mm")) : "???") + ' by ' +
                     (result.who_order_test.first_name || "").substring(0, 1) + "." +
                     (result.who_order_test.last_name || "").substring(0, 1) + "." + '"\n';
 
