@@ -828,14 +828,18 @@ module.exports = function (router) {
 
                 label += 'A6,29,0,2,1,1,N,"' + (result.patient.national_patient_id || "") + '        ' +
                     ((result.patient.date_of_birth || "").length > 0 ?
-                        (moment(result.patient.date_of_birth).format("DD-MMM-YYYY")) : "???") + ' ' + age + 'y F"\n';
+                        (moment(result.patient.date_of_birth).format("DD-MMM-YYYY")) : "???") + ' ' + age + 'y ' +
+                    (result.patient.gender || "") + '"\n';
 
                 label += 'B51,51,0,1A,2,2,76,N,"' + result._id + '"\n';
 
                 label += 'A51,131,0,2,1,1,N,"' + (result.accession_number || "") + ' * ' + result._id + '"\n';
 
-                label += 'A6,150,0,2,1,1,N,"Col: ' + ((result.date_drawn || "").length > 0 ?
-                    (moment(result.date_drawn).format("DD-MMM-YYYY HH:mm")) : "???") + ' by ' +
+                var dateDrawn = (result.date_drawn || "").match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
+
+                label += 'A6,150,0,2,1,1,N,"Col: ' + (dateDrawn ?
+                    (moment(dateDrawn[1] + "-" + dateDrawn[2] + "-" + dateDrawn[3] + " " + dateDrawn[4] + ":" +
+                        dateDrawn[5]).format("DD-MMM-YYYY HH:mm")) : "???") + ' by ' +
                     (result.who_order_test.first_name || "").substring(0, 1) + "." +
                     (result.who_order_test.last_name || "").substring(0, 1) + "." + '"\n';
 
