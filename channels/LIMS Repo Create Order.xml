@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1454503029468</time>
+    <time>1454581495970</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>31</revision>
+  <revision>35</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -475,6 +475,102 @@
             </entry>
           </data>
         </step>
+        <step>
+          <sequenceNumber>18</sequenceNumber>
+          <name>date_drawn</name>
+          <script>tmp[&apos;data&apos;][&apos;date_drawn&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;date_drawn&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;OBR&apos;][&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>19</sequenceNumber>
+          <name>date_received</name>
+          <script>tmp[&apos;data&apos;][&apos;date_received&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.14&apos;][&apos;OBR.14.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;date_received&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;OBR&apos;][&apos;OBR.14&apos;][&apos;OBR.14.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>20</sequenceNumber>
+          <name>date_despatched</name>
+          <script>tmp[&apos;data&apos;][&apos;date_despatched&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;date_despatched&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>21</sequenceNumber>
+          <name>art_start_date</name>
+          <script>tmp[&apos;data&apos;][&apos;art_start_date&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;art_start_date&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
       </steps>
       <inboundTemplate encoding="base64">TVNIfF5+XCZ8fF4yLjE2Ljg0MC4xLjExMzg4My4zLjU5ODYuMi4xNV5JU098fENIXjIuMTYuODQw
 LjEuMTEzODgzLjMuNTk4Ni4yLjE1XklTT3wyMDE1MDIyMjIwMDQwMXx8T01MXk8yMV5PTUxfTzIx
@@ -486,10 +582,11 @@ dF9pZCI6IlAxNzAwMDAwMDAwMzEiLAoJCQkiZmlyc3RfbmFtZSI6IlRlc3QiLAoJCQkibWlkZGxl
 X25hbWUiOiJOL0EiLAoJCQkibGFzdF9uYW1lIjoiUGF0aWVudCIsCgkJCSJkYXRlX29mX2JpcnRo
 IjoiMTk5MzA3MDEiLAoJCQkiZ2VuZGVyIjoiRiIKCQl9LAoJCSJzYW1wbGVfdHlwZSI6IiIsCgkJ
 Indob19vcmRlcl90ZXN0Ijp7CgkJCSJmaXJzdF9uYW1lIjoiIiwKCQkJImxhc3RfbmFtZSI6IiIs
-CgkJCSJpZF9udW1iZXIiOiIiLAoJCQkicGhvbmVfbnVtYmVyIjoiIgoJCX0sCgkJImRhdGVfdGlt
-ZSI6IiIsCgkJInNlbmRpbmdfZmFjaWxpdHkiOiJLQ0giLAoJCSJyZWNlaXZpbmdfZmFjaWxpdHki
-OiJLQ0giLAoJCSJyZWFzb25fZm9yX3Rlc3QiOiIiLAoJCSJ0ZXN0X3R5cGUiOiIiLAoJCSJzdGF0
-dXMiOiJEcmF3biIsCgkJInJlc3VsdHMiOnt9Cgl9Cn0=</outboundTemplate>
+CgkJCSJpZF9udW1iZXIiOiIiLAoJCQkicGhvbmVfbnVtYmVyIjoiIgoJCX0sCgkJImRhdGVfZHJh
+d24iOiIiLAoJCSJkYXRlX2Rlc3BhdGNoZWQiOiIiLAoJCSJhcnRfc3RhcnRfZGF0ZSI6IiIsCgkJ
+ImRhdGVfcmVjZWl2ZWQiOiIiLAoJCSJzZW5kaW5nX2ZhY2lsaXR5IjoiS0NIIiwKCQkicmVjZWl2
+aW5nX2ZhY2lsaXR5IjoiS0NIIiwKCQkicmVhc29uX2Zvcl90ZXN0IjoiIiwKCQkidGVzdF90eXBl
+IjoiIiwKCQkic3RhdHVzIjoiRHJhd24iLAoJCSJyZXN1bHRzIjp7fQoJfQp9</outboundTemplate>
       <inboundDataType>HL7V2</inboundDataType>
       <outboundDataType>JSON</outboundDataType>
       <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.3.1">
