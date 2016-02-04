@@ -245,6 +245,53 @@ module.exports = function (router) {
 
             if (!err) {
 
+                var keys = Object.keys(pbody);
+
+                for(var i = 0; i < keys.length; i++) {
+
+                    if(typeof pbody[keys[i]] == "object") {
+
+                        var childKeys = Object.keys(pbody[keys[i]]);
+
+                        for(var j = 0; j < childKeys.length; j++) {
+
+                            if (childKeys[j].trim().toLowerCase().match(/date/)) {
+
+                                var parts = pbody[keys[i]][childKeys[j]].trim().match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
+
+                                if (parts) {
+
+                                    var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
+
+                                    pbody[keys[i]][childKeys[j]] = date;
+
+                                }
+
+                            }
+
+                        }
+
+
+                    } else {
+
+                        if (keys[i].trim().toLowerCase().match(/date/)) {
+
+                            var parts = pbody[keys[i]].trim().match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
+
+                            if (parts) {
+
+                                var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
+
+                                pbody[keys[i]] = date;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
                 callback(pbody);
 
             } else {
@@ -368,7 +415,7 @@ module.exports = function (router) {
 
             doRead(req.params.id, function (result) {
 
-                res.status(200).json({data: result});
+                res.status(200).json(result);
 
             })
 
@@ -453,6 +500,8 @@ module.exports = function (router) {
             var query = url_parts.query;
 
             var sample_types = ['Dry Blood Spot', 'Whole Blood', 'Sputum', 'Pus'];
+
+            // res.removeHeader('X-Frame-Options');
 
             res.render('lab_order', {
                 first_name: (query.first_name || ""),
