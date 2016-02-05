@@ -227,9 +227,15 @@ module.exports = function (router) {
 
     }
 
-    function doRead(id, callback) {
+    function doRead(id, callback, format) {
 
         console.log(id);
+
+        if(format == undefined) {
+
+            format = false;
+
+        }
 
         var site = JSON.parse(configs)["site_code"];
 
@@ -245,44 +251,47 @@ module.exports = function (router) {
 
             if (!err) {
 
-                var keys = Object.keys(pbody);
+                if(format) {
 
-                for(var i = 0; i < keys.length; i++) {
+                    var keys = Object.keys(pbody);
 
-                    if(typeof pbody[keys[i]] == "object") {
+                    for (var i = 0; i < keys.length; i++) {
 
-                        var childKeys = Object.keys(pbody[keys[i]]);
+                        if (typeof pbody[keys[i]] == "object") {
 
-                        for(var j = 0; j < childKeys.length; j++) {
+                            var childKeys = Object.keys(pbody[keys[i]]);
 
-                            if (childKeys[j].trim().toLowerCase().match(/date/)) {
+                            for (var j = 0; j < childKeys.length; j++) {
 
-                                var parts = pbody[keys[i]][childKeys[j]].trim().match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
+                                if (childKeys[j].trim().toLowerCase().match(/date/)) {
 
-                                if (parts) {
+                                    var parts = pbody[keys[i]][childKeys[j]].trim().match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
 
-                                    var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
+                                    if (parts) {
 
-                                    pbody[keys[i]][childKeys[j]] = date;
+                                        var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
+
+                                        pbody[keys[i]][childKeys[j]] = date;
+
+                                    }
 
                                 }
 
                             }
 
-                        }
+                        } else {
 
+                            if (keys[i].trim().toLowerCase().match(/date/)) {
 
-                    } else {
+                                var parts = pbody[keys[i]].trim().match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
 
-                        if (keys[i].trim().toLowerCase().match(/date/)) {
+                                if (parts) {
 
-                            var parts = pbody[keys[i]].trim().match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
+                                    var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
 
-                            if (parts) {
+                                    pbody[keys[i]] = date;
 
-                                var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
-
-                                pbody[keys[i]] = date;
+                                }
 
                             }
 
@@ -417,7 +426,7 @@ module.exports = function (router) {
 
                 res.status(200).json(result);
 
-            })
+            }, true)
 
         })
 
@@ -432,7 +441,7 @@ module.exports = function (router) {
 
                 res.status(200).json({data: result});
 
-            })
+            }, true)
 
         })
 

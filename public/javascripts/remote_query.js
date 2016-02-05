@@ -6,6 +6,12 @@
 
 var localSearchURL = "/query_order/";
 
+/*
+* http://localhost:3014/query_order/XKCH1624001
+*
+* {"data":{"_id":"XKCH1624001","_rev":"1-0b3be6fcad65e86a199f7cf54ca9323a","patient":{"national_patient_id":"XXXYYY","first_name":"Mary","middle_name":"Jane","last_name":"Banda","date_of_birth":"2016020400000","gender":"F"},"sample_type":"Whole Blood","who_order_test":{"first_name":"User","last_name":"Trial","id_number":"P3920","phone_number":""},"date_drawn":"20160204123807","date_despatched":"20160204123807","art_start_date":"20160204123807","date_received":"20160204123807","sending_facility":"KCH","receiving_facility":"KCH","reason_for_test":"Testing","test_type":"WBC","status":"Drawn","results":{},"date_time":""}}
+*
+* */
 var remoteSearchURL = "/query_order/";
 
 function __$(id) {
@@ -83,7 +89,7 @@ function populateForm(json) {
         sample_priority: (json.sample_priority || ""),
         target_lab: (json.receiving_facility || ""),
         art_start_date: (json.art_start_date || ""),
-        date_dispatched: (json.date_despatched || ""),
+        date_dispatched: (json.date_dispatched || ""),
         date_received: (json.date_received || "")
     }
 
