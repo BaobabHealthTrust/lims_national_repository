@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1454662616460</time>
+    <time>1454673835863</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>36</revision>
+  <revision>51</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -214,7 +214,7 @@
         <step>
           <sequenceNumber>7</sequenceNumber>
           <name>orderer_id</name>
-          <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;id_number&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;id_number&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
@@ -223,7 +223,7 @@
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString()</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.16&apos;][&apos;OBR.16.1&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -310,7 +310,7 @@
         <step>
           <sequenceNumber>11</sequenceNumber>
           <name>reason_for_test</name>
-          <script>tmp[&apos;data&apos;][&apos;reason_for_test&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.13&apos;][&apos;OBR.13.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <script>tmp[&apos;data&apos;][&apos;reason_for_test&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.13&apos;][&apos;OBR.13.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
@@ -319,7 +319,7 @@
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.13&apos;][&apos;OBR.13.1&apos;].toString()</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.13&apos;][&apos;OBR.13.1&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -333,17 +333,17 @@
         </step>
         <step>
           <sequenceNumber>12</sequenceNumber>
-          <name>test_type</name>
-          <script>tmp[&apos;data&apos;][&apos;test_type&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString(), &apos;&apos;, new Array());</script>
+          <name>order_status</name>
+          <script>tmp[&apos;data&apos;][&apos;status&apos;] = validate(msg[&apos;NTE&apos;][0][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
               <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;test_type&apos;]</string>
+              <string>tmp[&apos;data&apos;][&apos;status&apos;]</string>
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString()</string>
+              <string>msg[&apos;NTE&apos;][0][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -357,17 +357,17 @@
         </step>
         <step>
           <sequenceNumber>13</sequenceNumber>
-          <name>order_status</name>
-          <script>tmp[&apos;data&apos;][&apos;status&apos;] = validate(msg[&apos;NTE&apos;][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <name>orderer_fname</name>
+          <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;first_name&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
               <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;status&apos;]</string>
+              <string>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;first_name&apos;]</string>
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;NTE&apos;][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString()</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -381,17 +381,17 @@
         </step>
         <step>
           <sequenceNumber>14</sequenceNumber>
-          <name>orderer_fname</name>
-          <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;first_name&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString(), &apos;&apos;, new Array());</script>
+          <name>orderer_lname</name>
+          <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;last_name&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
               <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;first_name&apos;]</string>
+              <string>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;last_name&apos;]</string>
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.3&apos;].toString()</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -405,30 +405,6 @@
         </step>
         <step>
           <sequenceNumber>15</sequenceNumber>
-          <name>orderer_lname</name>
-          <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;last_name&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString(), &apos;&apos;, new Array());</script>
-          <type>Message Builder</type>
-          <data>
-            <entry>
-              <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;last_name&apos;]</string>
-            </entry>
-            <entry>
-              <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.16&apos;][&apos;OBR.16.2&apos;].toString()</string>
-            </entry>
-            <entry>
-              <string>DefaultValue</string>
-              <string></string>
-            </entry>
-            <entry>
-              <string>RegularExpressions</string>
-              <list/>
-            </entry>
-          </data>
-        </step>
-        <step>
-          <sequenceNumber>16</sequenceNumber>
           <name>tracking_number</name>
           <script>tmp[&apos;data&apos;][&apos;_id&apos;] = validate(msg[&apos;SPM&apos;][&apos;SPM.2&apos;][&apos;SPM.2.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
@@ -452,7 +428,7 @@
           </data>
         </step>
         <step>
-          <sequenceNumber>17</sequenceNumber>
+          <sequenceNumber>16</sequenceNumber>
           <name>orderer_phone</name>
           <script>tmp[&apos;data&apos;][&apos;who_order_test&apos;][&apos;phone_number&apos;] = validate(msg[&apos;ORC&apos;][&apos;ORC.14&apos;][&apos;ORC.14.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
@@ -476,9 +452,9 @@
           </data>
         </step>
         <step>
-          <sequenceNumber>18</sequenceNumber>
+          <sequenceNumber>17</sequenceNumber>
           <name>date_drawn</name>
-          <script>tmp[&apos;data&apos;][&apos;date_drawn&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <script>tmp[&apos;data&apos;][&apos;date_drawn&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
@@ -487,7 +463,31 @@
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString()</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>18</sequenceNumber>
+          <name>date_received</name>
+          <script>tmp[&apos;data&apos;][&apos;date_received&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.14&apos;][&apos;OBR.14.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;date_received&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.14&apos;][&apos;OBR.14.1&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -501,17 +501,17 @@
         </step>
         <step>
           <sequenceNumber>19</sequenceNumber>
-          <name>date_received</name>
-          <script>tmp[&apos;data&apos;][&apos;date_received&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.14&apos;][&apos;OBR.14.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <name>date_dispatched</name>
+          <script>tmp[&apos;data&apos;][&apos;date_dispatched&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
               <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;date_received&apos;]</string>
+              <string>tmp[&apos;data&apos;][&apos;date_dispatched&apos;]</string>
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.14&apos;][&apos;OBR.14.1&apos;].toString()</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -525,17 +525,17 @@
         </step>
         <step>
           <sequenceNumber>20</sequenceNumber>
-          <name>date_dispatched</name>
-          <script>tmp[&apos;data&apos;][&apos;date_dispatched&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <name>art_start_date</name>
+          <script>tmp[&apos;data&apos;][&apos;art_start_date&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
               <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;date_dispatched&apos;]</string>
+              <string>tmp[&apos;data&apos;][&apos;art_start_date&apos;]</string>
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString()</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -549,17 +549,17 @@
         </step>
         <step>
           <sequenceNumber>21</sequenceNumber>
-          <name>art_start_date</name>
-          <script>tmp[&apos;data&apos;][&apos;art_start_date&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <name>district</name>
+          <script>tmp[&apos;data&apos;][&apos;district&apos;] = validate(msg[&apos;ORC&apos;][&apos;ORC.22&apos;][&apos;ORC.22.3&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
               <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;art_start_date&apos;]</string>
+              <string>tmp[&apos;data&apos;][&apos;district&apos;]</string>
             </entry>
             <entry>
               <string>Mapping</string>
-              <string>msg[&apos;OBR&apos;][&apos;OBR.6&apos;][&apos;OBR.6.1&apos;].toString()</string>
+              <string>msg[&apos;ORC&apos;][&apos;ORC.22&apos;][&apos;ORC.22.3&apos;].toString()</string>
             </entry>
             <entry>
               <string>DefaultValue</string>
@@ -571,22 +571,137 @@
             </entry>
           </data>
         </step>
+        <step>
+          <sequenceNumber>22</sequenceNumber>
+          <name>patient_phone</name>
+          <script>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;phone_number&apos;] = validate(msg[&apos;PID&apos;][&apos;PID.13&apos;][&apos;PID.13.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;patient&apos;][&apos;phone_number&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;PID&apos;][&apos;PID.13&apos;][&apos;PID.13.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>23</sequenceNumber>
+          <name>order_location</name>
+          <script>tmp[&apos;data&apos;][&apos;order_location&apos;] = validate(msg[&apos;ORC&apos;][&apos;ORC.13&apos;][&apos;ORC.13.2&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;order_location&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;ORC&apos;][&apos;ORC.13&apos;][&apos;ORC.13.2&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>24</sequenceNumber>
+          <name>priority</name>
+          <script>tmp[&apos;data&apos;][&apos;priority&apos;] = validate(msg[&apos;OBR&apos;][0][&apos;OBR.5&apos;][&apos;OBR.5.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;data&apos;][&apos;priority&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;OBR&apos;][0][&apos;OBR.5&apos;][&apos;OBR.5.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>25</sequenceNumber>
+          <name>test_types</name>
+          <script>tmp[&apos;data&apos;][&apos;test_types&apos;] = [];
+
+logger.info(msg[&apos;OBR&apos;].length());
+
+for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
+
+	logger.info(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString());
+
+	if(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().length &gt; 0) {
+
+		tmp[&apos;data&apos;][&apos;test_types&apos;].push(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim());
+		
+	}
+	
+}</script>
+          <type>JavaScript</type>
+          <data>
+            <entry>
+              <string>Script</string>
+              <string>tmp[&apos;data&apos;][&apos;test_types&apos;] = [];
+
+logger.info(msg[&apos;OBR&apos;].length());
+
+for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
+
+	logger.info(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString());
+
+	if(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().length &gt; 0) {
+
+		tmp[&apos;data&apos;][&apos;test_types&apos;].push(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim());
+		
+	}
+	
+}</string>
+            </entry>
+          </data>
+        </step>
       </steps>
       <inboundTemplate encoding="base64">TVNIfF5+XCZ8fF4yLjE2Ljg0MC4xLjExMzg4My4zLjU5ODYuMi4xNV5JU098fENIXjIuMTYuODQw
 LjEuMTEzODgzLjMuNTk4Ni4yLjE1XklTT3wyMDE1MDIyMjIwMDQwMXx8T01MXk8yMV5PTUxfTzIx
-fDIwMTUwMjIyMjAwNDAxfFR8Mi41ClBJRHwxfHx+Xl5eXl5efHxeXnx8fApPUkN8fHx8fHx8fHx8
-Xl5efHx8Xl5eXl5eXl58fHx8fHx8fF5eXnwKVFExfDF8fHx8fHx8fF5eXgpTUE18MXx8fF5eCk9C
-UnwxfHx8Xl58fHx8fHx8fHx8fHxeXl5eXg==</inboundTemplate>
+fDIwMTUwMjIyMjAwNDAxfFR8Mi41ClBJRHwxfHx+Xl5eXl5efHxeXnx8fHx8fHx8fHx8fHwKT1JD
+fHx8fHx8fHx8fF5eXnx8fF5eXl5eXl5efHx8fHx8fHxeXl5eXl5efF5eXl5eXl4KVFExfDF8fHx8
+fHx8fF5eXgpTUE18MXx8fF5eCk9CUnwxfHx8Xl58fHx8fHx8fHx8fHxeXl5eXgpPQlJ8Mnx8fF5e
+fHx8fHx8fHx8fHx8Xl5eXl4=</inboundTemplate>
       <outboundTemplate encoding="base64">ewoJImRhdGEiOnsKCQkiX2lkIjoiIiwKCQkicGF0aWVudCI6ewoJCQkibmF0aW9uYWxfcGF0aWVu
 dF9pZCI6IlAxNzAwMDAwMDAwMzEiLAoJCQkiZmlyc3RfbmFtZSI6IlRlc3QiLAoJCQkibWlkZGxl
 X25hbWUiOiJOL0EiLAoJCQkibGFzdF9uYW1lIjoiUGF0aWVudCIsCgkJCSJkYXRlX29mX2JpcnRo
-IjoiMTk5MzA3MDEiLAoJCQkiZ2VuZGVyIjoiRiIKCQl9LAoJCSJzYW1wbGVfdHlwZSI6IiIsCgkJ
-Indob19vcmRlcl90ZXN0Ijp7CgkJCSJmaXJzdF9uYW1lIjoiIiwKCQkJImxhc3RfbmFtZSI6IiIs
-CgkJCSJpZF9udW1iZXIiOiIiLAoJCQkicGhvbmVfbnVtYmVyIjoiIgoJCX0sCgkJImRhdGVfZHJh
-d24iOiIiLAoJCSJkYXRlX2Rpc3BhdGNoZWQiOiIiLAoJCSJhcnRfc3RhcnRfZGF0ZSI6IiIsCgkJ
-ImRhdGVfcmVjZWl2ZWQiOiIiLAoJCSJzZW5kaW5nX2ZhY2lsaXR5IjoiS0NIIiwKCQkicmVjZWl2
-aW5nX2ZhY2lsaXR5IjoiS0NIIiwKCQkicmVhc29uX2Zvcl90ZXN0IjoiIiwKCQkidGVzdF90eXBl
-IjoiIiwKCQkic3RhdHVzIjoiRHJhd24iLAoJCSJyZXN1bHRzIjp7fQoJfQp9</outboundTemplate>
+IjoiMTk5MzA3MDEiLAoJCQkiZ2VuZGVyIjoiRiIsCgkJCSJwaG9uZV9udW1iZXIiOiIiCgkJfSwK
+CQkic2FtcGxlX3R5cGUiOiIiLAoJCSJ3aG9fb3JkZXJfdGVzdCI6ewoJCQkiZmlyc3RfbmFtZSI6
+IiIsCgkJCSJsYXN0X25hbWUiOiIiLAoJCQkiaWRfbnVtYmVyIjoiIiwKCQkJInBob25lX251bWJl
+ciI6IiIKCQl9LAoJCSJkYXRlX2RyYXduIjoiIiwKCQkiZGF0ZV9kaXNwYXRjaGVkIjoiIiwKCQki
+YXJ0X3N0YXJ0X2RhdGUiOiIiLAoJCSJkYXRlX3JlY2VpdmVkIjoiIiwKCQkic2VuZGluZ19mYWNp
+bGl0eSI6IktDSCIsCgkJInJlY2VpdmluZ19mYWNpbGl0eSI6IktDSCIsCgkJInJlYXNvbl9mb3Jf
+dGVzdCI6IiIsCgkJInRlc3RfdHlwZXMiOltdLAoJCSJzdGF0dXMiOiJEcmF3biIsCgkJImRpc3Ry
+aWN0IjoiIiwKCQkicHJpb3JpdHkiOiIiLAoJCSJvcmRlcl9sb2NhdGlvbiI6IiIsCgkJInJlc3Vs
+dHMiOnt9Cgl9Cn0=</outboundTemplate>
       <inboundDataType>HL7V2</inboundDataType>
       <outboundDataType>JSON</outboundDataType>
       <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.3.1">
