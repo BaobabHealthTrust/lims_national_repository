@@ -8,6 +8,7 @@ html
         link(rel='stylesheet', href='/stylesheets/pikaday.css')
         script(src="/javascripts/pikaday.js")
         script(src="/javascripts/lab_order.js")
+        script(src="/javascripts/remote_query.js")
     body
 
         table(style="margin: auto;" cellpadding="10")
@@ -25,6 +26,14 @@ html
                                 td(colspan=3 style="font-size: 11px; font-style: italic; padding: 0px;" align="right"
                                     class="required")
                                     | * Required fields
+
+                            tr
+                                th(align="right" style="vertical-align: top;")
+                                    | Tracking Number
+                                td(align="center" style="vertical-align: top;")
+                                    | :
+                                td
+                                    input(type="text" id="tracking_number" name="tracking_number" class="text" )
 
                             - if(!hide_demographics) {
 
@@ -416,13 +425,7 @@ html
                                     | :
                                 td
                                     input(type="text" id="target_lab" name="target_lab" class="text" required=true)
-                            tr
-                                th(align="right" style="vertical-align: top;")
-                                    | Tracking Number
-                                td(align="center" style="vertical-align: top;")
-                                    | :
-                                td
-                                    input(type="text" id="tracking_number" name="tracking_number" class="text" )
+
                             tr
                                 th(align="right")
                                     | ART Start Date
