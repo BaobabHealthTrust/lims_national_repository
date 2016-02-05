@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1454581495970</time>
+    <time>1454662616460</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>35</revision>
+  <revision>36</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -525,13 +525,13 @@
         </step>
         <step>
           <sequenceNumber>20</sequenceNumber>
-          <name>date_despatched</name>
-          <script>tmp[&apos;data&apos;][&apos;date_despatched&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <name>date_dispatched</name>
+          <script>tmp[&apos;data&apos;][&apos;date_dispatched&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.8&apos;][&apos;OBR.8.1&apos;].toString(), &apos;&apos;, new Array());</script>
           <type>Message Builder</type>
           <data>
             <entry>
               <string>Variable</string>
-              <string>tmp[&apos;data&apos;][&apos;date_despatched&apos;]</string>
+              <string>tmp[&apos;data&apos;][&apos;date_dispatched&apos;]</string>
             </entry>
             <entry>
               <string>Mapping</string>
@@ -583,7 +583,7 @@ X25hbWUiOiJOL0EiLAoJCQkibGFzdF9uYW1lIjoiUGF0aWVudCIsCgkJCSJkYXRlX29mX2JpcnRo
 IjoiMTk5MzA3MDEiLAoJCQkiZ2VuZGVyIjoiRiIKCQl9LAoJCSJzYW1wbGVfdHlwZSI6IiIsCgkJ
 Indob19vcmRlcl90ZXN0Ijp7CgkJCSJmaXJzdF9uYW1lIjoiIiwKCQkJImxhc3RfbmFtZSI6IiIs
 CgkJCSJpZF9udW1iZXIiOiIiLAoJCQkicGhvbmVfbnVtYmVyIjoiIgoJCX0sCgkJImRhdGVfZHJh
-d24iOiIiLAoJCSJkYXRlX2Rlc3BhdGNoZWQiOiIiLAoJCSJhcnRfc3RhcnRfZGF0ZSI6IiIsCgkJ
+d24iOiIiLAoJCSJkYXRlX2Rpc3BhdGNoZWQiOiIiLAoJCSJhcnRfc3RhcnRfZGF0ZSI6IiIsCgkJ
 ImRhdGVfcmVjZWl2ZWQiOiIiLAoJCSJzZW5kaW5nX2ZhY2lsaXR5IjoiS0NIIiwKCQkicmVjZWl2
 aW5nX2ZhY2lsaXR5IjoiS0NIIiwKCQkicmVhc29uX2Zvcl90ZXN0IjoiIiwKCQkidGVzdF90eXBl
 IjoiIiwKCQkic3RhdHVzIjoiRHJhd24iLAoJCSJyZXN1bHRzIjp7fQoJfQp9</outboundTemplate>
