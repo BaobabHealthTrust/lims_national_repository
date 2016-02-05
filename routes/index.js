@@ -913,7 +913,13 @@ module.exports = function (router) {
                     (result.who_order_test.first_name || "").substring(0, 1) + "." +
                     (result.who_order_test.last_name || "").substring(0, 1) + "." + '"\n';
 
-                label += 'A6,172,0,2,1,1,N,"' + (result.test_type || "") + '"\n';
+                label += 'A6,172,0,2,1,1,N,"' + (result.test_types || []).join(",") + '"\n';
+
+                if(result.priority.toString().toLowerCase().trim().match(/^stat/)) {
+
+                    label += 'A24,6,1,2,1,1,R,"   STAT   "\n';
+
+                }
 
                 label += 'P1\n';
 
