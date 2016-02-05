@@ -568,8 +568,8 @@ module.exports = function (router) {
             console.log(params);
 
             var template = "MSH|^~&||^^||^^|||OML^O21^OML_O21||T|2.5\r" +
-                "PID|1||^^^^^^||^^|||\r" +
-                "ORC||||||||||^^^|||^^^^^^^^||||||||^^^|\r" +
+                "PID|1||~^^^^^^||^^|||||||||||||\r" +
+                "ORC||||||||||^^^|||^^^^^^^^||||||||^^^^^^^|^^^^^^^\r" +
                 "TQ1|1||||||||^^^\r" +
                 "SPM|1|||^\r";
             /*+
@@ -600,6 +600,8 @@ module.exports = function (router) {
 
             hl7[1][5][0][2] = (params.middle_name || "");
 
+            hl7[1][13][0][0] = (params.phone_number || "");
+
             if (params.date_of_birth) {
 
                 var dob = (new Date(params.date_of_birth));
@@ -627,7 +629,11 @@ module.exports = function (router) {
 
             hl7[2][14][0][0] = (params.sample_collector_phone_number || "");
 
-            hl7[3][9][0][1] = (params.sample_priority || "");
+            hl7[2][22][0][2] = (params.district || "");
+
+            hl7[2][13][0][1] = (params.sample_order_location || "");
+
+            // hl7[3][9][0][1] = (params.sample_priority || "");
 
             hl7[4][4][0][1] = (params.sample_type || "");
 
@@ -765,6 +771,8 @@ module.exports = function (router) {
                     padZeros(today.getSeconds(), 2);
 
                 hl7[5 + (2 * i)][8][0][0] = (dateDispatchedFormatted || "");
+
+                hl7[5 + (2 * i)][5][0][0] = (params.sample_priority || "");
 
                 hl7[5 + (2 * i)][13][0][0] = (params.reason_for_test || "");
 
