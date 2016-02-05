@@ -154,8 +154,19 @@ html
                                     td(align="center")
                                         | :
                                     td
-                                        input(type="text" id="reason_for_test" class="text" required=true
+                                        select(type="text" id="reason_for_test" class="text" required=true
                                             name="reason_for_test" value="#{reason_for_test}" )
+                                            option
+                                            option
+                                                | Routine
+                                            option
+                                                | Targeted (Treatment Failure Suspected)
+                                            option
+                                                | Confirmatory (Follow up test after high viral load)
+                                            option
+                                                | Redraw
+                                            option
+                                                | Other
                                 tr
                                     th(align="right")
                                         | Surname of Person Collecting Sample
