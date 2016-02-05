@@ -633,6 +633,10 @@ module.exports = function (router) {
 
             hl7[2][13][0][1] = (params.sample_order_location || "");
 
+            var timestamp = moment(new Date()).format("YYYYMMDDHHmmss");
+
+            hl7[2][9][0][0] = timestamp;
+
             // hl7[3][9][0][1] = (params.sample_priority || "");
 
             hl7[4][4][0][1] = (params.sample_type || "");
@@ -746,7 +750,7 @@ module.exports = function (router) {
                     padZeros(dateDrawn.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
-                hl7[5 + (2 * i)][7][0][0] = (dateDrawnFormatted || "");
+                hl7[5 + (2 * i)][7][0][0] = (!isNaN(dateDrawn.getFullYear()) ? dateDrawnFormatted : "");
 
                 var artStartDate = ((new Date(params.art_start_date)) || (new Date()));
 
@@ -754,7 +758,7 @@ module.exports = function (router) {
                     padZeros(artStartDate.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
-                hl7[5 + (2 * i)][6][0][0] = (artStartDateFormatted || "");
+                hl7[5 + (2 * i)][6][0][0] = (!isNaN(artStartDate.getFullYear()) ? artStartDateFormatted : "");
 
                 var dateReceived = ((new Date(params.date_received)) || (new Date()));
 
@@ -762,7 +766,7 @@ module.exports = function (router) {
                     padZeros(dateReceived.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
-                hl7[5 + (2 * i)][14][0][0] = (dateReceivedFormatted || "");
+                hl7[5 + (2 * i)][14][0][0] = (!isNaN(dateReceived.getFullYear()) ? dateReceivedFormatted : "");
 
                 var dateDispatched = ((new Date(params.date_dispatched)) || (new Date()));
 
@@ -770,7 +774,7 @@ module.exports = function (router) {
                     padZeros(dateDispatched.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
-                hl7[5 + (2 * i)][8][0][0] = (dateDispatchedFormatted || "");
+                hl7[5 + (2 * i)][8][0][0] = (!isNaN(dateDispatched.getFullYear()) ? dateDispatchedFormatted : "");
 
                 hl7[5 + (2 * i)][5][0][0] = (params.sample_priority || "");
 
