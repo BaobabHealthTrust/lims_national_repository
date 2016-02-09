@@ -901,7 +901,7 @@ module.exports = function (router) {
                             "status": (params.status || "Drawn"),
                             "district": params.district,
                             "priority": params.sample_priority,
-                            "order_location": params.order_location,
+                            "order_location": params.sample_order_location,
                             "results": {
                             },
                             "date_time": (params.date_time || "")
