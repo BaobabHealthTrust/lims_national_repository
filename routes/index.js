@@ -504,12 +504,19 @@ module.exports = function (router) {
     router.route('/lab_order')
         .get(function (req, res) {
 
+            var facilities = JSON.parse(fs.readFileSync(path.resolve('config', 'facilities.json'))).sort();
+
+            var districts = JSON.parse(fs.readFileSync(path.resolve('config', 'districts.json'))).sort();
+
             var url_parts = url.parse(req.url, true);
 
             var query = url_parts.query;
 
             var sample_types = ['DBS (Using capillary tube)', 'DBS (Free drop to DBS card)', 'Plasma', 'Whole Blood',
                 'Sputum', 'Pus'];
+
+            var reasons_for_testing = ["Routine", "Targeted (Treatment Failure Suspected)", "Other", "Redraw",
+                "Confirmatory (Follow up test after high viral load))"];
 
             // res.removeHeader('X-Frame-Options');
 
@@ -538,8 +545,11 @@ module.exports = function (router) {
                 info: (query.return_path ? "" : "Missing return path. Can't proceed!"),
                 art_start_date: (query.art_start_date || ""),
                 date_received: (query.date_received || ""),
-                date_dispatched: (query.date_dispatched || "")
-
+                date_dispatched: (query.date_dispatched || ""),
+                facilities: facilities,
+                districts: districts,
+                reasons_for_testing: reasons_for_testing,
+                health_facility_name: (query.health_facility_name || "")
             });
 
         })
@@ -548,10 +558,15 @@ module.exports = function (router) {
         .get(function (req, res) {
 
             var sample_types = {
-                "whole blood": ['FBC', 'WBC', 'VL', 'RBC']
+                "whole blood": ['FBC', 'WBC', 'VL', 'RBC'],
+                'dbs (using capillary tube)': ['Viral Load'],
+                'dbs (free drop to dbs card)': ['Viral Load'],
+                'plasma': ['Viral Load'],
+                'sputum': ['TB Test'],
+                'pus': ['Other']
             };
 
-            res.status(200).json(sample_types[req.params.id.replace(/\+/g, " ").toLowerCase()]);
+            res.status(200).json(sample_types[req.params.id.trim().toLowerCase()]);
 
         })
 
