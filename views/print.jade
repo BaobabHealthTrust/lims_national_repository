@@ -12,7 +12,8 @@ html
             | Printing. Please Wait...
 
         script.
-            setTimeout(redirect, 6000);
-            function redirect() {
-                document.location = '#{path}';
-            }
+            var uLocalCreateURL = "#{localCreateURL}";
+            var uPath = '#{path}';
+            var uJson = !{params};
+
+        script(src="/javascripts/print.js")

@@ -18,6 +18,8 @@ html
 
                         input(type="hidden" id="return_path" name="return_path" value="#{return_path}")
 
+                        input(type="hidden" id="localCreateURL" name="localCreateURL" value="#{localCreateURL}")
+
                         table(cellpadding=10)
                             tr
                                 th(colspan=3 style="font-size: 24px; border-bottom: 1px solid #ccc;" align="center")
@@ -480,7 +482,21 @@ html
                                 td(align="center" style="vertical-align: top;")
                                     | :
                                 td
-                                    input(type="text" id="target_lab" name="target_lab" class="text" required=true)
+                                    select(type="text" id="target_lab" name="target_lab" class="text" required=true)
+                                        option
+                                        - for(var i = 0; i < facilities.length; i++) {
+
+                                            - if(facilities[i].trim() == target_lab.trim()) {
+
+                                                option(class='selected') #{facilities[i]}
+
+                                            - } else {
+
+                                                option #{facilities[i]}
+
+                                            - }
+
+                                        - }
 
                             tr
                                 th(align="right")

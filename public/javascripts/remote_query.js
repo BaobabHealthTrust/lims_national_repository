@@ -111,32 +111,6 @@ function populateForm(json) {
 
             }
 
-            /*if(keys[i] == "tests") {
-
-             setTimeout((function(ifields) {
-
-             var options = ifields["tests"].split(",");
-
-             for(var o = 0; o < options.length; o++) {
-
-             var opts = __$("tests").options;
-
-             for(var k = 0; k < opts.length; k++) {
-
-             if(opts[k].innerHTML.trim().toLowerCase() == options[o].trim().toLowerCase()) {
-
-             opts.setAttribute("selected", true);
-
-             }
-
-             }
-
-             }
-
-             }(fields)), 5000);
-
-             }*/
-
         }
 
         if (keys[i] == "sample_type") {
