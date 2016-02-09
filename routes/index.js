@@ -269,7 +269,7 @@ module.exports = function (router) {
 
                                     if (parts) {
 
-                                        var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
+                                        var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY HH:mm");
 
                                         pbody[keys[i]][childKeys[j]] = date;
 
@@ -287,7 +287,7 @@ module.exports = function (router) {
 
                                 if (parts) {
 
-                                    var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY");
+                                    var date = moment(parts[1] + "-" + parts[2] + "-" + parts[3] + " " + parts[4] + ":" + parts[5]).format("ddd MMM DD YYYY HH:mm");
 
                                     pbody[keys[i]] = date;
 
@@ -508,7 +508,8 @@ module.exports = function (router) {
 
             var query = url_parts.query;
 
-            var sample_types = ['Dry Blood Spot', 'Whole Blood', 'Sputum', 'Pus'];
+            var sample_types = ['DBS (Using capillary tube)', 'DBS (Free drop to DBS card)', 'Plasma', 'Whole Blood',
+                'Sputum', 'Pus'];
 
             // res.removeHeader('X-Frame-Options');
 
