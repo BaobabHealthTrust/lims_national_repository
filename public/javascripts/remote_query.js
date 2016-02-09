@@ -12,6 +12,8 @@ var localCreateURL = "http://localhost/chai/test/create.php";
 
 var noLocalCopy = false;
 
+var globalJson = {};
+
 function __$(id) {
 
     return document.getElementById(id);
@@ -41,6 +43,8 @@ function queryByTrackingNumber(url, callback, retryURL) {
             if (httpRequest.responseText.trim().length > 0) {
 
                 var json = JSON.parse(httpRequest.responseText);
+
+                globalJson = json;
 
                 if (Object.keys(json).length > 0) {
 
