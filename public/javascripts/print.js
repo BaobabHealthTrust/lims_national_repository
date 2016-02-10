@@ -42,8 +42,6 @@ function redirect() {
 
                     var json = JSON.parse(httpRequest.responseText);
 
-                    console.log(json);
-
                     document.location = uPath;
 
                 }

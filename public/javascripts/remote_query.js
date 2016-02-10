@@ -10,6 +10,8 @@ var remoteSearchURL = "/query_order/";
 
 var localCreateURL = "http://localhost/chai/test/create.php";
 
+var localQueryURL = "http://localhost/chai/test/query.php";
+
 var noLocalCopy = false;
 
 var globalJson = {};
@@ -74,51 +76,55 @@ function queryByTrackingNumber(url, callback, retryURL) {
 function populateForm(json) {
 
     var fields = {
-        national_patient_id: (json.patient.national_patient_id || ""),
-        health_facility_name: (json.sending_facility || ""),
-        first_name: (json.patient.first_name || ""),
-        last_name: (json.patient.last_name || ""),
-        middle_name: (json.patient.middle_name || ""),
-        date_of_birth: (json.patient.date_of_birth || ""),
-        gender: (json.patient.gender || ""),
-        phone_number: (json.patient.phone_number || ""),
-        district: (json.district || ""),
-        reason_for_test: (json.reason_for_test || ""),
-        sample_collector_last_name: (json.who_order_test.last_name || ""),
-        sample_collector_first_name: (json.who_order_test.first_name || ""),
-        sample_collector_phone_number: (json.who_order_test.phone_number || ""),
-        sample_collector_id: (json.who_order_test.id_number || ""),
-        sample_order_location: (json.order_location || ""),
-        sample_type: (json.sample_type || ""),
-        date_sample_drawn: (json.date_drawn || ""),
-        tests: (json.test_type || ""),
-        sample_priority: (json.priority || ""),
-        target_lab: (json.receiving_facility || ""),
-        art_start_date: (json.art_start_date || ""),
-        date_dispatched: (json.date_dispatched || ""),
-        date_received: (json.date_received || "")
+        national_patient_id: (json.patient.national_patient_id || "").trim(),
+        health_facility_name: (json.sending_facility || "").trim(),
+        first_name: (json.patient.first_name || "").trim(),
+        last_name: (json.patient.last_name || "").trim(),
+        middle_name: (json.patient.middle_name || "").trim(),
+        date_of_birth: (json.patient.date_of_birth || "").trim(),
+        gender: (json.patient.gender || "").trim(),
+        phone_number: (json.patient.phone_number || "").trim(),
+        district: (json.district || "").trim(),
+        reason_for_test: (json.reason_for_test || "").trim(),
+        sample_collector_last_name: (json.who_order_test.last_name || "").trim(),
+        sample_collector_first_name: (json.who_order_test.first_name || "").trim(),
+        sample_collector_phone_number: (json.who_order_test.phone_number || "").trim(),
+        sample_collector_id: (json.who_order_test.id_number || "").trim(),
+        sample_order_location: (json.order_location || "").trim(),
+        sample_type: (json.sample_type || "").trim(),
+        date_sample_drawn: (json.date_drawn || "").trim(),
+        tests: (""),
+        sample_priority: (json.priority || "").trim(),
+        target_lab: (json.receiving_facility || "").trim(),
+        art_start_date: (json.art_start_date || "").trim(),
+        date_dispatched: (json.date_dispatched || "").trim(),
+        date_received: (json.date_received || "").trim()
     }
 
     var keys = Object.keys(fields);
 
     for (var i = 0; i < keys.length; i++) {
 
-        if (__$(keys[i])) {
+        if (__$(keys[i]) && keys[i] != "tests") {
 
             __$(keys[i]).value = fields[keys[i]];
 
             if (keys[i] == "sample_type") {
 
+                __$(keys[i]).setAttribute("tag", JSON.stringify(json.test_types));
+
+                __$(keys[i]).onchange = function() {
+
+                    if(this.value.trim().length <= 0)
+                        return;
+
+                    ajaxLoad('/sample_tests/' + encodeURI(this.value.trim()), __$('tests'), JSON.parse(this.getAttribute("tag")));
+
+                }
+
                 __$(keys[i]).onchange();
 
-                var opts = __$("tests").options;
-
             }
-
-        }
-
-        if (keys[i] == "sample_type") {
-
 
         }
 
@@ -261,14 +267,43 @@ function saveRemoteRecord(json, url) {
 
                 var json = JSON.parse(httpRequest.responseText);
 
-                console.log(json);
-
             }
 
         }
     }
     httpRequest.open("POST", url, true);
     httpRequest.send(JSON.stringify(json));
+
+}
+
+function decodeEntry(type, value, control) {
+
+    if(!type || !value || !control) {
+        return;
+    }
+
+    var url = localQueryURL + "?type=" + type + "&value=" + value;
+
+    var httpRequest;
+    if (window.XMLHttpRequest) {
+        httpRequest = new XMLHttpRequest();
+    }
+
+    httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+
+            if (httpRequest.responseText.trim().length > 0) {
+
+                var result = httpRequest.responseText;
+
+                control.value = result;
+
+            }
+
+        }
+    }
+    httpRequest.open("GET", url, true);
+    httpRequest.send();
 
 }
 
