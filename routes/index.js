@@ -504,12 +504,19 @@ module.exports = function (router) {
     router.route('/lab_order')
         .get(function (req, res) {
 
+            var facilities = JSON.parse(fs.readFileSync(path.resolve('config', 'facilities.json'))).sort();
+
+            var districts = JSON.parse(fs.readFileSync(path.resolve('config', 'districts.json'))).sort();
+
             var url_parts = url.parse(req.url, true);
 
             var query = url_parts.query;
 
             var sample_types = ['DBS (Using capillary tube)', 'DBS (Free drop to DBS card)', 'Plasma', 'Whole Blood',
                 'Sputum', 'Pus'];
+
+            var reasons_for_testing = ["Routine", "Targeted (Treatment Failure Suspected)", "Other", "Redraw",
+                "Confirmatory (Follow up test after high viral load))"];
 
             // res.removeHeader('X-Frame-Options');
 
@@ -538,8 +545,13 @@ module.exports = function (router) {
                 info: (query.return_path ? "" : "Missing return path. Can't proceed!"),
                 art_start_date: (query.art_start_date || ""),
                 date_received: (query.date_received || ""),
-                date_dispatched: (query.date_dispatched || "")
-
+                date_dispatched: (query.date_dispatched || ""),
+                facilities: facilities,
+                districts: districts,
+                reasons_for_testing: reasons_for_testing,
+                health_facility_name: (query.health_facility_name || ""),
+                target_lab: (query.target_lab || ""),
+                localCreateURL: (query.localCreateURL || "")
             });
 
         })
@@ -548,10 +560,15 @@ module.exports = function (router) {
         .get(function (req, res) {
 
             var sample_types = {
-                "whole blood": ['FBC', 'WBC', 'VL', 'RBC']
+                "whole blood": ['FBC', 'WBC', 'VL', 'RBC'],
+                'dbs (using capillary tube)': ['Viral Load'],
+                'dbs (free drop to dbs card)': ['Viral Load'],
+                'plasma': ['Viral Load'],
+                'sputum': ['TB Test'],
+                'pus': ['Other']
             };
 
-            res.status(200).json(sample_types[req.params.id.replace(/\+/g, " ").toLowerCase()]);
+            res.status(200).json(sample_types[req.params.id.trim().toLowerCase()]);
 
         })
 
@@ -830,6 +847,8 @@ module.exports = function (router) {
 
                 params.tracking_number = tracking_number;
 
+                var localCreateURL = params.localCreateURL;
+
                 var link = params.return_path + "?";
 
                 var keys = Object.keys(params);
@@ -852,7 +871,44 @@ module.exports = function (router) {
 
                     if (!trackingNumberExists) {
 
-                        res.render("print", {id: params.tracking_number, path: link, params: params});
+                        var json = {
+                            "_id": params.tracking_number,
+                            "accession_number": params.accession_number,
+                            "patient": {
+                                "national_patient_id": params.national_patient_id,
+                                "first_name": params.first_name,
+                                "middle_name": params.middle_name,
+                                "last_name": params.last_name,
+                                "date_of_birth": params.date_of_birth,
+                                "gender": params.gender,
+                                "phone_number": params.phone_number
+                            },
+                            "sample_type": params.sample_type,
+                            "who_order_test": {
+                                "first_name": params.sample_collector_first_name,
+                                "last_name": params.sample_collector_last_name,
+                                "id_number": params.sample_collector_id,
+                                "phone_number": params.sample_collector_phone_number
+                            },
+                            "date_drawn": params.date_sample_drawn,
+                            "date_dispatched": params.date_dispatched,
+                            "art_start_date": params.art_start_date,
+                            "date_received": params.date_received,
+                            "sending_facility": params.health_facility_name,
+                            "receiving_facility": params.target_lab,
+                            "reason_for_test": params.reason_for_test,
+                            "test_types": params.tests,
+                            "status": (params.status || "Drawn"),
+                            "district": params.district,
+                            "priority": params.sample_priority,
+                            "order_location": params.sample_order_location,
+                            "results": {
+                            },
+                            "date_time": (params.date_time || "")
+                        };
+
+                        res.render("print", {id: params.tracking_number, path: link, params: JSON.stringify(json),
+                            localCreateURL: localCreateURL});
 
                     } else {
 

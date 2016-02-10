@@ -6,11 +6,13 @@
 
 "use strict"
 
+var selectedOptions = {};
+
 function __$(id) {
     return document.getElementById(id);
 }
 
-function ajaxLoad(url, control) {
+function ajaxLoad(url, control, defaultValues) {
 
     if (control) {
 
@@ -37,6 +39,20 @@ function ajaxLoad(url, control) {
                     var opt = document.createElement("option");
 
                     opt.innerHTML = json[i];
+
+                    if(defaultValues) {
+
+                        for(var j = 0; j < defaultValues.length; j++) {
+
+                            if(json[i] == defaultValues[j]) {
+
+                                opt.setAttribute("selected", true);
+
+                            }
+
+                        }
+
+                    }
 
                     if (control) {
 

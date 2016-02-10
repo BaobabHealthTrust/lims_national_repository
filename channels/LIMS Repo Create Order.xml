@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1454673835863</time>
+    <time>1455105205341</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>51</revision>
+  <revision>71</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -648,7 +648,17 @@
           <name>test_types</name>
           <script>tmp[&apos;data&apos;][&apos;test_types&apos;] = [];
 
+tmp[&apos;data&apos;][&apos;results&apos;] = {};
+
 logger.info(msg[&apos;OBR&apos;].length());
+
+var date = new Date();
+
+var timestamp = date.getFullYear() + (date.getMonth() + 1 &lt; 10 ? &quot;0&quot; + date.getMonth() : date.getMonth() + 1) + 
+	(date.getDate() &lt; 10 ? &quot;0&quot; + date.getDate() : date.getDate()) + (date.getHours() &lt; 10 ? &quot;0&quot; + date.getHours() : date.getHours()) +
+	(date.getMinutes() &lt; 10 ? &quot;0&quot; + date.getMinutes() : date.getMinutes());
+			
+logger.info(timestamp);
 
 for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
 
@@ -657,6 +667,16 @@ for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
 	if(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().length &gt; 0) {
 
 		tmp[&apos;data&apos;][&apos;test_types&apos;].push(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim());
+
+		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()] = {};
+
+		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()][timestamp] = {
+			&quot;test_status&quot; : validate(msg[&apos;NTE&apos;][0][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString(), &apos;&apos;, new Array()),
+			&quot;remarks&quot; : &quot;&quot;,
+			&quot;datetime_started&quot; : timestamp,
+			&quot;datetime_completed&quot; : &quot;&quot;,
+			&quot;results&quot;: {} 			
+		}
 		
 	}
 	
@@ -667,7 +687,17 @@ for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
               <string>Script</string>
               <string>tmp[&apos;data&apos;][&apos;test_types&apos;] = [];
 
+tmp[&apos;data&apos;][&apos;results&apos;] = {};
+
 logger.info(msg[&apos;OBR&apos;].length());
+
+var date = new Date();
+
+var timestamp = date.getFullYear() + (date.getMonth() + 1 &lt; 10 ? &quot;0&quot; + date.getMonth() : date.getMonth() + 1) + 
+	(date.getDate() &lt; 10 ? &quot;0&quot; + date.getDate() : date.getDate()) + (date.getHours() &lt; 10 ? &quot;0&quot; + date.getHours() : date.getHours()) +
+	(date.getMinutes() &lt; 10 ? &quot;0&quot; + date.getMinutes() : date.getMinutes());
+			
+logger.info(timestamp);
 
 for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
 
@@ -676,6 +706,16 @@ for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
 	if(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().length &gt; 0) {
 
 		tmp[&apos;data&apos;][&apos;test_types&apos;].push(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim());
+
+		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()] = {};
+
+		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()][timestamp] = {
+			&quot;test_status&quot; : validate(msg[&apos;NTE&apos;][0][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString(), &apos;&apos;, new Array()),
+			&quot;remarks&quot; : &quot;&quot;,
+			&quot;datetime_started&quot; : timestamp,
+			&quot;datetime_completed&quot; : &quot;&quot;,
+			&quot;results&quot;: {} 			
+		}
 		
 	}
 	

@@ -18,6 +18,8 @@ html
 
                         input(type="hidden" id="return_path" name="return_path" value="#{return_path}")
 
+                        input(type="hidden" id="localCreateURL" name="localCreateURL" value="#{localCreateURL}")
+
                         table(cellpadding=10)
                             tr
                                 th(colspan=3 style="font-size: 24px; border-bottom: 1px solid #ccc;" align="center")
@@ -52,8 +54,22 @@ html
                                     td(align="center")
                                         | :
                                     td
-                                        input(type="text" id="district" name="district" value="#{district}" class="text"
+                                        select(type="text" id="district" name="district" class="text"
                                                 required=true)
+                                            option
+                                            - for(var i = 0; i < districts.length; i++) {
+
+                                                - if(districts[i].trim() == district.trim()) {
+
+                                                    option(class='selected') #{districts[i]}
+
+                                                - } else {
+
+                                                    option #{districts[i]}
+
+                                                - }
+
+                                            - }
                                 tr
                                     th(align="right")
                                         | Health Facility Name
@@ -62,8 +78,22 @@ html
                                     td(align="center")
                                         | :
                                     td
-                                        input(type="text" id="health_facility_name" name="health_facility_name"
-                                                value="#{health_facility_name}" class="text" required=true)
+                                        select(type="text" id="health_facility_name" name="health_facility_name"
+                                                class="text" required=true)
+                                            option
+                                            - for(var i = 0; i < facilities.length; i++) {
+
+                                                - if(facilities[i].trim() == health_facility_name.trim()) {
+
+                                                    option(class='selected') #{facilities[i]}
+
+                                                - } else {
+
+                                                    option #{facilities[i]}
+
+                                                - }
+
+                                            - }
 
                                 tr
                                     th(align="right")
@@ -162,18 +192,21 @@ html
                                         | :
                                     td
                                         select(type="text" id="reason_for_test" class="text" required=true
-                                            name="reason_for_test" value="#{reason_for_test}" )
+                                                name="reason_for_test" )
                                             option
-                                            option
-                                                | Routine
-                                            option
-                                                | Targeted (Treatment Failure Suspected)
-                                            option
-                                                | Confirmatory (Follow up test after high viral load)
-                                            option
-                                                | Redraw
-                                            option
-                                                | Other
+                                            - for(var i = 0; i < reasons_for_testing.length; i++) {
+
+                                                - if(reasons_for_testing[i].trim() == reason_for_test.trim()) {
+
+                                                    option(class='selected') #{reasons_for_testing[i]}
+
+                                                - } else {
+
+                                                    option #{reasons_for_testing[i]}
+
+                                                - }
+
+                                            - }
                                 tr
                                     th(align="right")
                                         | Surname of Person Collecting Sample
@@ -391,13 +424,20 @@ html
                                     | :
                                 td(style="padding-right: 0px;")
                                     select(id="sample_type" name="sample_type"
-                                            onchange="if(this.value.trim().length <= 0) return; ajaxLoad('/sample_tests/' + this.value.trim().toLowerCase().replace(/\s/g, '+'), __$('tests'))"
+                                            onchange="if(this.value.trim().length <= 0) return; ajaxLoad('/sample_tests/' + encodeURI(this.value.trim()), __$('tests'))"
                                             class="text" required=true)
                                         option
                                         - for(var i = 0; i < sample_types.length; i++) {
 
-                                            option
-                                                =sample_types[i]
+                                            - if(sample_types[i].trim() == sample_type.trim()) {
+
+                                                option(class='selected') #{sample_types[i]}
+
+                                            - } else {
+
+                                                option #{sample_types[i]}
+
+                                            - }
 
                                         - }
                             tr
@@ -442,7 +482,21 @@ html
                                 td(align="center" style="vertical-align: top;")
                                     | :
                                 td
-                                    input(type="text" id="target_lab" name="target_lab" class="text" required=true)
+                                    select(type="text" id="target_lab" name="target_lab" class="text" required=true)
+                                        option
+                                        - for(var i = 0; i < facilities.length; i++) {
+
+                                            - if(facilities[i].trim() == target_lab.trim()) {
+
+                                                option(class='selected') #{facilities[i]}
+
+                                            - } else {
+
+                                                option #{facilities[i]}
+
+                                            - }
+
+                                        - }
 
                             tr
                                 th(align="right")
@@ -481,6 +535,10 @@ html
                         | Order Test(s)
 
         script.
+            selectedOptions = {
+                tests: []
+            };
+
             var info = "#{info}";
 
             if(info.trim().length > 0) {
@@ -496,3 +554,9 @@ html
             var picker4 = new Pikaday({ field: document.getElementById("date_dispatched")});
 
             var picker5 = new Pikaday({ field: document.getElementById("date_received")});
+
+            var selects = document.getElementsByClassName("selected");
+
+            for(var i = 0; i < selects.length; i++) {
+                selects[i].setAttribute("selected", true);
+            }
