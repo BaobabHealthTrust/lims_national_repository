@@ -471,11 +471,32 @@ module.exports = function (router) {
 
                 if (Object.keys(result).length > 0) {
 
-                    var json = params;
+                    var json = result;
 
-                    json._id = result._id;
+                    var keys = Object.keys(params.results);
 
-                    json._rev = result._rev;
+                    console.log(keys);
+
+                    var date = new Date();
+
+                    var timestamp = date.getFullYear() + (date.getMonth() + 1 < 10 ? "0" + date.getMonth() :
+                        date.getMonth() + 1) + (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
+                        (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + (date.getMinutes() < 10 ? "0" +
+                        date.getMinutes() : date.getMinutes());
+
+                    for(var i = 0; i < keys.length; i++) {
+
+                        if(json.test_types.indexOf(keys[i]) < 0) {
+
+                            json.test_types.push(keys[i]);
+
+                            json.results[keys[i]] = {};
+
+                        }
+
+                        json.results[keys[i]][timestamp] = params.results[keys[i]];
+
+                    }
 
                     doUpdate(json, function (success) {
 
