@@ -1,0 +1,84 @@
+{
+    "tracking_number": "",
+    "accession_number": "",
+    "sample_type": "",
+    "sample_status": "",
+    "order_location": "",
+    "priority": "",
+    "patient": {
+        "national_patient_id": "",
+        "first_name": "",
+        "last_name": "",
+        "middle_name": "",
+        "gender": "",
+        "date_of_birth": "",
+        "phone_number": ""
+    },
+    "date_drawn": "",
+    "date_received": "",
+    "who_order_test": {
+        "first_name": "",
+        "last_name": "",
+        "ID_number": ""
+    },
+    "test_types": [
+        "Urine Chemistries",
+        "Cross-match"
+    ],
+    "results": {
+        "Urine Chemistries": {
+            "20160209131902": {
+                "test_status": "drawn",
+                "remarks": "",
+                "datetime_started": "",
+                "datetime_completed": "",
+                "who_updated": {
+                    "first_name": "",
+                    "last_name": "",
+                    "ID_number": "",
+                    "phone_number": ""
+                },
+                "results": {
+                    "Sodium": "20mg/L",
+                    "Result2": "300ml/Ul",
+                    "Measure3": "Positive"
+                }
+            },
+            "20160209131902": {
+                "test_status": "started",
+                "remarks": "",
+                "datetime_started": "",
+                "datetime_completed": "",
+                "who_updated": {
+                    "first_name": "",
+                    "last_name": "",
+                    "ID_number": "",
+                    "phone_number": ""
+                },
+                "results": {
+                    "Sodium": "20mg/L",
+                    "Result2": "300ml/Ul",
+                    "Measure3": "Positive"
+                }
+            }
+        },
+        "Cross-match": {
+            "20160209121932": {
+                "test_status": "Rejected",
+                "remarks": "",
+                "datetime_started": "",
+                "datetime_completed": "",
+                "who_updated": {
+                    "first_name": "",
+                    "last_name": "",
+                    "ID_number": "",
+                    "phone_number": ""
+                },
+                "results": {
+                    "Sample ABO group": "A+ Rh-",
+                    "Pack ABO Group": "B+ RH-"
+                }
+            }
+        }
+    }
+}
