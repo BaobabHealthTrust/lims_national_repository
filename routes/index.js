@@ -479,7 +479,7 @@ module.exports = function (router) {
 
                     var date = new Date();
 
-                    json.sample_status = params.sample_status;
+                    json.status = params.sample_status;
 
                     var timestamp = date.getFullYear() + (date.getMonth() + 1 < 10 ? "0" + date.getMonth() :
                         date.getMonth() + 1) + (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
