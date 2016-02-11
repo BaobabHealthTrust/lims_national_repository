@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1455174665954</time>
+    <time>1455176864826</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>95</revision>
+  <revision>96</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -132,6 +132,30 @@ for(var i = 0; i &lt; msg[&apos;OBX&apos;].length(); i++) {
 	}
 	
 }</string>
+            </entry>
+          </data>
+        </step>
+        <step>
+          <sequenceNumber>2</sequenceNumber>
+          <name>sample_status</name>
+          <script>tmp[&apos;sample_status&apos;] = validate(msg[&apos;OBR&apos;][&apos;OBR.25&apos;][&apos;OBR.25.1&apos;].toString(), &apos;&apos;, new Array());</script>
+          <type>Message Builder</type>
+          <data>
+            <entry>
+              <string>Variable</string>
+              <string>tmp[&apos;sample_status&apos;]</string>
+            </entry>
+            <entry>
+              <string>Mapping</string>
+              <string>msg[&apos;OBR&apos;][&apos;OBR.25&apos;][&apos;OBR.25.1&apos;].toString()</string>
+            </entry>
+            <entry>
+              <string>DefaultValue</string>
+              <string></string>
+            </entry>
+            <entry>
+              <string>RegularExpressions</string>
+              <list/>
             </entry>
           </data>
         </step>
