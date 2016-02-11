@@ -502,11 +502,11 @@ module.exports = function (router) {
 
                         if (success) {
 
-                            res.status(200).json({status: "SUCCESS", data: json});
+                            res.status(200).json({status: "SUCCESS"});
 
                         } else {
 
-                            res.status(200).json({status: "FAILED", data: json});
+                            res.status(200).json({status: "FAILED"});
 
                         }
 
@@ -514,7 +514,7 @@ module.exports = function (router) {
 
                 } else {
 
-                    res.status(200).json({status: "FAILED", data: params});
+                    res.status(200).json({status: "FAILED"});
 
                 }
 
