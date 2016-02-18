@@ -9,530 +9,558 @@ html
         script(src="/library/javascripts/pikaday.js")
         script(src="/library/javascripts/lab_order.js")
         script(src="/library/javascripts/remote_query.js")
+
+        - if(ts) {
+
+            script.
+                var date = new Date();
+
+                tstCurrentDate = date.getFullYear() + "-" + (date.getMonth() + 1 < 10 ? "0" +
+                        (date.getMonth() + 1) : date.getMonth() + 1) + "-" + (date.getDate() + 1 < 10 ? "0" +
+                        date.getDate(): date.getDate());
+
+            script(language="javascript" type="text/javascript" src="/touchscreentoolkit/lib/javascripts/touchScreenToolkit.js" defer="true")
+
+        - }
     body
 
-        table(style="margin: auto;" cellpadding="10")
-            tr
-                td
-                    form(action="/create_hl7_order" method="post")
+        div(id="container")
+            div(id="content")
+                table(style="margin: auto;" cellpadding="10")
+                    tr
+                        td
+                            form(action="/create_hl7_order" method="post")
 
-                        input(type="hidden" id="return_path" name="return_path" value="#{return_path}")
+                                input(type="hidden" id="return_path" name="return_path" value="#{return_path}")
 
-                        input(type="hidden" id="localCreateURL" name="localCreateURL" value="#{localCreateURL}")
+                                input(type="hidden" id="localCreateURL" name="localCreateURL" value="#{localCreateURL}")
 
-                        table(cellpadding=10)
-                            tr
-                                th(colspan=3 style="font-size: 24px; border-bottom: 1px solid #ccc;" align="center")
-                                    | Patient Lab Order Entry
-                            tr
-                                td(colspan=3 style="font-size: 11px; font-style: italic; padding: 0px;" align="right"
-                                    class="required")
-                                    | * Required fields
+                                table(cellpadding=10)
+                                    tr
+                                        th(colspan=3 style="font-size: 24px; border-bottom: 1px solid #ccc;" align="center")
+                                            | Patient Lab Order Entry
+                                    tr
+                                        td(colspan=3 style="font-size: 11px; font-style: italic; padding: 0px;" align="right"
+                                            class="required")
+                                            | * Required fields
 
-                            tr
-                                th(align="right" style="vertical-align: top;")
-                                    | Tracking Number
-                                td(align="center" style="vertical-align: top;")
-                                    | :
-                                td
-                                    input(type="text" id="tracking_number" name="tracking_number" class="text" )
-                            tr
-                                th(align="right" style="vertical-align: top;")
-                                    | Accession Number
-                                td(align="center" style="vertical-align: top;")
-                                    | :
-                                td
-                                    input(type="text" id="accession_number" name="accession_number" class="text" )
+                                    tr
+                                        th(align="right" style="vertical-align: top;")
+                                            | Tracking Number
+                                        td(align="center" style="vertical-align: top;")
+                                            | :
+                                        td
+                                            input(type="text" id="tracking_number" name="tracking_number" class="text"
+                                                helpText="Tracking Number" optional="true" tt_onLoad="trackCustomField('touchscreenInput' + tstCurrentPage)"
+                                                tt_onUnLoad="clearCustomTracker()")
+                                    tr
+                                        th(align="right" style="vertical-align: top;")
+                                            | Accession Number
+                                        td(align="center" style="vertical-align: top;")
+                                            | :
+                                        td
+                                            input(type="text" id="accession_number" name="accession_number" class="text"
+                                                helpText="Accession Number" optional="true")
 
-                            - if(!hide_demographics) {
+                                    - if(!hide_demographics) {
 
-                                tr
-                                    th(align="right")
-                                        | District
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        select(type="text" id="district" name="district" class="text"
-                                                required=true)
-                                            option
-                                            - for(var i = 0; i < districts.length; i++) {
+                                        tr
+                                            th(align="right")
+                                                | District
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                select(type="text" id="district" name="district" class="text"
+                                                        required=true helpText="District" tt_pageStyleClass="longSelectList NoKeyboard")
+                                                    option
+                                                    - for(var i = 0; i < districts.length; i++) {
 
-                                                - if(districts[i].trim() == district.trim()) {
+                                                        - if(districts[i].trim() == district.trim()) {
 
-                                                    option(class='selected') #{districts[i]}
+                                                            option(class='selected') #{districts[i]}
 
-                                                - } else {
+                                                        - } else {
 
-                                                    option #{districts[i]}
+                                                            option #{districts[i]}
+
+                                                        - }
+
+                                                    - }
+                                        tr
+                                            th(align="right")
+                                                | Health Facility Name
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                select(type="text" id="health_facility_name" name="health_facility_name"
+                                                        class="text" required=true helpText="Health Facility Name")
+                                                    option
+                                                    - for(var i = 0; i < facilities.length; i++) {
+
+                                                        - if(facilities[i].trim() == health_facility_name.trim()) {
+
+                                                            option(class='selected') #{facilities[i]}
+
+                                                        - } else {
+
+                                                            option #{facilities[i]}
+
+                                                        - }
+
+                                                    - }
+
+                                        tr
+                                            th(align="right")
+                                                | First Name
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="first_name" name="first_name" value="#{first_name}"
+                                                    class="text" required=true helpText="First Name")
+                                        tr
+                                            th(align="right")
+                                                | Last Name
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="last_name" name="last_name" value="#{last_name}" class="text"
+                                                    required=true helpText="Last Name")
+                                        tr
+                                            th(align="right")
+                                                | Middle Name &nbsp;&nbsp;
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="middle_name" name="middle_name" value="#{middle_name}"
+                                                    class="text" helpText="Middle Name" optional="true")
+                                        tr
+                                            th(align="right")
+                                                | Date of Birth
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="date_of_birth" name="date_of_birth" value="#{date_of_birth}"
+                                                    class="text" required=true field_type="date" helpText="Date of Birth")
+                                        tr
+                                            th(align="right")
+                                                | Gender
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td(style="padding-right: 0px;")
+                                                select(id="gender" name="gender" class="text" required=true helpText="Gender")
+                                                    option
+                                                    - if(gender == "F") {
+
+                                                        option(value="F" selected)
+                                                            | Female
+                                                        option(value="M")
+                                                            | Male
+
+                                                    - } else if(gender == "M") {
+
+                                                        option(value="F")
+                                                            | Female
+                                                        option(value="M" selected)
+                                                            | Male
+
+                                                    - } else {
+
+                                                        option(value="F")
+                                                            | Female
+                                                        option(value="M")
+                                                            | Male
+
+                                                    - }
+                                        tr
+                                            th(align="right")
+                                                | National Patient ID
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="national_patient_id" class="text" required=true
+                                                    name="national_patient_id" value="#{national_patient_id}" helpText="National Patient ID" )
+                                        tr
+                                            th(align="right")
+                                                | Phone Number &nbsp;&nbsp;
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="phone_number" class="text"
+                                                    name="phone_number" value="#{phone_number}" helpText="Phone Number"
+                                                    optional="true" )
+                                        tr
+                                            th(align="right")
+                                                | Surname of Person Collecting Sample
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="sample_collector_last_name" class="text" required=true
+                                                    name="sample_collector_last_name" value="#{sample_collector_last_name}"
+                                                     helpText="Surname of Person Collecting Sample")
+                                        tr
+                                            th(align="right")
+                                                | First Name of Person Collecting Sample
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="sample_collector_first_name" class="text" required=true
+                                                    name="sample_collector_first_name" value="#{sample_collector_first_name}"
+                                                     helpText="First Name of Person Collecting Sample")
+                                        tr
+                                            th(align="right")
+                                                | Phone Number of Person Collecting Sample &nbsp;&nbsp;
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="sample_collector_phone_number" class="text"
+                                                    name="sample_collector_phone_number" value="#{sample_collector_phone_number}"
+                                                     helpText="Phone Number of Person Collecting Sample" optional="true")
+                                        tr
+                                            th(align="right")
+                                                | Provider ID of Person Collecting Sample
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                input(type="text" id="sample_collector_id" class="text" required=true
+                                                    name="sample_collector_id" value="#{sample_collector_id}"
+                                                    helpText="Provider ID of Person Collecting Sample" )
+                                        tr
+                                            th(align="right" style="vertical-align: top;")
+                                                | Order Location
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center" style="vertical-align: top;")
+                                                | :
+                                            td
+                                                input(type="text" id="sample_order_location" name="sample_order_location"
+                                                    class="text" required=true value="#{sample_order_location}"
+                                                    helpText="Order Location")
+
+                                    - } else {
+
+                                        tr
+                                            th(align="right")
+                                                | District
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =district
+                                                input(type="hidden" id="district" name="district" value="#{district}" class="text"
+                                                    required=true helpText="District" )
+                                        tr
+                                            th(align="right")
+                                                | Health Facility Name
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =health_facility_name
+                                                input(type="hidden" id="health_facility_name" name="health_facility_name"
+                                                    value="#{health_facility_name}" class="text" required=true
+                                                    helpText="Health Facility Name")
+
+                                        tr
+                                            th(align="right")
+                                                | First Name
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =first_name
+                                                input(type="hidden" id="first_name" name="first_name" value="#{first_name}"
+                                                 helpText="First Name")
+                                        tr
+                                            th(align="right")
+                                                | Last Name
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =last_name
+                                                input(type="hidden" id="last_name" name="last_name" value="#{last_name}"
+                                                 helpText="Last Name")
+                                        tr
+                                            th(align="right")
+                                                | Middle Name &nbsp;&nbsp;
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =middle_name
+                                                input(type="hidden" id="middle_name" name="middle_name" value="#{middle_name}"
+                                                 helpText="Middle Name" optional="true")
+                                        tr
+                                            th(align="right")
+                                                | Date of Birth
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =date_of_birth
+                                                input(type="hidden" id="date_of_birth" name="date_of_birth" value="#{date_of_birth}"
+                                                 helpText="Date of Birth" field_type="date")
+                                        tr
+                                            th(align="right")
+                                                | Gender
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td(style="padding-right: 0px;")
+                                                =gender
+                                                input(type="hidden" id="gender" name="gender" value="#{gender}" helpText="Gender" )
+                                        tr
+                                            th(align="right")
+                                                | National Patient ID
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =national_patient_id
+                                                input(type="hidden" id="national_patient_id" name="national_patient_id"
+                                                value="#{national_patient_id}" helpText="National Patient ID" )
+
+                                        tr
+                                            th(align="right")
+                                                | Phone Number &nbsp;&nbsp;
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =phone_number
+                                                input(type="hidden" id="phone_number" class="text" optional="true"
+                                                    name="phone_number" value="#{phone_number}" helpText="Phone Number" )
+                                        tr
+                                            th(align="right")
+                                                | Surname of Person Collecting Sample
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =sample_collector_last_name
+                                                input(type="hidden" id="sample_collector_last_name" class="text" required=true
+                                                    name="sample_collector_last_name" value="#{sample_collector_last_name}"
+                                                     helpText="Surname of Person Collecting Sample")
+                                        tr
+                                            th(align="right")
+                                                | First Name of Person Collecting Sample
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =sample_collector_first_name
+                                                input(type="hidden" id="sample_collector_first_name" class="text" required=true
+                                                    name="sample_collector_first_name" value="#{sample_collector_first_name}"
+                                                     helpText="First Name of Person Collecting Sample")
+                                        tr
+                                            th(align="right")
+                                                | Phone Number of Person Collecting Sample &nbsp;&nbsp;
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =sample_collector_phone_number
+                                                input(type="hidden" id="sample_collector_phone_number" class="text"
+                                                    name="sample_collector_phone_number" value="#{sample_collector_phone_number}"
+                                                     helpText="Phone Number of Person Collecting Sample")
+                                        tr
+                                            th(align="right")
+                                                | Provider ID of Person Collecting Sample
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center")
+                                                | :
+                                            td
+                                                =sample_collector_id
+                                                input(type="hidden" id="sample_collector_id" class="text" required=true
+                                                    name="sample_collector_id" value="#{sample_collector_id}"
+                                                    helpText="Provider ID of Person Collecting Sample" )
+                                        tr
+                                            th(align="right" style="vertical-align: top;")
+                                                | Order Location
+                                                b(class="required")
+                                                    | &nbsp;*
+                                            td(align="center" style="vertical-align: top;")
+                                                | :
+                                            td
+                                                =sample_order_location
+                                                input(type="hidden" id="sample_order_location" name="sample_order_location"
+                                                    class="text" required=true value="#{sample_order_location}"
+                                                    helpText="Order Location")
+                                    - }
+
+                                    tr
+                                        th(align="right")
+                                            | Reason for Test
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center")
+                                            | :
+                                        td
+                                            select(type="text" id="reason_for_test" class="text" required=true
+                                            name="reason_for_test" helpText="Reason for Test" tt_pageStyleClass="longSelectList NoKeyboard" )
+                                                option
+                                                - for(var i = 0; i < reasons_for_testing.length; i++) {
+
+                                                    - if(reasons_for_testing[i].trim() == reason_for_test.trim()) {
+
+                                                        option(class='selected') #{reasons_for_testing[i]}
+
+                                                    - } else {
+
+                                                        option #{reasons_for_testing[i]}
+
+                                                    - }
+
+                                                - }
+                                    tr
+                                        th(align="right")
+                                            | Sample Type
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center")
+                                            | :
+                                        td(style="padding-right: 0px;")
+                                            select(id="sample_type" name="sample_type"
+                                                    onchange="if(this.value.trim().length <= 0) return; ajaxLoad('/sample_tests/' + encodeURI(this.value.trim()), __$('tests'))"
+                                                    tt_onUnLoad="__$('tests').setAttribute('ajaxurl', '/custom_sample_tests/' + encodeURI(__$('sample_type').value.trim()));"
+                                                    class="text" required=true helpText="Sample Type" tt_pageStyleClass="longSelectList NoKeyboard")
+                                                option
+                                                - for(var i = 0; i < sample_types.length; i++) {
+
+                                                    - if(sample_types[i].trim() == sample_type.trim()) {
+
+                                                        option(class='selected') #{sample_types[i]}
+
+                                                    - } else {
+
+                                                        option #{sample_types[i]}
+
+                                                    - }
+
+                                                - }
+                                    tr
+                                        th(align="right")
+                                            | Date Sample Drawn
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center")
+                                            | :
+                                        td
+                                            input(type="text" id="date_sample_drawn" name="date_sample_drawn" value="#{date_sample_drawn}"
+                                                class="text" required=true helpText="Date Sample Drawn" field_type="date")
+                                    tr
+                                        th(align="right" style="vertical-align: top;")
+                                            | Test(s)
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center" style="vertical-align: top;")
+                                            | :
+                                        td(style="padding-right: 0px;")
+                                            select(id="tests" name="tests[]" multiple="multiple" class="text" required=true
+                                                helpText="Test(s)")
+                                                option
+                                    tr
+                                        th(align="right" style="vertical-align: top;")
+                                            | Priority
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center" style="vertical-align: top;")
+                                            | :
+                                        td
+                                            select(id="sample_priority" name="sample_priority" class="text" required=true
+                                                    helpText="Priority")
+                                                option
+                                                option
+                                                    | Routine
+                                                option
+                                                    | Stat
+                                    tr
+                                        th(align="right" style="vertical-align: top;")
+                                            | Target Laboratory
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center" style="vertical-align: top;")
+                                            | :
+                                        td
+                                            select(type="text" id="target_lab" name="target_lab" class="text" required=true
+                                                    helpText="Target Laboratory")
+                                                option
+                                                - for(var i = 0; i < facilities.length; i++) {
+
+                                                    - if(facilities[i].trim() == target_lab.trim()) {
+
+                                                        option(class='selected') #{facilities[i]}
+
+                                                    - } else {
+
+                                                        option #{facilities[i]}
+
+                                                    - }
 
                                                 - }
 
-                                            - }
-                                tr
-                                    th(align="right")
-                                        | Health Facility Name
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        select(type="text" id="health_facility_name" name="health_facility_name"
-                                                class="text" required=true)
-                                            option
-                                            - for(var i = 0; i < facilities.length; i++) {
+                                    tr
+                                        th(align="right")
+                                            | ART Start Date
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center")
+                                            | :
+                                        td
+                                            input(type="text" id="art_start_date" name="art_start_date" value="#{art_start_date}"
+                                            class="text" required=true helpText="ART Start Date" field_type="date")
+                                    tr
+                                        th(align="right")
+                                            | Date Dispatched
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center")
+                                            | :
+                                        td
+                                            input(type="text" id="date_dispatched" name="date_dispatched" value="#{date_dispatched}"
+                                            class="text" required=true helpText="Date Dispatched" field_type="date")
+                                    tr
+                                        th(align="right")
+                                            | Date Received
+                                            b(class="required")
+                                                | &nbsp;*
+                                        td(align="center")
+                                            | :
+                                        td
+                                            input(type="text" id="date_received" name="date_received" value="#{date_received}"
+                                            class="text" required=true helpText="Date Received" field_type="date")
 
-                                                - if(facilities[i].trim() == health_facility_name.trim()) {
-
-                                                    option(class='selected') #{facilities[i]}
-
-                                                - } else {
-
-                                                    option #{facilities[i]}
-
-                                                - }
-
-                                            - }
-
-                                tr
-                                    th(align="right")
-                                        | First Name
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="first_name" name="first_name" value="#{first_name}"
-                                            class="text" required=true)
-                                tr
-                                    th(align="right")
-                                        | Last Name
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="last_name" name="last_name" value="#{last_name}" class="text"
-                                            required=true)
-                                tr
-                                    th(align="right")
-                                        | Middle Name &nbsp;&nbsp;
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="middle_name" name="middle_name" value="#{middle_name}"
-                                            class="text")
-                                tr
-                                    th(align="right")
-                                        | Date of Birth
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="date_of_birth" name="date_of_birth" value="#{date_of_birth}"
-                                            class="text" required=true)
-                                tr
-                                    th(align="right")
-                                        | Gender
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td(style="padding-right: 0px;")
-                                        select(id="gender" name="gender" class="text" required=true)
-                                            option
-                                            - if(gender == "F") {
-
-                                                option(value="F" selected)
-                                                    | Female
-                                                option(value="M")
-                                                    | Male
-
-                                            - } else if(gender == "M") {
-
-                                                option(value="F")
-                                                    | Female
-                                                option(value="M" selected)
-                                                    | Male
-
-                                            - } else {
-
-                                                option(value="F")
-                                                    | Female
-                                                option(value="M")
-                                                    | Male
-
-                                            - }
-                                tr
-                                    th(align="right")
-                                        | National Patient ID
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="national_patient_id" class="text" required=true
-                                            name="national_patient_id" value="#{national_patient_id}" )
-                                tr
-                                    th(align="right")
-                                        | Phone Number &nbsp;&nbsp;
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="phone_number" class="text"
-                                            name="phone_number" value="#{phone_number}" )
-                                tr
-                                    th(align="right")
-                                        | Reason for Test
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        select(type="text" id="reason_for_test" class="text" required=true
-                                                name="reason_for_test" )
-                                            option
-                                            - for(var i = 0; i < reasons_for_testing.length; i++) {
-
-                                                - if(reasons_for_testing[i].trim() == reason_for_test.trim()) {
-
-                                                    option(class='selected') #{reasons_for_testing[i]}
-
-                                                - } else {
-
-                                                    option #{reasons_for_testing[i]}
-
-                                                - }
-
-                                            - }
-                                tr
-                                    th(align="right")
-                                        | Surname of Person Collecting Sample
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="sample_collector_last_name" class="text" required=true
-                                            name="sample_collector_last_name" value="#{sample_collector_last_name}" )
-                                tr
-                                    th(align="right")
-                                        | First Name of Person Collecting Sample
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="sample_collector_first_name" class="text" required=true
-                                            name="sample_collector_first_name" value="#{sample_collector_first_name}" )
-                                tr
-                                    th(align="right")
-                                        | Phone Number of Person Collecting Sample &nbsp;&nbsp;
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="sample_collector_phone_number" class="text"
-                                            name="sample_collector_phone_number" value="#{sample_collector_phone_number}" )
-                                tr
-                                    th(align="right")
-                                        | Provider ID of Person Collecting Sample
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        input(type="text" id="sample_collector_id" class="text" required=true
-                                            name="sample_collector_id" value="#{sample_collector_id}" )
-                                tr
-                                    th(align="right" style="vertical-align: top;")
-                                        | Order Location
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center" style="vertical-align: top;")
-                                        | :
-                                    td
-                                        input(type="text" id="sample_order_location" name="sample_order_location"
-                                            class="text" required=true value="#{sample_order_location}")
-
-                            - } else {
-
-                                tr
-                                    th(align="right")
-                                        | District
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =district
-                                        input(type="hidden" id="district" name="district" value="#{district}" class="text"
-                                            required=true)
-                                tr
-                                    th(align="right")
-                                        | Health Facility Name
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =health_facility_name
-                                        input(type="hidden" id="health_facility_name" name="health_facility_name"
-                                            value="#{health_facility_name}" class="text" required=true)
-
-                                tr
-                                    th(align="right")
-                                        | First Name
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =first_name
-                                        input(type="hidden" id="first_name" name="first_name" value="#{first_name}" )
-                                tr
-                                    th(align="right")
-                                        | Last Name
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =last_name
-                                        input(type="hidden" id="last_name" name="last_name" value="#{last_name}" )
-                                tr
-                                    th(align="right")
-                                        | Middle Name &nbsp;&nbsp;
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =middle_name
-                                        input(type="hidden" id="middle_name" name="middle_name" value="#{middle_name}" )
-                                tr
-                                    th(align="right")
-                                        | Date of Birth
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =date_of_birth
-                                        input(type="hidden" id="date_of_birth" name="date_of_birth" value="#{date_of_birth}" )
-                                tr
-                                    th(align="right")
-                                        | Gender
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td(style="padding-right: 0px;")
-                                        =gender
-                                        input(type="hidden" id="gender" name="gender" value="#{gender}" )
-                                tr
-                                    th(align="right")
-                                        | National Patient ID
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =national_patient_id
-                                        input(type="hidden" id="national_patient_id" name="national_patient_id" value="#{national_patient_id}" )
-
-                                tr
-                                    th(align="right")
-                                        | Phone Number &nbsp;&nbsp;
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =phone_number
-                                        input(type="hidden" id="phone_number" class="text"
-                                            name="phone_number" value="#{phone_number}" )
-                                tr
-                                    th(align="right")
-                                        | Reason for Test
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =reason_for_test
-                                        input(type="hidden" id="reason_for_test" class="text" required=true
-                                            name="reason_for_test" value="#{reason_for_test}" )
-                                tr
-                                    th(align="right")
-                                        | Surname of Person Collecting Sample
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =sample_collector_last_name
-                                        input(type="hidden" id="sample_collector_last_name" class="text" required=true
-                                            name="sample_collector_last_name" value="#{sample_collector_last_name}" )
-                                tr
-                                    th(align="right")
-                                        | First Name of Person Collecting Sample
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =sample_collector_first_name
-                                        input(type="hidden" id="sample_collector_first_name" class="text" required=true
-                                            name="sample_collector_first_name" value="#{sample_collector_first_name}" )
-                                tr
-                                    th(align="right")
-                                        | Phone Number of Person Collecting Sample &nbsp;&nbsp;
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =sample_collector_phone_number
-                                        input(type="hidden" id="sample_collector_phone_number" class="text"
-                                            name="sample_collector_phone_number" value="#{sample_collector_phone_number}" )
-                                tr
-                                    th(align="right")
-                                        | Provider ID of Person Collecting Sample
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center")
-                                        | :
-                                    td
-                                        =sample_collector_id
-                                        input(type="hidden" id="sample_collector_id" class="text" required=true
-                                            name="sample_collector_id" value="#{sample_collector_id}" )
-                                tr
-                                    th(align="right" style="vertical-align: top;")
-                                        | Order Location
-                                        b(class="required")
-                                            | &nbsp;*
-                                    td(align="center" style="vertical-align: top;")
-                                        | :
-                                    td
-                                        =sample_order_location
-                                        input(type="hidden" id="sample_order_location" name="sample_order_location"
-                                            class="text" required=true value="#{sample_order_location}")
-                            - }
-
-                            tr
-                                th(align="right")
-                                    | Sample Type
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center")
-                                    | :
-                                td(style="padding-right: 0px;")
-                                    select(id="sample_type" name="sample_type"
-                                            onchange="if(this.value.trim().length <= 0) return; ajaxLoad('/sample_tests/' + encodeURI(this.value.trim()), __$('tests'))"
-                                            class="text" required=true)
-                                        option
-                                        - for(var i = 0; i < sample_types.length; i++) {
-
-                                            - if(sample_types[i].trim() == sample_type.trim()) {
-
-                                                option(class='selected') #{sample_types[i]}
-
-                                            - } else {
-
-                                                option #{sample_types[i]}
-
-                                            - }
-
-                                        - }
-                            tr
-                                th(align="right")
-                                    | Date Sample Drawn
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center")
-                                    | :
-                                td
-                                    input(type="text" id="date_sample_drawn" name="date_sample_drawn" value="#{date_sample_drawn}"
-                                        class="text" required=true)
-                            tr
-                                th(align="right" style="vertical-align: top;")
-                                    | Test(s)
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center" style="vertical-align: top;")
-                                    | :
-                                td(style="padding-right: 0px;")
-                                    select(id="tests" name="tests[]" multiple="multiple" class="text" required=true)
-                                        option
-                            tr
-                                th(align="right" style="vertical-align: top;")
-                                    | Priority
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center" style="vertical-align: top;")
-                                    | :
-                                td
-                                    select(id="sample_priority" name="sample_priority" class="text" required=true)
-                                        option
-                                        option
-                                            | Routine
-                                        option
-                                            | Stat
-                            tr
-                                th(align="right" style="vertical-align: top;")
-                                    | Target Laboratory
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center" style="vertical-align: top;")
-                                    | :
-                                td
-                                    select(type="text" id="target_lab" name="target_lab" class="text" required=true)
-                                        option
-                                        - for(var i = 0; i < facilities.length; i++) {
-
-                                            - if(facilities[i].trim() == target_lab.trim()) {
-
-                                                option(class='selected') #{facilities[i]}
-
-                                            - } else {
-
-                                                option #{facilities[i]}
-
-                                            - }
-
-                                        - }
-
-                            tr
-                                th(align="right")
-                                    | ART Start Date
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center")
-                                    | :
-                                td
-                                    input(type="text" id="art_start_date" name="art_start_date" value="#{art_start_date}"
-                                    class="text" required=true)
-                            tr
-                                th(align="right")
-                                    | Date Dispatched
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center")
-                                    | :
-                                td
-                                    input(type="text" id="date_dispatched" name="date_dispatched" value="#{date_dispatched}"
-                                    class="text" required=true)
-                            tr
-                                th(align="right")
-                                    | Date Received
-                                    b(class="required")
-                                        | &nbsp;*
-                                td(align="center")
-                                    | :
-                                td
-                                    input(type="text" id="date_received" name="date_received" value="#{date_received}"
-                                    class="text" required=true)
-
-            tr
-                td(align="center" style="border-top: 1px solid #ccc;")
-                    button(style="margin: auto; padding: 15px; width: 150px; cursor: pointer;" onclick="validateForm()")
-                        | Order Test(s)
+                    tr
+                        td(align="center" style="border-top: 1px solid #ccc;")
+                            button(style="margin: auto; padding: 15px; width: 150px; cursor: pointer;" onclick="validateForm()")
+                                | Order Test(s)
 
         script.
             selectedOptions = {
@@ -556,6 +584,11 @@ html
             var picker5 = new Pikaday({ field: document.getElementById("date_received")});
 
             var selects = document.getElementsByClassName("selected");
+
+            remoteSearchURL = "/query_order/";
+            localSearchURL = "http://localhost/chai/test/query.php?id=";
+            localCreateURL = "http://localhost/chai/test/create.php";
+            localQueryURL = "http://localhost/chai/test/query.php";
 
             for(var i = 0; i < selects.length; i++) {
                 selects[i].setAttribute("selected", true);

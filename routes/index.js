@@ -10,7 +10,7 @@ module.exports = function (router) {
 
     var path = require("path");
 
-    var couch = require(path.resolve('public', 'javascripts', 'couch.js'));
+    var couch = require(path.resolve('public', 'library', 'javascripts', 'couch.js'));
 
     var url = require('url');
 
@@ -575,7 +575,8 @@ module.exports = function (router) {
                 reasons_for_testing: reasons_for_testing,
                 health_facility_name: (query.health_facility_name || ""),
                 target_lab: (query.target_lab || ""),
-                localCreateURL: (query.localCreateURL || "")
+                localCreateURL: (query.localCreateURL || ""),
+                ts: ((query.ts || "").trim().toLowerCase() == "true" ? true : false)
             });
 
         })
@@ -629,10 +630,10 @@ module.exports = function (router) {
             hl7[0][6][0][0] = (params.target_lab || "");
 
             hl7[0][7][0][0] = date.getFullYear() + (padZeros(date.getMonth() + 1, 2)) + padZeros(date.getDate(), 2) +
-                padZeros(date.getHours()) + padZeros(date.getMinutes(), 2) + padZeros(date.getSeconds(), 2);
+                padZeros(date.getHours(), 2) + padZeros(date.getMinutes(), 2) + padZeros(date.getSeconds(), 2);
 
             hl7[0][10][0][0] = date.getFullYear() + (padZeros(date.getMonth() + 1, 2)) + padZeros(date.getDate(), 2) +
-                padZeros(date.getHours()) + padZeros(date.getMinutes(), 2) + padZeros(date.getSeconds(), 2);
+                padZeros(date.getHours(), 2) + padZeros(date.getMinutes(), 2) + padZeros(date.getSeconds(), 2);
 
             // hl7[1][3][0][0] = (params.national_patient_id || "");
 
@@ -649,7 +650,7 @@ module.exports = function (router) {
                 var dob = (new Date(params.date_of_birth));
 
                 var formattedDob = dob.getFullYear() + (padZeros(dob.getMonth() + 1, 2)) + padZeros(dob.getDate(), 2) +
-                    padZeros(dob.getHours()) + padZeros(dob.getMinutes(), 2) + padZeros(dob.getSeconds(), 2);
+                    padZeros(dob.getHours(), 2) + padZeros(dob.getMinutes(), 2) + padZeros(dob.getSeconds(), 2);
 
                 hl7[1][7][0][0] = (formattedDob || "");
 
@@ -789,7 +790,7 @@ module.exports = function (router) {
                 var dateDrawn = ((new Date(params.date_sample_drawn)) || (new Date()));
 
                 var dateDrawnFormatted = dateDrawn.getFullYear() + (padZeros(dateDrawn.getMonth() + 1, 2)) +
-                    padZeros(dateDrawn.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(dateDrawn.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
                 hl7[5 + (2 * i)][7][0][0] = (!isNaN(dateDrawn.getFullYear()) ? dateDrawnFormatted : "");
@@ -797,7 +798,7 @@ module.exports = function (router) {
                 var artStartDate = ((new Date(params.art_start_date)) || (new Date()));
 
                 var artStartDateFormatted = artStartDate.getFullYear() + (padZeros(artStartDate.getMonth() + 1, 2)) +
-                    padZeros(artStartDate.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(artStartDate.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
                 hl7[5 + (2 * i)][6][0][0] = (!isNaN(artStartDate.getFullYear()) ? artStartDateFormatted : "");
@@ -805,7 +806,7 @@ module.exports = function (router) {
                 var dateReceived = ((new Date(params.date_received)) || (new Date()));
 
                 var dateReceivedFormatted = dateReceived.getFullYear() + (padZeros(dateReceived.getMonth() + 1, 2)) +
-                    padZeros(dateReceived.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(dateReceived.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
                 hl7[5 + (2 * i)][14][0][0] = (!isNaN(dateReceived.getFullYear()) ? dateReceivedFormatted : "");
@@ -813,7 +814,7 @@ module.exports = function (router) {
                 var dateDispatched = ((new Date(params.date_dispatched)) || (new Date()));
 
                 var dateDispatchedFormatted = dateDispatched.getFullYear() + (padZeros(dateDispatched.getMonth() + 1, 2)) +
-                    padZeros(dateDispatched.getDate(), 2) + padZeros(today.getHours()) + padZeros(today.getMinutes(), 2) +
+                    padZeros(dateDispatched.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
                     padZeros(today.getSeconds(), 2);
 
                 hl7[5 + (2 * i)][8][0][0] = (!isNaN(dateDispatched.getFullYear()) ? dateDispatchedFormatted : "");

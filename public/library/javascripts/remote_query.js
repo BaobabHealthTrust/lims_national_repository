@@ -4,9 +4,9 @@
 
 "use strict"
 
-var localSearchURL = "http://localhost/chai/test/query.php?id=";
-
 var remoteSearchURL = "/query_order/";
+
+var localSearchURL = "http://localhost/chai/test/query.php?id=";
 
 var localCreateURL = "http://localhost/chai/test/create.php";
 
@@ -304,6 +304,35 @@ function decodeEntry(type, value, control) {
     }
     httpRequest.open("GET", url, true);
     httpRequest.send();
+
+}
+
+var intervalTracker;
+
+function trackCustomField(id) {
+
+    intervalTracker = setInterval(function () {
+
+        if (__$(id)) {
+
+            if (__$(id).value.trim().match(/\$/)) {
+
+                __$(id).value = __$(id).value.replace(/\$/g, "");
+
+                queryByTrackingNumber(localSearchURL + __$(id).value.trim(), populateForm,
+                        remoteSearchURL + __$(id).value.trim());
+
+            }
+
+        }
+
+    }, 200);
+
+}
+
+function clearCustomTracker() {
+
+    clearInterval(intervalTracker);
 
 }
 
