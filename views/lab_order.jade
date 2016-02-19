@@ -449,7 +449,7 @@ html
                                         td(style="padding-right: 0px;")
                                             select(id="sample_type" name="sample_type"
                                                     onchange="if(this.value.trim().length <= 0) return; ajaxLoad('/sample_tests/' + encodeURI(this.value.trim()), __$('tests'))"
-                                                    tt_onUnLoad="__$('tests').setAttribute('ajaxurl', '/custom_sample_tests/' + encodeURI(__$('sample_type').value.trim()));"
+                                                    tt_onUnLoad="__$('tests').setAttribute('ajaxurl', '/custom_sample_tests/' + encodeURI(__$('sample_type').value.trim())) + '?other=';"
                                                     class="text" required=true helpText="Sample Type" tt_pageStyleClass="longSelectList NoKeyboard")
                                                 option
                                                 - for(var i = 0; i < sample_types.length; i++) {
@@ -483,9 +483,11 @@ html
                                         td(align="center" style="vertical-align: top;")
                                             | :
                                         td(style="padding-right: 0px;")
+
                                             select(id="tests" name="tests[]" multiple="multiple" class="text" required=true
-                                                helpText="Test(s)")
-                                                option
+                                                    helpText="Test(s)")
+                                                    option
+
                                     tr
                                         th(align="right" style="vertical-align: top;")
                                             | Priority
@@ -589,6 +591,7 @@ html
             localSearchURL = "http://localhost/chai/test/query.php?id=";
             localCreateURL = "http://localhost/chai/test/create.php";
             localQueryURL = "http://localhost/chai/test/query.php";
+            localViewOnlyURL = "http://localhost:3000/lims/show/";
 
             for(var i = 0; i < selects.length; i++) {
                 selects[i].setAttribute("selected", true);

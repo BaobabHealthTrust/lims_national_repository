@@ -1033,6 +1033,37 @@ module.exports = function (router) {
 
         });
 
+    router.route('/query_results/:id')
+        .get(function (req, res) {
+
+            doRead(req.params.id, function (result) {
+
+                var results = {};
+
+                for(var i = 0; i < result.test_types.length; i++) {
+
+                    if(!result.results[result.test_types[i]]) {
+
+                        continue;
+
+                    }
+
+                    var timestamps = Object.keys(result.results[result.test_types[i]]).sort();
+
+                    results[result.test_types[i]] = {};
+
+                    results[result.test_types[i]][timestamps[timestamps.length - 1]] = result.results[result.test_types[i]][timestamps[timestamps.length - 1]]
+
+                }
+
+                console.log(JSON.stringify(results));
+
+                res.status(200).json(result);
+
+            }, true)
+
+        })
+
     return router;
 
 }
