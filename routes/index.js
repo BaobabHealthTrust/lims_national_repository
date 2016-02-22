@@ -1058,6 +1058,9 @@ module.exports = function (router) {
 
                 console.log(JSON.stringify(results));
 
+                // Overwrite the rest of the results with our selected set only
+                result.results = results;
+
                 res.status(200).json(result);
 
             }, true)
