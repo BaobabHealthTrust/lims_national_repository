@@ -4,13 +4,15 @@
 
 "use strict"
 
-var localSearchURL = "http://localhost/chai/test/query.php?id=";
-
 var remoteSearchURL = "/query_order/";
+
+var localSearchURL = "http://localhost/chai/test/query.php?id=";
 
 var localCreateURL = "http://localhost/chai/test/create.php";
 
 var localQueryURL = "http://localhost/chai/test/query.php";
+
+var localViewOnlyURL = "http://localhost:3000/lims/show/";
 
 var noLocalCopy = false;
 
@@ -142,6 +144,14 @@ function populateForm(json) {
 
         noLocalCopy = false;
 
+    } else {
+
+        if(localViewOnlyURL && localViewOnlyURL.trim().length > 0) {
+
+            window.location = localViewOnlyURL + json._id;
+
+        }
+
     }
 
 }
@@ -187,50 +197,6 @@ function clearFields() {
 
 }
 
-/*
- var json = {
- "_id": "XKCH1625002",
- "_rev": "1-1cdbba07933b8ec793980571322dedf2",
- "accession_number": "10002",
- "patient": {
- "national_patient_id": "XXXYYY",
- "first_name": "John",
- "middle_name": "Yohane",
- "last_name": "Banda",
- "date_of_birth": "2008021300000",
- "gender": "M",
- "phone_number": "N/A"
- },
- "sample_type": "DBS (Using capillary tube)",
- "who_order_test": {
- "first_name": "User",
- "last_name": "Trial",
- "id_number": "P3920",
- "phone_number": "09999999"
- },
- "date_drawn": "20160205143917",
- "date_dispatched": "20160205143917",
- "art_start_date": "20100406143917",
- "date_received": "20160205143917",
- "sending_facility": "Kamuzu (KCH) Central Hospital",
- "receiving_facility": "Kamuzu (KCH) Central Hospital",
- "reason_for_test": "Targeted (Treatment Failure Suspected)",
- "test_types": [
- "WBC",
- "RBC"
- ],
- "status": "Drawn",
- "district": "Lilongwe",
- "priority": "Routine",
- "order_location": "Ward 4B",
- "results": {
- },
- "date_time": "20160205143917"
- };
-
- saveRemoteRecord(json, localCreateURL);
- */
-
 function saveRemoteRecord(json, url) {
 
     var dates = ["date_time", "date_drawn", "art_start_date", "date_dispatched", "date_received"];
@@ -260,12 +226,20 @@ function saveRemoteRecord(json, url) {
         httpRequest = new XMLHttpRequest();
     }
 
+    var trackingNumber = json._id;
+
     httpRequest.onreadystatechange = function () {
         if (httpRequest.readyState == 4 && httpRequest.status == 200) {
 
             if (httpRequest.responseText.trim().length > 0) {
 
                 var json = JSON.parse(httpRequest.responseText);
+
+                if(localViewOnlyURL && localViewOnlyURL.trim().length > 0) {
+
+                    window.location = localViewOnlyURL + trackingNumber;
+
+                }
 
             }
 
@@ -304,6 +278,35 @@ function decodeEntry(type, value, control) {
     }
     httpRequest.open("GET", url, true);
     httpRequest.send();
+
+}
+
+var intervalTracker;
+
+function trackCustomField(id) {
+
+    intervalTracker = setInterval(function () {
+
+        if (__$(id)) {
+
+            if (__$(id).value.trim().match(/\$/)) {
+
+                __$(id).value = __$(id).value.replace(/\$/g, "");
+
+                queryByTrackingNumber(localSearchURL + __$(id).value.trim(), populateForm,
+                        remoteSearchURL + __$(id).value.trim());
+
+            }
+
+        }
+
+    }, 200);
+
+}
+
+function clearCustomTracker() {
+
+    clearInterval(intervalTracker);
 
 }
 

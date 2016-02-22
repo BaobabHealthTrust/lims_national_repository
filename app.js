@@ -8,7 +8,7 @@ var path = require("path");
 
 var router = express.Router();
 
-var couch = require(path.resolve('public', 'javascripts', 'couch.js'));
+var couch = require(path.resolve('public', 'library', 'javascripts', 'couch.js'));
 
 var fs = require("fs");
 var md5 = require('md5');
@@ -51,12 +51,24 @@ if(process.env.BHT_MODULE) {
 
 } else {
 
-    portfinder.getPort(function (err, port) {
+    if(false) {
+
+        portfinder.getPort(function (err, port) {
+
+            app.listen(port, function () {
+                console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
+            });
+
+        });
+
+    } else {
+
+        var port = portfinder.basePort;
 
         app.listen(port, function () {
             console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
         });
 
-    });
+    }
 
 }
