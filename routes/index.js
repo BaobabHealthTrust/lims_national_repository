@@ -231,7 +231,7 @@ module.exports = function (router) {
 
         console.log(id);
 
-        if(format == undefined) {
+        if (format == undefined) {
 
             format = false;
 
@@ -251,7 +251,7 @@ module.exports = function (router) {
 
             if (!err) {
 
-                if(format) {
+                if (format) {
 
                     var keys = Object.keys(pbody);
 
@@ -439,7 +439,7 @@ module.exports = function (router) {
 
             doRead(query.id, function (result) {
 
-                res.status(200).json({data: result});
+                res.status(200).json(result);
 
             }, true)
 
@@ -450,7 +450,7 @@ module.exports = function (router) {
 
             doReadByNPID(req.params.id, function (result) {
 
-                res.status(200).json({data: result});
+                res.status(200).json(result);
 
             })
 
@@ -487,9 +487,9 @@ module.exports = function (router) {
                         date.getMinutes() : date.getMinutes()) + (date.getSeconds() < 10 ? "0" +
                         date.getSeconds() : date.getSeconds());
 
-                    for(var i = 0; i < keys.length; i++) {
+                    for (var i = 0; i < keys.length; i++) {
 
-                        if(json.test_types.indexOf(keys[i]) < 0) {
+                        if (json.test_types.indexOf(keys[i]) < 0) {
 
                             json.test_types.push(keys[i]);
 
@@ -997,7 +997,7 @@ module.exports = function (router) {
 
                 label += 'A6,172,0,2,1,1,N,"' + (result.test_types || []).join(",") + '"\n';
 
-                if(result.priority.toString().toLowerCase().trim().match(/^stat/)) {
+                if (result.priority.toString().toLowerCase().trim().match(/^stat/)) {
 
                     label += 'A24,6,1,2,1,1,R,"   STAT   "\n';
 
@@ -1038,11 +1038,21 @@ module.exports = function (router) {
 
             doRead(req.params.id, function (result) {
 
+                if (!result.test_types) {
+
+                    console.log(result);
+
+                    res.status(200).json({});
+
+                    return;
+
+                }
+
                 var results = {};
 
-                for(var i = 0; i < result.test_types.length; i++) {
+                for (var i = 0; i < result.test_types.length; i++) {
 
-                    if(!result.results[result.test_types[i]]) {
+                    if (!result.results[result.test_types[i]]) {
 
                         continue;
 
