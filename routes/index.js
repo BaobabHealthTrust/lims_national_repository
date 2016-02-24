@@ -890,7 +890,7 @@ module.exports = function (router) {
 
                 if (params.return_json == 'true') {
 
-                    res.status(200).json({'params': params});
+                    res.status(200).json(params);
 
                 } else {
 
