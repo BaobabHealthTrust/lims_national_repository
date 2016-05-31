@@ -1,12 +1,11 @@
 {
     "protocol": "http",
-    "host": "xxx.xxx.xxx.xxx",
-    "port": "xxxxx",
-    "username": "xxxxxx",
-    "password": "xxxxxx",
-    "site_code": "xxx",
-    "district_code": "xxxxxxx",
-    "mirth_host": "xxxxx",
-    "mirth_username": "xxxxxxx",
-    "mirth_password": "xxxxxxxxx"
+    "host": "localhost",
+    "port": "5984",
+    "username": "root",
+    "password": "password",
+    "site_code": "KCH",
+    "mirth_host": "http://localhost:3016/create_order/",
+    "mirth_username": "admin",
+    "mirth_password": "admin"
 }
