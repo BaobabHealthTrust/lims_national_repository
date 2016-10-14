@@ -1,6 +1,29 @@
 /*
  * GET home page.
  */
+Date.prototype.YYYYMMDDHHMMSS = function () {
+    var yyyy = this.getFullYear().toString();
+    var MM = pad(this.getMonth() + 1,2);
+    var dd = pad(this.getDate(), 2);
+    var hh = pad(this.getHours(), 2);
+    var mm = pad(this.getMinutes(), 2)
+    var ss = pad(this.getSeconds(), 2)
+
+    return yyyy + MM + dd+  hh + mm + ss;
+};
+
+
+
+function pad(number, length) {
+
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+
+    return str;
+
+}
 
 module.exports = function (router) {
 
@@ -460,6 +483,9 @@ module.exports = function (router) {
         .post(function (req, res) {
 
             var params = req.body;
+            console.log(params);
+
+            //return res.status(200).json(params);
 
             if (params.data) {
 
@@ -479,13 +505,11 @@ module.exports = function (router) {
 
                     var date = new Date();
 
-                    json.status = params.sample_status;
+                    if (params.sample_status) {
+                        json.status = params.sample_status;
+                    }
 
-                    var timestamp = date.getFullYear() + (date.getMonth() + 1 < 10 ? "0" + date.getMonth() :
-                        date.getMonth() + 1) + (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
-                        (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + (date.getMinutes() < 10 ? "0" +
-                        date.getMinutes() : date.getMinutes()) + (date.getSeconds() < 10 ? "0" +
-                        date.getSeconds() : date.getSeconds());
+                    var timestamp = date.YYYYMMDDHHMMSS();
 
                     for (var i = 0; i < keys.length; i++) {
 
@@ -497,6 +521,9 @@ module.exports = function (router) {
 
                         }
 
+                        if (!json.results[keys[i]]){
+                            json.results[keys[i]] = {}
+                        }
                         json.results[keys[i]][timestamp] = params.results[keys[i]];
 
                     }
@@ -629,11 +656,9 @@ module.exports = function (router) {
 
             hl7[0][6][0][0] = (params.target_lab || "");
 
-            hl7[0][7][0][0] = date.getFullYear() + (padZeros(date.getMonth() + 1, 2)) + padZeros(date.getDate(), 2) +
-                padZeros(date.getHours(), 2) + padZeros(date.getMinutes(), 2) + padZeros(date.getSeconds(), 2);
+            hl7[0][7][0][0] = date.YYYYMMDDHHMMSS();
 
-            hl7[0][10][0][0] = date.getFullYear() + (padZeros(date.getMonth() + 1, 2)) + padZeros(date.getDate(), 2) +
-                padZeros(date.getHours(), 2) + padZeros(date.getMinutes(), 2) + padZeros(date.getSeconds(), 2);
+            hl7[0][10][0][0] = date.YYYYMMDDHHMMSS();
 
             // hl7[1][3][0][0] = (params.national_patient_id || "");
 
@@ -649,8 +674,7 @@ module.exports = function (router) {
 
                 var dob = (new Date(params.date_of_birth));
 
-                var formattedDob = dob.getFullYear() + (padZeros(dob.getMonth() + 1, 2)) + padZeros(dob.getDate(), 2) +
-                    padZeros(dob.getHours(), 2) + padZeros(dob.getMinutes(), 2) + padZeros(dob.getSeconds(), 2);
+                var formattedDob = dob.YYYYMMDDHHMMSS();
 
                 hl7[1][7][0][0] = (formattedDob || "");
 
@@ -789,33 +813,25 @@ module.exports = function (router) {
 
                 var dateDrawn = ((new Date(params.date_sample_drawn)) || (new Date()));
 
-                var dateDrawnFormatted = dateDrawn.getFullYear() + (padZeros(dateDrawn.getMonth() + 1, 2)) +
-                    padZeros(dateDrawn.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
-                    padZeros(today.getSeconds(), 2);
+                var dateDrawnFormatted = dateDrawn.YYYYMMDDHHMMSS();
 
                 hl7[5 + (2 * i)][7][0][0] = (!isNaN(dateDrawn.getFullYear()) ? dateDrawnFormatted : "");
 
                 var artStartDate = ((new Date(params.art_start_date)) || (new Date()));
 
-                var artStartDateFormatted = artStartDate.getFullYear() + (padZeros(artStartDate.getMonth() + 1, 2)) +
-                    padZeros(artStartDate.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
-                    padZeros(today.getSeconds(), 2);
+                var artStartDateFormatted = artStartDate.YYYYMMDDHHMMSS();
 
                 hl7[5 + (2 * i)][6][0][0] = (!isNaN(artStartDate.getFullYear()) ? artStartDateFormatted : "");
 
                 var dateReceived = ((new Date(params.date_received)) || (new Date()));
 
-                var dateReceivedFormatted = dateReceived.getFullYear() + (padZeros(dateReceived.getMonth() + 1, 2)) +
-                    padZeros(dateReceived.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
-                    padZeros(today.getSeconds(), 2);
+                var dateReceivedFormatted = dateReceived.YYYYMMDDHHMMSS();
 
                 hl7[5 + (2 * i)][14][0][0] = (!isNaN(dateReceived.getFullYear()) ? dateReceivedFormatted : "");
 
                 var dateDispatched = ((new Date(params.date_dispatched)) || (new Date()));
 
-                var dateDispatchedFormatted = dateDispatched.getFullYear() + (padZeros(dateDispatched.getMonth() + 1, 2)) +
-                    padZeros(dateDispatched.getDate(), 2) + padZeros(today.getHours(), 2) + padZeros(today.getMinutes(), 2) +
-                    padZeros(today.getSeconds(), 2);
+                var dateDispatchedFormatted = dateDispatched.YYYYMMDDHHMMSS();
 
                 hl7[5 + (2 * i)][8][0][0] = (!isNaN(dateDispatched.getFullYear()) ? dateDispatchedFormatted : "");
 
@@ -831,7 +847,7 @@ module.exports = function (router) {
 
                 hl7[5 + (2 * i)][16][0][3] = (params.sample_collector_phone_number || "");
 
-                hl7[6 + (2 * i)][3][0][0] = "Drawn";
+                hl7[6 + (2 * i)][3][0][0] = (params.status || "Drawn");
 
             }
 
