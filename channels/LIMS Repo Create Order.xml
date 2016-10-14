@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1455192790571</time>
+    <time>1476452651900</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>72</revision>
+  <revision>4</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -654,7 +654,7 @@ logger.info(msg[&apos;OBR&apos;].length());
 
 var date = new Date();
 
-var timestamp = date.getFullYear() + (date.getMonth() + 1 &lt; 10 ? &quot;0&quot; + date.getMonth() : date.getMonth() + 1) + 
+var timestamp = &quot;&quot; + date.getFullYear() + (date.getMonth() + 1 &lt; 10 ? &quot;0&quot; + date.getMonth() : date.getMonth() + 1) + 
 	(date.getDate() &lt; 10 ? &quot;0&quot; + date.getDate() : date.getDate()) + (date.getHours() &lt; 10 ? &quot;0&quot; + date.getHours() : date.getHours()) +
 	(date.getMinutes() &lt; 10 ? &quot;0&quot; + date.getMinutes() : date.getMinutes()) + (date.getSeconds() &lt; 10 ? &quot;0&quot; +
                         date.getSeconds() : date.getSeconds());
@@ -694,7 +694,7 @@ logger.info(msg[&apos;OBR&apos;].length());
 
 var date = new Date();
 
-var timestamp = date.getFullYear() + (date.getMonth() + 1 &lt; 10 ? &quot;0&quot; + date.getMonth() : date.getMonth() + 1) + 
+var timestamp = &quot;&quot; + date.getFullYear() + (date.getMonth() + 1 &lt; 10 ? &quot;0&quot; + date.getMonth() : date.getMonth() + 1) + 
 	(date.getDate() &lt; 10 ? &quot;0&quot; + date.getDate() : date.getDate()) + (date.getHours() &lt; 10 ? &quot;0&quot; + date.getHours() : date.getHours()) +
 	(date.getMinutes() &lt; 10 ? &quot;0&quot; + date.getMinutes() : date.getMinutes()) + (date.getSeconds() &lt; 10 ? &quot;0&quot; +
                         date.getSeconds() : date.getSeconds());
