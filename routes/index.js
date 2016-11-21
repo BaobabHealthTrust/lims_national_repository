@@ -499,7 +499,11 @@ module.exports = function (router) {
 
                     var json = result;
 
-                    var keys = Object.keys(params.results);
+                    var keys = [];
+
+                    if (params.results) {
+                        var keys = Object.keys(params.results);
+                    }
 
                     console.log(keys);
 
