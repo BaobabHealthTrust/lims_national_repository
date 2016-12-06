@@ -700,7 +700,7 @@ module.exports = function (router) {
 
             hl7[2][14][0][0] = (params.sample_collector_phone_number || "");
 
-            hl7[2][22][0][2] = (params.district || "");
+            hl7[2][22][0][2] = ((params.district && params.district.length > 0) ? params.district : JSON.parse(configs)["district"]);
 
             hl7[2][13][0][1] = (params.sample_order_location || "");
 
