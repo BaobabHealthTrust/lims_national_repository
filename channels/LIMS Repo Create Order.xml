@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1476452651900</time>
+    <time>1481194341218</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>4</revision>
+  <revision>39</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -662,16 +662,18 @@ var timestamp = &quot;&quot; + date.getFullYear() + (date.getMonth() + 1 &lt; 10
 logger.info(timestamp);
 
 for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
-
+	
 	logger.info(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString());
 
 	if(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().length &gt; 0) {
 
-		tmp[&apos;data&apos;][&apos;test_types&apos;].push(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim());
+		var test_type = msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().replace(/ampersand/, &quot;&amp;&quot;);
 
-		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()] = {};
+		tmp[&apos;data&apos;][&apos;test_types&apos;].push(test_type);
 
-		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()][timestamp] = {
+		tmp[&apos;data&apos;][&apos;results&apos;][test_type] = {};
+
+		tmp[&apos;data&apos;][&apos;results&apos;][test_type][timestamp] = {
 			&quot;test_status&quot; : validate(msg[&apos;NTE&apos;][0][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString(), &apos;&apos;, new Array()),
 			&quot;remarks&quot; : &quot;&quot;,
 			&quot;datetime_started&quot; : timestamp,
@@ -702,16 +704,18 @@ var timestamp = &quot;&quot; + date.getFullYear() + (date.getMonth() + 1 &lt; 10
 logger.info(timestamp);
 
 for(var i = 0; i &lt; msg[&apos;OBR&apos;].length(); i++) {
-
+	
 	logger.info(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString());
 
 	if(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().length &gt; 0) {
 
-		tmp[&apos;data&apos;][&apos;test_types&apos;].push(msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim());
+		var test_type = msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim().replace(/ampersand/, &quot;&amp;&quot;);
 
-		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()] = {};
+		tmp[&apos;data&apos;][&apos;test_types&apos;].push(test_type);
 
-		tmp[&apos;data&apos;][&apos;results&apos;][msg[&apos;OBR&apos;][i][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString().trim()][timestamp] = {
+		tmp[&apos;data&apos;][&apos;results&apos;][test_type] = {};
+
+		tmp[&apos;data&apos;][&apos;results&apos;][test_type][timestamp] = {
 			&quot;test_status&quot; : validate(msg[&apos;NTE&apos;][0][&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString(), &apos;&apos;, new Array()),
 			&quot;remarks&quot; : &quot;&quot;,
 			&quot;datetime_started&quot; : timestamp,

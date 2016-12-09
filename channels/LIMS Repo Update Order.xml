@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1455176864826</time>
+    <time>1481194039427</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>96</revision>
+  <revision>12</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -77,8 +77,10 @@ logger.info(msg[&apos;OBX&apos;].length());
 for(var i = 0; i &lt; msg[&apos;OBX&apos;].length(); i++) {
 
 	if(msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim().length &gt; 0) {
-
-		tmp[&apos;results&apos;][msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim()] = {
+		//.replace(/\\T\\/g, &quot;\&amp;amp;&quot;) to escape &amp;
+		var test_type = msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim().replace(/ampersand/g, &quot;&amp;&quot;);
+		logger.info(test_type);
+		tmp[&apos;results&apos;][test_type] = {
 			&quot;test_status&quot; : validate(msg[&apos;OBX&apos;][i][&apos;OBX.11&apos;][&apos;OBX.11.1&apos;].toString(), &apos;&apos;, new Array()),
 			&quot;remarks&quot; : &quot;&quot;,
 			&quot;datetime_started&quot; : validate(msg[&apos;OBX&apos;][0][&apos;OBX.7&apos;][&apos;OBX.7.1&apos;].toString(), &apos;&apos;, new Array()),
@@ -93,7 +95,7 @@ for(var i = 0; i &lt; msg[&apos;OBX&apos;].length(); i++) {
 			&quot;results&quot;: {} 			
 		}
 
-		tmp[&apos;results&apos;][msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim()][&apos;results&apos;][validate(msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString(), &apos;&apos;, new Array())] = 
+		tmp[&apos;results&apos;][test_type][&apos;results&apos;][validate(test_type, &apos;&apos;, new Array())] = 
 				validate(msg[&apos;OBX&apos;][i][&apos;OBX.5&apos;][&apos;OBX.5.1&apos;].toString(), &apos;&apos;, new Array());
 		
 	}
@@ -110,8 +112,10 @@ logger.info(msg[&apos;OBX&apos;].length());
 for(var i = 0; i &lt; msg[&apos;OBX&apos;].length(); i++) {
 
 	if(msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim().length &gt; 0) {
-
-		tmp[&apos;results&apos;][msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim()] = {
+		//.replace(/\\T\\/g, &quot;\&amp;amp;&quot;) to escape &amp;
+		var test_type = msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim().replace(/ampersand/g, &quot;&amp;&quot;);
+		logger.info(test_type);
+		tmp[&apos;results&apos;][test_type] = {
 			&quot;test_status&quot; : validate(msg[&apos;OBX&apos;][i][&apos;OBX.11&apos;][&apos;OBX.11.1&apos;].toString(), &apos;&apos;, new Array()),
 			&quot;remarks&quot; : &quot;&quot;,
 			&quot;datetime_started&quot; : validate(msg[&apos;OBX&apos;][0][&apos;OBX.7&apos;][&apos;OBX.7.1&apos;].toString(), &apos;&apos;, new Array()),
@@ -126,7 +130,7 @@ for(var i = 0; i &lt; msg[&apos;OBX&apos;].length(); i++) {
 			&quot;results&quot;: {} 			
 		}
 
-		tmp[&apos;results&apos;][msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString().trim()][&apos;results&apos;][validate(msg[&apos;OBX&apos;][i][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString(), &apos;&apos;, new Array())] = 
+		tmp[&apos;results&apos;][test_type][&apos;results&apos;][validate(test_type, &apos;&apos;, new Array())] = 
 				validate(msg[&apos;OBX&apos;][i][&apos;OBX.5&apos;][&apos;OBX.5.1&apos;].toString(), &apos;&apos;, new Array());
 		
 	}

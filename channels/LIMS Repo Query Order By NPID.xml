@@ -5,10 +5,10 @@
   <description></description>
   <enabled>true</enabled>
   <lastModified>
-    <time>1449566737020</time>
+    <time>1476367023803</time>
     <timezone>Africa/Blantyre</timezone>
   </lastModified>
-  <revision>26</revision>
+  <revision>1</revision>
   <sourceConnector version="3.3.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>

@@ -811,7 +811,7 @@ module.exports = function (router) {
                         [ '' ]
                     ] ]);
 
-                hl7[5 + (2 * i)][4][0][1] = (params.tests[i] || "");
+                hl7[5 + (2 * i)][4][0][1] = (params.tests[i].replace(/\&/g, "ampersand") || "");
 
                 var today = (new Date());
 
@@ -856,9 +856,7 @@ module.exports = function (router) {
             }
 
             var hl7Str = hl7e.serializeJSON(hl7);
-
             console.log(hl7Str.replace(/\r/g, "\n"));
-
             var mirth = JSON.parse(configs);
 
             var options_auth = {user: mirth.mirth_username, password: mirth.mirth_password};
@@ -870,6 +868,7 @@ module.exports = function (router) {
                 headers: {"Content-Type": "text/plain"}
             };
 
+
             var trackingNumberExists = false;
 
             if (params.tracking_number && params.tracking_number.trim().length > 0) {
@@ -877,11 +876,9 @@ module.exports = function (router) {
                 trackingNumberExists = true;
 
             }
-
             (new Client()).put(mirth.mirth_host, args, function (data, response) {
 
                 var output = data.toString();
-
                 console.log(output);
 
                 var resultHL7 = hl7e.parseString(output);
