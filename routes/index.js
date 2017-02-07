@@ -252,7 +252,7 @@ module.exports = function (router) {
 
     function doRead(id, callback, format) {
 
-        console.log(id);
+        console.log(format);
 
         if (format == undefined) {
 
@@ -481,79 +481,73 @@ module.exports = function (router) {
 
     router.route('/update_order')
         .post(function (req, res) {
-
-            var params = req.body;
-            console.log(params);
+            var params = req.body;    
 
             //return res.status(200).json(params);
-
             if (params.data) {
-
                 params = params.data;
-
             }
-
-            doRead(params._id, function (result) {
-
-                if (Object.keys(result).length > 0) {
-
-                    var json = result;
-
-                    var keys = [];
-
-                    if (params.results) {
-                        var keys = Object.keys(params.results);
-                    }
-
-                    console.log(keys);
-
-                    var date = new Date();
-
-                    if (params.sample_status) {
-                        json.status = params.sample_status;
-                    }
-
-                    var timestamp = date.YYYYMMDDHHMMSS();
-
-                    for (var i = 0; i < keys.length; i++) {
-
-                        if (json.test_types.indexOf(keys[i]) < 0) {
-
-                            json.test_types.push(keys[i]);
-
-                            json.results[keys[i]] = {};
-
-                        }
-
-                        if (!json.results[keys[i]]){
-                            json.results[keys[i]] = {}
-                        }
-                        json.results[keys[i]][timestamp] = params.results[keys[i]];
-
-                    }
-
-                    doUpdate(json, function (success) {
-
-                        if (success) {
-
-                            res.status(200).json({status: "SUCCESS"});
-
-                        } else {
-
-                            res.status(200).json({status: "FAILED"});
-
-                        }
-
+            // checking if it is an updation(dispatcher and date of dispatcher), since the json containing the updation details will come with 5 keys.
+            if (Object.keys(params).length == 5)
+                {   doRead(params.tracking_number, function (result) {
+                               
+                               if (Object.keys(params).length >0)
+                                {   var json = result;
+                                    json["Dispatcher"] = params.dispatcher;
+                                    json.date_dispatched = params.date_dispatched;
+                                    doUpdate(json, function (success) {
+                                        if (success) {
+                                            res.status(200).json({status: "SUCCESS"});
+                                        } else {
+                                            res.status(200).json({status: "FAILED"});
+                                        }
+                                    })                    
+                                }
+                                else {
+                                    res.status(200).json({status: "FAILED"});
+                                }
                     })
+                }else   
+                {
+                // doing the normal order updation, (order status, test results)
+                 doRead(params._id, function (result) {
 
-                } else {
-
+                    if (Object.keys(result).length > 0) 
+                       {        var json = result;
+                                var keys = [];
+                                if (params.results) {
+                                    var keys = Object.keys(params.results);
+                                }
+                                console.log(keys);
+                                var date = new Date();
+                                if (params.sample_status) {
+                                    json.status = params.sample_status;
+                                }
+                                var timestamp = date.YYYYMMDDHHMMSS();
+                                for (var i = 0; i < keys.length; i++) {
+                                    if (json.test_types.indexOf(keys[i]) < 0) {
+                                        json.test_types.push(keys[i]);
+                                        json.results[keys[i]] = {};
+                                    }
+                                    if (!json.results[keys[i]]){
+                                        json.results[keys[i]] = {}
+                                    }
+                                    json.results[keys[i]][timestamp] = params.results[keys[i]];
+                                }
+                                doUpdate(json, function (success) {
+                                    if (success) {
+                                        res.status(200).json({status: "SUCCESS"});
+                                    } else {
+                                        res.status(200).json({status: "FAILED"});
+                                    }
+                                })
+                       } 
+                    else {
                     res.status(200).json({status: "FAILED"});
-
-                }
-
+                    }
             })
-
+          
+          }
         })
 
     router.route('/lab_order')
