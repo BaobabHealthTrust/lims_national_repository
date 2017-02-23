@@ -12,6 +12,7 @@ Date.prototype.YYYYMMDDHHMMSS = function () {
     return yyyy + MM + dd+  hh + mm + ss;
 };
 
+var crypto = require('crypto');
 
 
 function pad(number, length) {
@@ -59,6 +60,24 @@ module.exports = function (router) {
     function doCreateRecord(json, callback) {
 
         var personDb = "lims_repo";
+       
+        extra_fields_checks = {
+            "rejection_reason" : "",
+            "who_dispatched"   : {
+                                    "id_number"    : "",
+                                    "first_name"   : "",
+                                    "last_name"    : "",
+                                    "phone_number" : ""
+                                }
+        }
+
+        for(var key in extra_fields_checks){
+            if(!json[key]){
+                json[key] = extra_fields_checks[key];
+            }
+        }
+
+
 
         var db = "sites";
 
@@ -67,9 +86,7 @@ module.exports = function (router) {
             err: true
         };
 
-        console.log(json);
-
-        if (json._id.trim().length > 0) {
+         if (json._id.trim().length > 0) {
 
             couch.db(personDb, 'save', json, function (jerror, jbody) {
 
@@ -104,8 +121,7 @@ module.exports = function (router) {
         }
 
         if (mutex[site].tryLock()) {
-
-            console.log("locked mutex");
+           
 
             var months = {
                 0: "1",
@@ -182,9 +198,6 @@ module.exports = function (router) {
                     pbody[formattedDate].offset = parseInt(offset) + 1;
 
                     couch.db(db, 'save', pbody, function (error, body) {
-
-                        console.log(id);
-
                         json["_id"] = id;
 
                         couch.db(personDb, 'save', json, function (jerror, jbody) {
@@ -218,7 +231,7 @@ module.exports = function (router) {
 
                     couch.db(db, 'save', params, function (error, body) {
 
-                        console.log(id);
+                      
 
                         json["_id"] = id;
 
@@ -251,8 +264,6 @@ module.exports = function (router) {
     }
 
     function doRead(id, callback, format) {
-
-        console.log(format);
 
         if (format == undefined) {
 
@@ -324,6 +335,15 @@ module.exports = function (router) {
 
                 }
 
+
+                pbody['patient']['first_name'] = decrypt(pbody['patient']['first_name']);
+                pbody['patient']['middle_name'] = decrypt(pbody['patient']['middle_name']);
+                pbody['patient']['last_name'] = decrypt(pbody['patient']['last_name']);
+
+                pbody['who_order_test']['first_name'] =  decrypt(pbody['who_order_test']['first_name']);
+                pbody['who_order_test']['last_name'] =   decrypt(pbody['who_order_test']['last_name']);
+                pbody['who_order_test']['phone_number'] =  decrypt(pbody['who_order_test']['phone_number']);
+           
                 callback(pbody);
 
             } else {
@@ -354,6 +374,7 @@ module.exports = function (router) {
 
             if (!err) {
 
+
                 callback(pbody);
 
             } else {
@@ -379,6 +400,13 @@ module.exports = function (router) {
             return {};
 
         }
+        //encrypting dispatcher details
+        json['who_dispatched']['id_number'] =  encrypt(json['who_dispatched']['id_number'].toString());
+        json['who_dispatched']['first_name'] =  encrypt(json['who_dispatched']['first_name']);
+        json['who_dispatched']['last_name'] =  encrypt(json['who_dispatched']['last_name']);
+        json['who_dispatched']['phone_number'] =  encrypt(json['who_dispatched']['phone_number']);
+
+
 
         var db = "lims_repo";
 
@@ -407,7 +435,7 @@ module.exports = function (router) {
 
     router.route('/create_order')
         .post(function (req, res) {
-
+           
             var params = req.body;
 
             if (params.data) {
@@ -415,12 +443,25 @@ module.exports = function (router) {
                 params = params.data;
 
             }
+          
+            //encrypting patients details
+            if (params['patient'] && typeof(params['patient']) == 'object'){
+                params['patient']['first_name'] =  encrypt(params['patient']['first_name']);
+                params['patient']['middle_name'] =  encrypt(params['patient']['middle_name']);
+                params['patient']['last_name'] =  encrypt(params['patient']['last_name']);
+                params['patient']['date_of_birth'] =  encrypt(params['patient']['date_of_birth']);
+                params['patient']['phone_number'] =  encrypt(params['patient']['phone_number']);
+            }
 
-            console.log(params);
+            //encrypting who order details
+            if (params['who_order_test'] && typeof(params['who_order_test']) == 'object'){
+                params['who_order_test']['first_name'] =  encrypt(params['who_order_test']['first_name']);
+                params['who_order_test']['last_name'] =  encrypt(params['who_order_test']['last_name']);
+                params['who_order_test']['phone_number'] =  encrypt(params['who_order_test']['phone_number']);
+           
+            }
 
             doCreateRecord(params, function (result) {
-
-                console.log(result);
 
                 if (result.id == null) {
 
@@ -432,13 +473,12 @@ module.exports = function (router) {
 
                 } else {
 
-                    console.log(result.id);
-
                     res.status(200).json({error: false, message: "Done!", data: result.id});
 
                 }
 
             });
+                
 
         })
 
@@ -487,28 +527,9 @@ module.exports = function (router) {
             if (params.data) {
                 params = params.data;
             }
-            // checking if it is an updation(dispatcher and date of dispatcher), since the json containing the updation details will come with 5 keys.
-            if (Object.keys(params).length == 5)
-                {   doRead(params.tracking_number, function (result) {
-                               
-                               if (Object.keys(params).length >0)
-                                {   var json = result;
-                                    json["Dispatcher"] = params.dispatcher;
-                                    json.date_dispatched = params.date_dispatched;
-                                    doUpdate(json, function (success) {
-                                        if (success) {
-                                            res.status(200).json({status: "SUCCESS"});
-                                        } else {
-                                            res.status(200).json({status: "FAILED"});
-                                        }
-                                    })                    
-                                }
-                                else {
-                                    res.status(200).json({status: "FAILED"});
-                                }
-                    })
-                }else   
-                {
+           
+           console.log(params);
+
                 // doing the normal order updation, (order status, test results)
                  doRead(params._id, function (result) {
 
@@ -520,9 +541,29 @@ module.exports = function (router) {
                                 }
                                 console.log(keys);
                                 var date = new Date();
+
+                                var update_keys = [
+                                    'sample_status', "who_dispatched",
+                                     "rejection_reason", "date_dispatched"
+                                 ];
+
+                                for(var k = 0; k < update_keys.length; k++){
+                                    if(params[update_keys[k]]){
+                                        json[update_keys[k]] = params[update_keys[k]];
+                                    }
+                                }
+                                /*
                                 if (params.sample_status) {
                                     json.status = params.sample_status;
+                                 
                                 }
+                                if(params[.who_dispatched]){
+                                    json.who_dispatched = params['who_dispatched'];
+                                }
+                                if(params.rejection_reason){
+                                    json.rejection_reason = params['rejection_reason'];
+                                }
+                                */
                                 var timestamp = date.YYYYMMDDHHMMSS();
                                 for (var i = 0; i < keys.length; i++) {
                                     if (json.test_types.indexOf(keys[i]) < 0) {
@@ -547,7 +588,7 @@ module.exports = function (router) {
                     }
             })
           
-          }
+          
         })
 
     router.route('/lab_order')
@@ -633,8 +674,6 @@ module.exports = function (router) {
 
             }
 
-            console.log(params);
-
             var template = "MSH|^~&||^^||^^|||OML^O21^OML_O21||T|2.5\r" +
                 "PID|1||~^^^^^^||^^|||||||||||||\r" +
                 "ORC||||||||||^^^|||^^^^^^^^||||||||^^^^^^^|^^^^^^^\r" +
@@ -706,6 +745,7 @@ module.exports = function (router) {
 
             hl7[4][4][0][1] = (params.sample_type || "");
 
+            
             for (var i = 0; i < params.tests.length; i++) {
 
                 hl7.push([
@@ -850,7 +890,7 @@ module.exports = function (router) {
             }
 
             var hl7Str = hl7e.serializeJSON(hl7);
-            console.log(hl7Str.replace(/\r/g, "\n"));
+           
             var mirth = JSON.parse(configs);
 
             var options_auth = {user: mirth.mirth_username, password: mirth.mirth_password};
@@ -870,15 +910,16 @@ module.exports = function (router) {
                 trackingNumberExists = true;
 
             }
+           
+        
             (new Client()).put(mirth.mirth_host, args, function (data, response) {
 
                 var output = data.toString();
-                console.log(output);
 
+
+               
                 var resultHL7 = hl7e.parseString(output);
-
-                console.log(hl7e.serializeJSON(resultHL7).replace(/\r/g, '\n'));
-
+               
                 var tracking_number = resultHL7[4][2][0][0];
 
                 params.tracking_number = tracking_number;
@@ -1089,6 +1130,33 @@ module.exports = function (router) {
         })
 
     return router;
+
+
+
+
+    function encrypt(text){
+      var crypto = require('crypto');
+      var algorithm = 'aes-256-ctr';
+      var password ='d6F3Efeq';
+      var cipher = crypto.createCipher(algorithm,password);
+      var crypted = cipher.update(text,'utf8','hex');
+      crypted += cipher.final('hex');
+      return crypted;
+    }
+
+
+    function decrypt(text){
+      var crypto = require('crypto');
+      var algorithm = 'aes-256-ctr', password ='d6F3Efeq';
+      var decipher = crypto.createDecipher(algorithm,password)
+      var dec = decipher.update(text,'hex','utf8')
+      dec += decipher.final('utf8');
+      return dec;
+    }
+
+
+
+
 
 }
 
