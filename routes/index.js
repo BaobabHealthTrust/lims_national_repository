@@ -12,8 +12,6 @@ Date.prototype.YYYYMMDDHHMMSS = function () {
     return yyyy + MM + dd+  hh + mm + ss;
 };
 
-var crypto = require('crypto');
-
 
 function pad(number, length) {
 
@@ -336,13 +334,6 @@ module.exports = function (router) {
                 }
 
 
-                pbody['patient']['first_name'] = decrypt(pbody['patient']['first_name']);
-                pbody['patient']['middle_name'] = decrypt(pbody['patient']['middle_name']);
-                pbody['patient']['last_name'] = decrypt(pbody['patient']['last_name']);
-
-                pbody['who_order_test']['first_name'] =  decrypt(pbody['who_order_test']['first_name']);
-                pbody['who_order_test']['last_name'] =   decrypt(pbody['who_order_test']['last_name']);
-                pbody['who_order_test']['phone_number'] =  decrypt(pbody['who_order_test']['phone_number']);
            
                 callback(pbody);
 
@@ -400,13 +391,7 @@ module.exports = function (router) {
             return {};
 
         }
-        //encrypting dispatcher details
-        json['who_dispatched']['id_number'] =  encrypt(json['who_dispatched']['id_number'].toString());
-        json['who_dispatched']['first_name'] =  encrypt(json['who_dispatched']['first_name']);
-        json['who_dispatched']['last_name'] =  encrypt(json['who_dispatched']['last_name']);
-        json['who_dispatched']['phone_number'] =  encrypt(json['who_dispatched']['phone_number']);
-
-
+    
 
         var db = "lims_repo";
 
@@ -444,23 +429,6 @@ module.exports = function (router) {
 
             }
           
-            //encrypting patients details
-            if (params['patient'] && typeof(params['patient']) == 'object'){
-                params['patient']['first_name'] =  encrypt(params['patient']['first_name']);
-                params['patient']['middle_name'] =  encrypt(params['patient']['middle_name']);
-                params['patient']['last_name'] =  encrypt(params['patient']['last_name']);
-                params['patient']['date_of_birth'] =  encrypt(params['patient']['date_of_birth']);
-                params['patient']['phone_number'] =  encrypt(params['patient']['phone_number']);
-            }
-
-            //encrypting who order details
-            if (params['who_order_test'] && typeof(params['who_order_test']) == 'object'){
-                params['who_order_test']['first_name'] =  encrypt(params['who_order_test']['first_name']);
-                params['who_order_test']['last_name'] =  encrypt(params['who_order_test']['last_name']);
-                params['who_order_test']['phone_number'] =  encrypt(params['who_order_test']['phone_number']);
-           
-            }
-
             doCreateRecord(params, function (result) {
 
                 if (result.id == null) {
@@ -917,6 +885,8 @@ module.exports = function (router) {
                 var output = data.toString();
 
 
+                console.log(hl7Str);
+
                
                 var resultHL7 = hl7e.parseString(output);
                
@@ -997,7 +967,7 @@ module.exports = function (router) {
 
             });
 
-        });
+        });          
 
     router.route('/print/:id')
         .get(function (req, res) {
@@ -1005,7 +975,6 @@ module.exports = function (router) {
             doRead(req.params.id, function (result) {
 
                 console.log(JSON.stringify(result));
-
                 var label = "\n\N\nR215,0\nZT\n";
 
                 label += 'A6,6,0,2,1,1,N,"' + (result.patient.last_name || "") + ', ' +
@@ -1023,11 +992,8 @@ module.exports = function (router) {
                     age = ((new Date()).getFullYear() - dob);
 
                     if (age <= 0) {
-
                         age = "<1";
-
                     }
-
                 }
 
                 label += 'A6,29,0,2,1,1,N,"' + (result.patient.national_patient_id || "") + '        ' +
@@ -1133,26 +1099,6 @@ module.exports = function (router) {
 
 
 
-
-    function encrypt(text){
-      var crypto = require('crypto');
-      var algorithm = 'aes-256-ctr';
-      var password ='d6F3Efeq';
-      var cipher = crypto.createCipher(algorithm,password);
-      var crypted = cipher.update(text,'utf8','hex');
-      crypted += cipher.final('hex');
-      return crypted;
-    }
-
-
-    function decrypt(text){
-      var crypto = require('crypto');
-      var algorithm = 'aes-256-ctr', password ='d6F3Efeq';
-      var decipher = crypto.createDecipher(algorithm,password)
-      var dec = decipher.update(text,'hex','utf8')
-      dec += decipher.final('utf8');
-      return dec;
-    }
 
 
 
