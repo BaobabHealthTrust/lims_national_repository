@@ -5,7 +5,7 @@
     "username": "root",
     "password": "password",
     "site_code": "KCH",
-    "mirth_host": "http://localhost:3016/create_order/",
+    "mirth_host":"http://localhost:3016/create_order/",
     "mirth_username": "admin",
     "mirth_password": "admin"
 }

@@ -280,7 +280,8 @@ module.exports = function (router) {
         var db = "lims_repo";
 
         couch.db(db, 'read', {'_id': id}, function (err, pbody) {
-
+            console.log("am here guys");
+            console.log(err);
             if (!err) {
 
                 if (format) {
@@ -334,7 +335,6 @@ module.exports = function (router) {
                 }
 
 
-           
                 callback(pbody);
 
             } else {
@@ -344,6 +344,7 @@ module.exports = function (router) {
             }
 
         });
+
 
     }
 
@@ -495,11 +496,10 @@ module.exports = function (router) {
             if (params.data) {
                 params = params.data;
             }
-           
-           console.log(params);
 
                 // doing the normal order updation, (order status, test results)
                  doRead(params._id, function (result) {
+
 
                     if (Object.keys(result).length > 0) 
                        {        var json = result;
@@ -507,7 +507,7 @@ module.exports = function (router) {
                                 if (params.results) {
                                     var keys = Object.keys(params.results);
                                 }
-                                console.log(keys);
+                              
                                 var date = new Date();
 
                                 var update_keys = [
@@ -552,6 +552,7 @@ module.exports = function (router) {
                                 })
                        } 
                     else {
+
                     res.status(200).json({status: "FAILED"});
                     }
             })
@@ -877,17 +878,12 @@ module.exports = function (router) {
 
                 trackingNumberExists = true;
 
-            }
-           
+            }           
         
             (new Client()).put(mirth.mirth_host, args, function (data, response) {
 
                 var output = data.toString();
-
-
-                console.log(hl7Str);
-
-               
+                console.log(hl7Str);               
                 var resultHL7 = hl7e.parseString(output);
                
                 var tracking_number = resultHL7[4][2][0][0];
