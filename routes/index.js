@@ -280,7 +280,6 @@ module.exports = function (router) {
         var db = "lims_repo";
 
         couch.db(db, 'read', {'_id': id}, function (err, pbody) {
-            console.log("am here guys");
             console.log(err);
             if (!err) {
 

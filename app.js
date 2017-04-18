@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var portfinder = require('portfinder');
 var cors = require('cors');
+const https = require('https')
 
 var path = require("path");
 
@@ -45,13 +46,14 @@ portfinder.basePort = 3014;
 
 process.env.APPLICATION = "lims-repo";
 
+
 if(process.env.BHT_MODULE) {
 
     module.exports = router;
 
 } else {
 
-    if(false) {
+    if(true) {
 
         portfinder.getPort(function (err, port) {
 
@@ -65,10 +67,14 @@ if(process.env.BHT_MODULE) {
 
         var port = portfinder.basePort;
 
-        app.listen(port, function () {
+        const options = {
+            key: fs.readFileSync('./public/key.pem'),
+            cert: fs.readFileSync('./public/cert.pem')
+        }
+
+        const server = https.createServer(options, app).listen(port, function(req, res) {
             console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
         });
-
     }
 
 }
