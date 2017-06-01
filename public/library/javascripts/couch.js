@@ -146,73 +146,6 @@ var CouchDB = function () {
 
     }
 
-    function loadViews(db, callback) {
-
-        var couch = nano.use(db);
-
-        if(db.trim().toLowerCase() == "lims_repo") {
-
-            couch.insert(
-                {
-                    "views": {
-                        "by_npid": {
-                            "map": function (doc) {
-
-                                var tests = [];
-
-                                var keys = Object.keys(doc.results);
-
-                                for(var i = 0; i < keys.length; i++) {
-
-                                    var test = {
-                                        accession_number: doc._id,
-                                        test_name: keys[i],
-                                        result: doc.results[keys[i]].result,
-                                        units: doc.results[keys[i]].units,
-                                        reference_range: doc.results[keys[i]].reference_range,
-                                        entered_by: {
-                                            first_name: doc.results[keys[i]].entered_by.first_name,
-                                            last_name: doc.results[keys[i]].entered_by.last_name,
-                                            id_number: doc.results[keys[i]].entered_by.id_number
-                                        },
-                                        location_entered: doc.results[keys[i]].location_entered,
-                                        date_time: doc.results[keys[i]].date_time,
-                                        status: doc.results[keys[i]].status,
-                                        remark: doc.results[keys[i]].remark
-                                    }
-
-                                    tests.push(test);
-
-                                }
-
-                                emit(doc.patient.national_patient_id, tests);
-                            }
-                        }
-                    }
-                }, '_design/people', function (err, response) {
-
-                    if (!err) {
-
-                        callback();
-
-                    } else {
-
-                        console.log(err.message);
-
-                        callback(err);
-
-                    }
-
-                });
-
-        } else {
-
-            callback();
-
-        }
-
-    }
-
     function save(db, params, callback) {
 
         var couch = nano.use(db);
@@ -224,10 +157,6 @@ var CouchDB = function () {
                 callback(undefined, body);
 
             } else {
-
-                console.log(err);
-
-                console.log("First crash!");
 
                 if (callback != undefined) {
 

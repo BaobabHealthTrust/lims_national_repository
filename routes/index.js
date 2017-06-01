@@ -40,6 +40,8 @@ module.exports = function (router) {
 
     var locks = require("locks");
 
+    var async = require("async");
+
     var mutex = {};
 
     function padZeros(number, positions) {
@@ -55,6 +57,84 @@ module.exports = function (router) {
         return padded;
     }
 
+    function readRecur(dir, filelist) {
+
+        var files = fs.readdirSync(dir);
+        filelist = filelist || [];
+        files.forEach(function(file) {
+            if (fs.statSync(dir + '/' + file).isDirectory()) {
+                filelist = readRecur(dir + '/' + file, filelist);
+            }
+            else {
+                filelist.push(dir + '/' + file);
+            }
+        });
+
+        return filelist;
+    }
+
+    function checkValidations(record){
+
+        if(record['_id']){
+            var dir = process.cwd() + "/public/validations";
+            filelist = readRecur(dir, []);
+        }else{
+            filelist = [];
+        }
+
+        for(var i = 0; i < filelist.length; i++){
+            var split = filelist[i].split("/");
+            var valid = require(filelist[i])(record);
+            var category = split[split.length - 1].split(".")[0];
+            var record_id = (split[split.length - 1].split(".")[0].replace(/\s+/g, '_') + "__" + record['_id']);
+            couch.db('lims_repo', 'read',
+                {
+                    '_id': record_id
+                }, function (err, result) {
+                    error = {
+                        '_id': record_id
+                    };
+
+                    if(valid && err){
+                        return;
+                    }else if(!err){
+                        error['_rev'] = result['_rev'];
+                    }
+
+                    if(!valid){
+                        error["doc_type"] = "error";
+                        error["category"] = split[split.length - 1].split(".")[0];
+                        error["tracking_number"] = record['_id']
+                        error["datetime"] = (new Date()).YYYYMMDDHHMMSS();
+                        error["who_updated"] = record['who_updated'] ? record['who_updated'] : {};
+                        error["sending_facility"] = record['sending_facility']
+                        error["receiving_facility"] = record['receiving_facility'];
+                        error["test_types"] = record['test_types'];
+                        error["sample_type"] = record['sample_type'];
+                    }
+
+                    if(valid && !err){
+                        console.log('Updating record status to "Resolved" ');
+                        error["status"] = 'Resolved';
+                    }else if((typeof(result) != 'undefined' && result["status"] != 'New') || (typeof(result) == 'undefined')){
+                        error["status"] = 'New'; //New | Resolved
+                    }
+
+
+                    if(error['status']){
+                        if (Object.keys(error).length > 6) {
+                            couch.db("lims_repo", 'save',
+                                error, function (e, result) {
+                                    if (e) {
+                                    } else {
+                                    }
+                                })
+                        }
+                    }
+                });
+        }
+    }
+
     function doCreateRecord(json, callback) {
 
         var personDb = "lims_repo";
@@ -66,7 +146,13 @@ module.exports = function (router) {
                                     "first_name"   : "",
                                     "last_name"    : "",
                                     "phone_number" : ""
-                                }
+                                },
+            "who_updated"   : {
+                "id_number"    : "",
+                "first_name"   : "",
+                "last_name"    : "",
+                "phone_number" : ""
+            }
         }
 
         for(var key in extra_fields_checks){
@@ -253,8 +339,6 @@ module.exports = function (router) {
 
         } else {
 
-            console.log("busy!");
-
             callback(result);
 
         }
@@ -382,8 +466,6 @@ module.exports = function (router) {
 
     function doUpdate(json, callback) {
 
-        console.log(json);
-
         var site = JSON.parse(configs)["site_code"];
 
         if (!site) {
@@ -391,9 +473,10 @@ module.exports = function (router) {
             return {};
 
         }
-    
 
         var db = "lims_repo";
+
+        checkValidations(json);
 
         couch.db(db, 'save', json, function (error, body) {
 
@@ -431,6 +514,7 @@ module.exports = function (router) {
           
             doCreateRecord(params, function (result) {
 
+
                 if (result.id == null) {
 
                     res.status(200).json({error: true, message: "Configuration file not found!", data: null});
@@ -440,6 +524,8 @@ module.exports = function (router) {
                     res.status(200).json({error: true, message: "Process busy, please try again later!", data: null});
 
                 } else {
+
+                    checkValidations(result);
 
                     res.status(200).json({error: false, message: "Done!", data: result.id});
 
@@ -491,12 +577,11 @@ module.exports = function (router) {
         .post(function (req, res) {
             var params = req.body;    
 
-            //return res.status(200).json(params);
             if (params.data) {
                 params = params.data;
             }
 
-                // doing the normal order updation, (order status, test results)
+                // doing the normal order update, (order status, test results)
                  doRead(params._id, function (result) {
 
 
@@ -519,18 +604,7 @@ module.exports = function (router) {
                                         json[update_keys[k]] = params[update_keys[k]];
                                     }
                                 }
-                                /*
-                                if (params.sample_status) {
-                                    json.status = params.sample_status;
-                                 
-                                }
-                                if(params[.who_dispatched]){
-                                    json.who_dispatched = params['who_dispatched'];
-                                }
-                                if(params.rejection_reason){
-                                    json.rejection_reason = params['rejection_reason'];
-                                }
-                                */
+
                                 var timestamp = date.YYYYMMDDHHMMSS();
                                 for (var i = 0; i < keys.length; i++) {
                                     if (json.test_types.indexOf(keys[i]) < 0) {
