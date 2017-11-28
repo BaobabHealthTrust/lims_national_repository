@@ -595,8 +595,9 @@ module.exports = function (router) {
                                 var date = new Date();
 
                                 var update_keys = [
-                                    'sample_status', "who_dispatched",
-                                     "rejection_reason", "date_dispatched"
+                                    'status', "who_dispatched",
+                                     "rejection_reason", "date_dispatched",
+                                     "date_drawn"
                                  ];
 
                                 for(var k = 0; k < update_keys.length; k++){
