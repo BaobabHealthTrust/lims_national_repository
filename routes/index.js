@@ -509,7 +509,6 @@ module.exports = function (router) {
             if (params.data) {
 
                 params = params.data;
-
             }
           
             doCreateRecord(params, function (result) {
@@ -580,7 +579,7 @@ module.exports = function (router) {
             if (params.data) {
                 params = params.data;
             }
-
+            
                 // doing the normal order update, (order status, test results)
                  doRead(params._id, function (result) {
 
@@ -705,6 +704,12 @@ module.exports = function (router) {
             res.status(200).json(sample_types[req.params.id.trim().toLowerCase()]);
 
         })
+
+    router.route('/create_nlims_account').post(function(req,res){
+        console.log(req.body);
+        var s = require("./../lib/nlims_partner.js");
+        s.create_account();
+    })
 
     router.route('/create_hl7_order')
         .post(function (req, res) {

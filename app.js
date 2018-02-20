@@ -36,6 +36,7 @@ function encrypt(password, salt) {
 
 }
 
+
 // Routes
 
 // app.use('/', require("./routes/index.js")(router));
@@ -56,6 +57,9 @@ if(process.env.BHT_MODULE) {
     if(true) {
 
         portfinder.getPort(function (err, port) {
+        
+            const account = require('./lib/account.js');
+            account.create_default_account();
 
             app.listen(port, function () {
                 console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
@@ -73,7 +77,7 @@ if(process.env.BHT_MODULE) {
         }
 
         const server = https.createServer(options, app).listen(port, function(req, res) {
-            console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
+                console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
         });
     }
 
