@@ -30,6 +30,9 @@ module.exports = function (router) {
 
     var fs = require('fs');
 
+    var s = require("./../lib/nlims_partner.js");
+
+
     var path = require("path");
 
     var couch = require(path.resolve('public', 'library', 'javascripts', 'couch.js'));
@@ -43,6 +46,8 @@ module.exports = function (router) {
     var async = require("async");
 
     var mutex = {};
+
+    var def_account = require('./../lib/account.js');
 
     function padZeros(number, positions) {
         var zeros = parseInt(positions) - String(number).length;
@@ -706,9 +711,140 @@ module.exports = function (router) {
         })
 
     router.route('/create_nlims_account').post(function(req,res){
-        console.log(req.body);
-        var s = require("./../lib/nlims_partner.js");
-        s.create_account();
+        
+        var data = req.body;
+        var err_msg = null;
+        if (!data)
+        {
+
+        }else if(!data.location)
+        {
+            err_msg = "location not specified";
+        }
+        else if (!data.partner)
+        {
+            err_msg = "partner name not provided";
+        }
+        else if (!data.app_name)
+        {
+            err_msg = "application name not provided";
+        }
+        else if (!data.contact)
+        {
+            err_msg = "contact details not provided";
+        }
+        else if (!data.password)
+        {
+            err_msg = "password not provided";
+        }
+        else if(!data.username)
+        {
+            err_msg = "username not provided";
+        }
+        else
+        {
+                var details = {
+            name: "gift",
+            email: "gift@gmail"
+            }
+            s.create_account("baobab","iblis",details,"Lilongwe","amin","iblis");   
+        }
+
+        if (err_msg)
+        {
+                res.status(200).json({
+                        "status": 200,
+                        "message": err_msg,
+                        "error": true,
+                        "description": err_msg,
+                        "data": {}
+                    });
+        }
+        var da = {
+               "_id": "baobab1",
+               "_rev": "5-d20a614041f61a8809ac8a0a2c1723b1",
+               "username": "username",
+               "salt": "salt",
+               "application": "iblis",
+               "site_code": "KCH",
+               "password": "passcode",
+               "type": "User12",
+               "token": "token",
+               "contact_details": {
+                   "name": "gift",
+                   "email": "gift@gmail"
+               },
+               "origin": "Lilongwe",
+               "partner": "baobab",
+               "voided": false
+            };
+
+       
+
+             
+
+             account.get_default_account_details(function(data){
+             
+                 console.log(account.decrypt("nlims",data['salt']));
+
+             });
+
+             
+
+    })
+
+    router.route('/authenticate').post(function(req,res){
+
+        var username = req.body.username;
+        var password = req.body.password;
+        var msg = null;
+
+        if (!username)
+        {
+            msg = "username missing";
+        }
+        else if (!password)
+        {
+            msg = "password missing";
+        }
+        else{
+           
+            def_account.get_default_account_details(function(data){
+                password = def_account.decrypt(password,data['salt']);
+
+                if (password == data['password'] && username == data['username'])
+                {
+                 
+                    var token =  def_account.generate_tmp_token();
+                    
+                    var response ={
+                        code: "201",
+                        status: "true",
+                        message: "authenticated",
+                        token: token
+                    }
+
+                    res.status(200).json(response);
+                }
+                else
+                {
+             
+                    var response ={
+                        code: "405",
+                        status: "false",
+                        message: "not authenticated",
+                        token: ""
+                    }
+
+                    res.status(400).json(response);
+                }
+
+            })
+
+           
+        }
+        
+
     })
 
     router.route('/create_hl7_order')

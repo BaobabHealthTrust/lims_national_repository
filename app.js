@@ -58,8 +58,18 @@ if(process.env.BHT_MODULE) {
 
         portfinder.getPort(function (err, port) {
         
-            const account = require('./lib/account.js');
-            account.create_default_account();
+
+            fs.exists('./lib/default_account.json', function(exists) {
+               
+                if (exists == false)
+                {
+                    const account = require('./lib/account.js');
+                    account.create_default_account();
+                }
+
+            });
+
+            
 
             app.listen(port, function () {
                 console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
