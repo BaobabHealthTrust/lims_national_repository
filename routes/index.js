@@ -729,10 +729,6 @@ module.exports = function (router) {
         {
             err_msg = "application name not provided";
         }
-        else if (!data.contact)
-        {
-            err_msg = "contact details not provided";
-        }
         else if (!data.password)
         {
             err_msg = "password not provided";
@@ -742,18 +738,86 @@ module.exports = function (router) {
             err_msg = "username not provided";
         }
         else
-        {
-                var details = {
-            name: "gift",
-            email: "gift@gmail"
-            }
-            s.create_account("baobab","iblis",details,"Lilongwe","amin","iblis");   
+        {            
+            var token = data['token'];
+            var checker = false;
+            var got_da;
+            var va = null;
+            fs.readFile('./lib/tmp_tokens.txt','utf8',function(er, contents){
+                var da = contents.split("_");
+
+                da.forEach(function(el){
+                    var got_to = el.substring(0,12);
+                    var got_exp = el.substring(12,26);
+                    var tim = (new Date()).getTime();
+
+                    if (got_to == token && got_exp > tim)
+                    {   
+                        da.splice(da.indexOf(el),1);
+                        checker = true;
+                        s.create_account(data['partner'],data['app_name'],data['location'],data['password'],data['username'], function(err,re){
+                            if (err == false)
+                            {      
+                                    res.status(200).json({
+                                            "status": 200,
+                                            "message": "created",
+                                            "error": false,
+                                            "description": "",
+                                            "data": {
+                                                token: re
+                                            }
+                                    });
+                            }
+                            else
+                            {
+                                    res.status(200).json({
+                                                "status": 400,
+                                                "message": "account already exists",
+                                                "error": true,
+                                                "description": "",
+                                                "data": {
+                                                    token: ""
+                                                }
+                                        });
+                            }
+                            
+                        });  
+
+                    }
+                  
+                })
+     
+                if (checker == false)
+                {
+                    res.status(200).json({
+                                    "status": 400,
+                                    "message": "token expired",
+                                    "error": true,
+                                    "description": "",
+                                    "data": { }
+                            });
+                }
+                else{
+
+                    da.forEach(function(a){
+                        if (a){
+                            va += (a +"_");
+                        }
+                    })
+
+                    fs.writeFile('./lib/tmp_tokens.txt', va, function (err) {
+                        if (err) throw err;
+                        console.log('created successfuly gud gud');
+                    });
+                }
+               
+            }) 
         }
 
         if (err_msg)
         {
-                res.status(200).json({
-                        "status": 200,
+                res.status(400).json({
+                        "status": 400,
                         "message": err_msg,
                         "error": true,
                         "description": err_msg,
@@ -777,18 +841,7 @@ module.exports = function (router) {
                "origin": "Lilongwe",
                "partner": "baobab",
                "voided": false
-            };
-
-       
-
-             
-
-             account.get_default_account_details(function(data){
-             
-                 console.log(account.decrypt("nlims",data['salt']));
-
-             });
-
+            };         
              
 
     })
@@ -808,20 +861,21 @@ module.exports = function (router) {
             msg = "password missing";
         }
         else{
-           
+          
             def_account.get_default_account_details(function(data){
                 password = def_account.decrypt(password,data['salt']);
-
                 if (password == data['password'] && username == data['username'])
                 {
-                 
+                    
                     var token =  def_account.generate_tmp_token();
                     
                     var response ={
                         status: "201",
                         error: "false",
                         message: "authenticated",
-                        token: token
+                        data: {
+                                token: token
+                               }
                     }
 
                     res.status(200).json(response);
@@ -833,7 +887,9 @@ module.exports = function (router) {
                         status: "405",
                         error: "true",
                         message: "not authenticated",
-                        token: ""
+                        data: {
+                                token: ""
+                               }
                     }
 
                     res.status(400).json(response);
