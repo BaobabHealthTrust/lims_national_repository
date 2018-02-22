@@ -69,6 +69,17 @@ if(process.env.BHT_MODULE) {
 
             });
 
+
+             fs.exists('./lib/tmp_tokens.txt', function(exists) {
+               
+                if (exists == false)
+                {
+                    const account = require('./lib/account.js');
+                    account.create_tmp_tokens_file();
+                }
+
+            });
+
             
 
             app.listen(port, function () {

@@ -818,8 +818,8 @@ module.exports = function (router) {
                     var token =  def_account.generate_tmp_token();
                     
                     var response ={
-                        code: "201",
-                        status: "true",
+                        status: "201",
+                        error: "false",
                         message: "authenticated",
                         token: token
                     }
@@ -830,8 +830,8 @@ module.exports = function (router) {
                 {
              
                     var response ={
-                        code: "405",
-                        status: "false",
+                        status: "405",
+                        error: "true",
                         message: "not authenticated",
                         token: ""
                     }
