@@ -816,7 +816,7 @@ module.exports = function (router) {
 
         if (err_msg)
         {
-                res.status(400).json({
+                res.status(200).json({
                         "status": 400,
                         "message": err_msg,
                         "error": true,
@@ -892,7 +892,7 @@ module.exports = function (router) {
                                }
                     }
 
-                    res.status(400).json(response);
+                    res.status(200).json(response);
                 }
 
             })
@@ -903,17 +903,500 @@ module.exports = function (router) {
 
     })
 
+    router.route('/check_token').post(function(req,res){
+        s.authenticate_partner("Y50KJRVUTDpX",function(exp){
+            var exp = exp;
+            var nw = (new Date()).getTime();
+            if (exp < nw)
+            {
+                res.status(200).json({
+                        status: "405",
+                        error: "true",
+                        message: "token expired",
+                        
+                })
+            }
+            else
+            {
+                res.status(200).json({
+                        status: "405",
+                        error: "false",
+                        message: "authenticated",
+                        
+                })
+            }
+            
+        });
+    })
+
+
     router.route('/create_hl7_order')
         .post(function (req, res) {
 
             var params = req.body;
+            var msg = null;
 
             if (params.data) {
 
                 params = params.data;
-
+                
             }
 
+
+            if (params)
+            {
+
+                if (params['token'])
+                {
+                 
+                    s.authenticate_partner(params['token'],function(exp){
+                        var exp = exp;
+                        var nw = (new Date()).getTime();
+                        if (exp < nw)
+                        {
+                            res.status(200).json({
+                                    status: "405",
+                                    error: "true",
+                                    message: "token expired",
+                                    
+                            })
+                        }
+                        else
+                        {
+                                if(!params.district)
+                                {
+                                    msg = "district not provided";
+                                }
+                                else if(!params['health_facility_name'])
+                                {
+                                    msg = "district not provided";
+                                }
+                                else if(!params['first_name'])
+                                {
+                                    msg = "patient first name not provided";
+                                }
+                                 else if(!params['last_name'])
+                                {
+                                    msg = "patient last name not provided";
+                                }
+                                else if(!params['phone_number'])
+                                {
+                                    msg = "patient phone number nont provided";
+                                }
+                                 else if(!params['gender'])
+                                {
+                                    msg = "patient gender not provided"
+                                }
+                                 else if(!params['national_patient_id'])
+                                {
+                                    msg = "patient ID not provided";
+                                }
+                                else if(!params['sample_type'])
+                                {
+                                    msg = "sample type not provided";
+                                }
+                                else if(!params['tests'])
+                                {
+                                    msg = "tests not provided";
+                                }
+                                else if(!params['date_drawn'])
+                                {
+                                    msg = "date for sample drawn not provided";
+                                }
+                                 else if(!params['sample_priority'])
+                                {
+                                    msg = "sample priority level not provided";
+                                }
+                                 else if(!params['target_lab'])
+                                {
+                                    msg = "target lab for sample not provided";
+                                }
+                                 else if(!params['sample_order_location'])
+                                {
+                                    msg = "sample order location not provided";
+                                }
+                                 else if(!params['sample_priority'])
+                                {
+                                    msg = "sample_priority not provided";
+                                }
+                                 else if(!params['sample_collector_first_name'])
+                                {
+                                    msg = "first name for person ordering not provided";
+                                }
+                                 else if(!params['sample_collector_last_name'])
+                                {
+                                    msg = "last name for person ordering not provided";
+                                }
+                                else{
+                                    console.log("yes yes yes ");
+                                            var template = "MSH|^~&||^^||^^|||OML^O21^OML_O21||T|2.5\r" +
+                                                "PID|1||~^^^^^^||^^|||||||||||||\r" +
+                                                "ORC||||||||||^^^|||^^^^^^^^||||||||^^^^^^^|^^^^^^^\r" +
+                                                "TQ1|1||||||||^^^\r" +
+                                                "SPM|1|||^\r";
+                                            /*+
+                                             "OBR|1|||^^||||||||||||^^^\r" +
+                                             "NTE|1|P|\r";*/
+                                        
+                                            var hl7e = require("hl7");
+
+                                            var hl7 = hl7e.parseString(template);
+
+                                            var date = (new Date());
+
+                                            hl7[0][4][0][0] = (params.health_facility_name || "");
+
+                                            hl7[0][6][0][0] = (params.target_lab || "");
+
+                                            hl7[0][7][0][0] = date.YYYYMMDDHHMMSS();
+
+                                            hl7[0][10][0][0] = date.YYYYMMDDHHMMSS();
+
+                                            // hl7[1][3][0][0] = (params.national_patient_id || "");
+
+                                            hl7[1][5][0][0] = (params.last_name || "");
+
+                                            hl7[1][5][0][1] = (params.first_name || "");
+
+                                            hl7[1][5][0][2] = (params.middle_name || "");
+
+                                            hl7[1][13][0][0] = (params.phone_number || "");
+
+                                            if (params.date_of_birth) {
+
+                                                var dob = (new Date(params.date_of_birth));
+
+                                                var formattedDob = dob.YYYYMMDDHHMMSS();
+
+                                                hl7[1][7][0][0] = (formattedDob || "");
+
+                                            }
+
+                                            hl7[1][8][0][0] = (params.gender || "");
+
+                                            hl7[1][3][0][0] = (params.national_patient_id || "");
+
+                                            hl7[4][2][0][0] = (params.tracking_number || "");
+
+                                            hl7[2][21][0][0] = (params.health_facility_name || "");
+
+                                            hl7[2][10][0][0] = (params.sample_collector_id || "");
+
+                                            hl7[2][10][0][1] = (params.sample_collector_last_name || "");
+
+                                            hl7[2][10][0][2] = (params.sample_collector_first_name || "");
+
+                                            hl7[2][14][0][0] = (params.sample_collector_phone_number || "");
+
+                                            hl7[2][22][0][2] = ((params.district && params.district.length > 0) ? params.district : JSON.parse(configs)["district"]);
+
+                                            hl7[2][13][0][1] = (params.sample_order_location || "");
+
+                                            var timestamp = moment(new Date()).format("YYYYMMDDHHmmss");
+
+                                            hl7[2][9][0][0] = timestamp;
+
+                                            // hl7[3][9][0][1] = (params.sample_priority || "");
+
+                                            hl7[4][4][0][1] = (params.sample_type || "");
+
+                                            console.log("am here");
+                                            for (var i = 0; i < params.tests.length; i++) {
+
+                                                hl7.push([
+                                                    'OBR',
+                                                    [
+                                                        [ (i + 1).toString() ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '',
+                                                            '',
+                                                            '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '',
+                                                            '',
+                                                            '',
+                                                            '']
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ],
+                                                    [
+                                                        [ 'F' ]
+                                                    ],
+                                                    [
+                                                        [ ' ' ]
+                                                    ] ]);
+
+                                                hl7.push([ 'NTE',
+                                                    [
+                                                        [ (i + 1).toString() ]
+                                                    ],
+                                                    [
+                                                        [ 'P' ]
+                                                    ],
+                                                    [
+                                                        [ '' ]
+                                                    ] ]);
+
+                                                hl7[5 + (2 * i)][4][0][1] = (params.tests[i].replace(/\&/g, "ampersand") || "");
+
+                                                var today = (new Date());
+
+                                                var dateDrawn = ((new Date(params.date_sample_drawn)) || (new Date()));
+
+                                                var dateDrawnFormatted = dateDrawn.YYYYMMDDHHMMSS();
+
+                                                hl7[5 + (2 * i)][7][0][0] = (!isNaN(dateDrawn.getFullYear()) ? dateDrawnFormatted : "");
+
+                                                var artStartDate = ((new Date(params.art_start_date)) || (new Date()));
+
+                                                var artStartDateFormatted = artStartDate.YYYYMMDDHHMMSS();
+
+                                                hl7[5 + (2 * i)][6][0][0] = (!isNaN(artStartDate.getFullYear()) ? artStartDateFormatted : "");
+
+                                                var dateReceived = ((new Date(params.date_received)) || (new Date()));
+
+                                                var dateReceivedFormatted = dateReceived.YYYYMMDDHHMMSS();
+
+                                                hl7[5 + (2 * i)][14][0][0] = (!isNaN(dateReceived.getFullYear()) ? dateReceivedFormatted : "");
+
+                                                var dateDispatched = ((new Date(params.date_dispatched)) || (new Date()));
+
+                                                var dateDispatchedFormatted = dateDispatched.YYYYMMDDHHMMSS();
+
+                                                hl7[5 + (2 * i)][8][0][0] = (!isNaN(dateDispatched.getFullYear()) ? dateDispatchedFormatted : "");
+
+                                                hl7[5 + (2 * i)][5][0][0] = (params.sample_priority || "");
+
+                                                hl7[5 + (2 * i)][13][0][0] = (params.reason_for_test || "");
+
+                                                hl7[5 + (2 * i)][16][0][0] = (params.sample_collector_id || "");
+
+                                                hl7[5 + (2 * i)][16][0][1] = (params.sample_collector_last_name || "");
+
+                                                hl7[5 + (2 * i)][16][0][2] = (params.sample_collector_first_name || "");
+
+                                                hl7[5 + (2 * i)][16][0][3] = (params.sample_collector_phone_number || "");
+
+                                                hl7[6 + (2 * i)][3][0][0] = (params.status || "Drawn");
+
+                                            }
+                                            
+
+                                            var hl7Str = hl7e.serializeJSON(hl7);
+                                           
+                                            var mirth = JSON.parse(configs);
+
+                                            var options_auth = {user: mirth.mirth_username, password: mirth.mirth_password};
+
+                                            var Client = require('node-rest-client').Client;
+
+                                            var args = {
+                                                data: hl7Str,
+                                                headers: {"Content-Type": "text/plain"}
+                                            };
+
+
+                                            var trackingNumberExists = false;
+
+                                            if (params.tracking_number && params.tracking_number.trim().length > 0) {
+
+                                                trackingNumberExists = true;
+
+                                            }           
+                                            
+
+                                            (new Client()).put(mirth.mirth_host, args, function (data, response) {
+
+                                                var output = data.toString();
+                                                console.log(output);               
+                                                var resultHL7 = hl7e.parseString(output);
+                                               
+                                                var tracking_number = resultHL7[4][2][0][0];
+
+                                                params.tracking_number = tracking_number;
+
+                                                var localCreateURL = params.localCreateURL;
+
+                                                var link = params.return_path + "?";
+
+                                                var keys = Object.keys(params);
+
+                                                for (var i = 0; i < keys.length; i++) {
+
+                                                    var key = keys[i];
+
+                                                    if (key == "return_path") continue;
+
+                                                    link += (link.trim().match(/\?$/) ? "" : "&") + key + "=" + encodeURI(params[key]);
+
+                                                }
+
+                                                if (params.return_json == 'true') {
+
+                                                    res.status(200).json(params);
+
+                                                } else {
+
+                                                    if (!trackingNumberExists) {
+
+                                                        var json = {
+                                                            "_id": params.tracking_number,
+                                                            "accession_number": params.accession_number,
+                                                            "patient": {
+                                                                "national_patient_id": params.national_patient_id,
+                                                                "first_name": params.first_name,
+                                                                "middle_name": params.middle_name,
+                                                                "last_name": params.last_name,
+                                                                "date_of_birth": params.date_of_birth,
+                                                                "gender": params.gender,
+                                                                "phone_number": params.phone_number
+                                                            },
+                                                            "sample_type": params.sample_type,
+                                                            "who_order_test": {
+                                                                "first_name": params.sample_collector_first_name,
+                                                                "last_name": params.sample_collector_last_name,
+                                                                "id_number": params.sample_collector_id,
+                                                                "phone_number": params.sample_collector_phone_number
+                                                            },
+                                                            "date_drawn": params.date_sample_drawn,
+                                                            "date_dispatched": params.date_dispatched,
+                                                            "art_start_date": params.art_start_date,
+                                                            "date_received": params.date_received,
+                                                            "sending_facility": params.health_facility_name,
+                                                            "receiving_facility": params.target_lab,
+                                                            "reason_for_test": params.reason_for_test,
+                                                            "test_types": params.tests,
+                                                            "status": (params.status || "Drawn"),
+                                                            "district": params.district,
+                                                            "priority": params.sample_priority,
+                                                            "order_location": params.sample_order_location,
+                                                            "results": {
+                                                            },
+                                                            "date_time": (params.date_time || "")
+                                                        };
+
+                                                        res.render("print", {id: params.tracking_number, path: link, params: JSON.stringify(json),
+                                                            localCreateURL: localCreateURL});
+
+                                                    } else {
+
+                                                        res.redirect(link);
+
+                                                    }
+
+                                                }
+
+                                            });
+                                        
+                                }  
+                                
+                                if (msg)
+                                {
+                                    res.status(200).json({
+                                                    status: "405",
+                                                    error: "true",
+                                                    message: msg,
+                                                    data: {
+                                                           
+                                                           }          
+                                    })
+                                }
+                        }
+                        
+                    });                    
+
+
+                }
+                else{
+
+                     res.status(200).json({
+                                        status: "405",
+                                        error: "true",
+                                        message: "token not provided",
+                                        data: { }          
+                                    })
+
+                }
+
+
+               
+            }
+            else
+            {
+                res.status(200).json({
+                        status: "405",
+                        error: "true",
+                        message: "order not submited",
+                        data: {
+                               
+                               }
+                })
+            }
+
+        /*
             var template = "MSH|^~&||^^||^^|||OML^O21^OML_O21||T|2.5\r" +
                 "PID|1||~^^^^^^||^^|||||||||||||\r" +
                 "ORC||||||||||^^^|||^^^^^^^^||||||||^^^^^^^|^^^^^^^\r" +
@@ -922,7 +1405,7 @@ module.exports = function (router) {
             /*+
              "OBR|1|||^^||||||||||||^^^\r" +
              "NTE|1|P|\r";*/
-
+        /*
             var hl7e = require("hl7");
 
             var hl7 = hl7e.parseString(template);
@@ -1233,6 +1716,7 @@ module.exports = function (router) {
                 }
 
             });
+        */
 
         });          
 
