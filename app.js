@@ -59,6 +59,12 @@ if(process.env.BHT_MODULE) {
 
         portfinder.getPort(function (err, port) {
         
+            s.create_view(function(ee){
+                if (ee.name == 'Error')
+                {
+                 
+                }
+            });
 
             fs.exists('./lib/default_account.json', function(exists) {
                
@@ -79,10 +85,6 @@ if(process.env.BHT_MODULE) {
                     account.create_tmp_tokens_file();
                 }
 
-            });
-
-             s.create_user_view(function(r){
-                console.log(r);
             });
 
             app.listen(port, function () {
