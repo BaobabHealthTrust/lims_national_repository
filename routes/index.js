@@ -542,7 +542,7 @@ module.exports = function (router) {
         })
 
 
-        /**
+    /**
     *@api {get} /query_order_by_tracking_number/:tracking_number/:token Query Patient Orders 2
     *@apiName Query Patient Orders By Tracking Number
     *@apiGroup Order-APIs
@@ -1504,6 +1504,80 @@ module.exports = function (router) {
 
 
 
+    /**
+    *@api {get} /re_authenticate/:username/:password Re-Authenticate for new Token
+    *@apiName Re-Authenticate
+    *@apiGroup Account-APIs
+    *@apiParam {String} username partner username used on account creation
+    *@apiParam {String} password partner password used on account creation
+    *@apiParamExample Example of Request with Parameters
+    * /re_authenticate/ooooo/xxxxxx
+    *@apiSuccess {String} status status of the request
+    *@apiSuccess {String}  error indicating whether the response is an error or not
+    *@apiSuccess {String}  message information regarding re-authentication
+    *@apiSuccess {json}  data where new valid token is allocated
+    *@apiSuccessExample {json} Successful Response Example
+    *{
+    *   status :201,  
+    *   error: false,
+    *   message: 'authenticated',
+    *   data: "XaTB939478P2"
+    *        
+    *    
+    *}
+    *
+    *
+    *@apiError (Error 400) username_or_password_missing username or password not provided
+    *@apiError (Error 400) username_or_password_missing username or password missing
+    *@apiError (Error 400) wrong_username_or_password wrong username or password
+    *@apiErrorExample {json} Error Responce Example
+    *{
+    *   status :400,  
+    *   error: true,
+    *   message: 'not authenticated, wrong username or password'
+    *}
+    *
+    */
+
+
+
+
+router.route('/re_authenticate/:username/:password').get(function(req,res){
+    s.re_authenticate(req.params.username,req.params.password,function(rs,re){
+        console.log(rs);
+        if (req.params.username && req.params.password){
+            if (rs== true)
+            {
+                var token = re;
+                res.status(200).json({
+                    status: 200,
+                    error: false,
+                    message: 'authenticated',
+                    data: token
+                })
+            }
+            else
+            {
+                res.status(200).json({
+                    status: 400,
+                    error: false,
+                    message: 'wrong username or password'
+                    
+                })
+            }
+        }
+        else
+        {
+            res.status(200).json({
+                    status: 400,
+                    error: false,
+                    message: 'username or password not provided'
+                   
+            })
+        }
+    });
+});
+
 
 /**
 *@api {get} /check_token_validity/:token Check Token Validity
@@ -2437,13 +2511,6 @@ module.exports = function (router) {
 * error: true,
 * message: 'token missing'   
 *}
-*
-*
-*
-*
-*
-*
-*
 *
 *
 */
