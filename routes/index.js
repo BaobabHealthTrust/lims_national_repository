@@ -426,8 +426,8 @@ module.exports = function (router) {
                 callback(pbody);
 
             } else {
-
-                callback({});
+              
+                callback(err);
 
             }
 
@@ -451,7 +451,7 @@ module.exports = function (router) {
         var db = "lims_repo";
 
         couch.db(db, 'view', id, function (err, pbody) {
-
+            console.log(err);
             if (!err) {
 
 
@@ -501,6 +501,7 @@ module.exports = function (router) {
 
     router.route('/')
         .get(function (req, res) {
+           
 
             res.status(200).json({message: "Welcome to the LIMS data repo!"});
 
@@ -540,23 +541,245 @@ module.exports = function (router) {
 
         })
 
-    router.route('/query_order/:id')
+
+        /**
+    *@api {get} /query_order_by_tracking_number/:tracking_number/:token Query Patient Orders 2
+    *@apiName Query Patient Orders By Tracking Number
+    *@apiGroup Order-APIs
+    *@apiParam {String} tracking_number tacking number for order whose orders are needed
+    *@apiParam {String} token token in order to access the resource
+    *@apiParamExample Example of Request with Parameters
+    * /query_order_by_npid/XKCH9101010/XTo397ebdu
+    *
+    *@apiSuccess {String} status status of the request
+    *@apiSuccess {String}  error indicating whether the response is an error or not
+    *@apiSuccess {String}  message information regarding authentication
+    *@apiSuccess {json}  data where the orders are allocated
+    *@apiSuccessExample {json} Successful Response Example
+    *{
+    *   status :201,  
+    *   error: false,
+    *   message: 'authenticated',
+    *   data: {
+    *        
+    *                 "_id": "XKCH1288400",
+    *                 "_rev": "9-ff6372b4f975c763b07b106cfc749e03",
+    *                 "patient": {
+    *                       "national_patient_id": "00000",
+    *                       "first_name": "f-name",
+    *                      "middle_name": "m-name",
+    *                       "last_name": " l-name",
+    *                       "date_of_birth": "0000",
+    *                       "gender": "M",
+    *                       "phone_number": "000"
+    *                   },
+    *                   "sample_type": "Blood",
+    *                   "who_order_test": {
+    *                       "first_name": "f-name",
+    *                       "last_name": "l-name",
+    *                       "id_number": "0000",
+    *                       "phone_number": "0000"
+    *                   },
+    *                   "date_drawn": "20160614094212",
+    *                   "date_dispatched": "",
+    *                   "art_start_date": "",
+    *                   "date_received": "20160614094212",
+    *                   "sending_facility": "Kamuzu Central Hospital",
+    *                   "receiving_facility": "Kamuzu Central Hospital",
+    *                   "reason_for_test": "",
+    *                   "test_types": [
+    *                       "Test Name",
+    *                       "Test Name"
+    *                   ],
+    *                   "status": "specimen-accepted",
+    *                   "district": "Lilongwe",
+    *                   "priority": "Routine",
+    *                   "order_location": "4B",
+    *                   "results": {
+    *                       "Test Name": {
+    *                           "20160514094212": {
+    *                               "test_status": "Drawn",
+    *                               "remarks": "",
+    *                               "datetime_started": "20160514094212",
+    *                               "datetime_completed": "",
+    *                               "results": {
+    *                               }
+    *                           },
+    *                           "20160514094213": {
+    *                               "test_status": "pending",
+    *                               "remarks": "",
+    *                               "datetime_started": "",
+    *                               "datetime_completed": "",
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "00"
+    *                           },
+    *                           "20160514101736": {
+    *                               "test_status": "started",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 10:17:36",
+    *                               "datetime_completed": null,
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "00"
+    *                               },
+    *                               "results": [
+    *                               ]
+    *                           },
+    *                           "20160514101806": {
+    *                               "test_status": "completed",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 10:17:36",
+    *                               "datetime_completed": "2016-06-14 10:18:06",
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "00"
+    *                               },
+    *                               "results": {
+    *                                   "K": "6.36 mmol/L",
+    *                                   "Na": "132.2 mmol/L",
+    *                                   "Cl": "98.1 mmol/L"
+    *                               }
+    *                           }
+    *                       },
+    *                       "Test Name": {
+    *                           "20160514094212": {
+    *                               "test_status": "Drawn",
+    *                               "remarks": "",
+    *                               "datetime_started": "20160514094212",
+    *                               "datetime_completed": "",
+    *                               "results": {
+    *                               }
+    *                           },
+    *                           "20160514094220": {
+    *                               "test_status": "pending",
+    *                               "remarks": "",
+    *                               "datetime_started": "",
+    *                               "datetime_completed": "",
+    *                              "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "000"
+    *                               }
+    *                           },
+    *                          "20160514145459": {
+    *                               "test_status": "started",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 14:54:59",
+    *                               "datetime_completed": null,
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "000"
+    *                               },
+    *                               "results": [
+    *                               ]
+    *                           },
+    *                           "20160514145520": {
+    *                               "test_status": "completed",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 14:54:59",
+    *                               "datetime_completed": "2016-06-14 14:55:20",
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "0000"
+    *                               },
+    *                               "results": {
+    *                                   "Urea": "133.5 mg/dl",
+    *                                   "Creatinine": "0"
+    *                               }
+    *                           }
+    *                       }
+    *                   },
+    *                   "date_time": "20160614094212"            
+    *   }   
+    *}
+    *
+    *
+    *@apiError (Error 400) tracking_number_missing tracking number for order not provided
+    *@apiError (Error 400) token_missing token not provided
+    *@apiError (Error 400) token_expired token not provided,re-authenticate for valid token
+    *@apiErrorExample {json} Error Responce Example
+    *{
+    *   status :400,  
+    *   error: true,
+    *   message: 'tracking number missing',
+    *}
+    *
+    */
+
+
+    router.route('/query_order_by_tracking_number/:id/:token')
         .get(function (req, res) {
+              
+            if(!req.params.id){
+             
+                res.status(200).json({
+                    status: 200,
+                    error: true,
+                    message: 'order tracking number not provided'
+                })
+            }
+            else if (!req.params.token)
+            {
+                 res.status(200).json({
+                    status: 200,
+                    error: true,
+                    message: 'token not provided'
+                })
+            }
+            else
+            {
 
-            doRead(req.params.id, function (result) {
+                    s.authenticate_partner(req.params.token,function(exp){
+                        var exp = exp;
+                        var nw = (new Date()).getTime();
+                        if (exp < nw)
+                        {
+                            res.status(200).json({
+                                    status: 405,
+                                    error: true,
+                                    message: "token expired"                                    
+                            })
+                        }else{ 
+                                doRead(req.params.id, function (result) {
 
-                res.status(200).json(result);
+                                    res.status(200).json(
+                                        {   status: 200,
+                                            error: false,
+                                            message: 'orders retrived',
+                                            data: result
+                                        });
 
-            }, true)
+                                }, true)
+                        }
+                    });
+
+            }
 
         })
+
+
+
+
+
+
+
+
+
 
     router.route('/query_order')
         .get(function (req, res) {
 
             var url_parts = url.parse(req.url, true);
 
+
             var query = url_parts.query;
+          
 
             doRead(query.id, function (result) {
 
@@ -566,16 +789,301 @@ module.exports = function (router) {
 
         })
 
-    router.route('/query_order_by_npid/:id')
+
+
+
+
+
+
+
+
+
+
+    /**
+    *@api {get} /query_order_by_npid/:npid/:token Query Patient Orders 1
+    *@apiName Query Patient Orders by NPID
+    *@apiGroup Order-APIs
+    *@apiParam {String} national_patient_id patient national patient id whose orders are needed
+    *@apiParam {String} token token in order to access the resource
+    *@apiParamExample Example of Request with Parameters
+    * /query_order_by_npid/00007R/XTo397ebdu
+    *
+    *@apiSuccess {String} status status of the request
+    *@apiSuccess {String}  error indicating whether the response is an error or not
+    *@apiSuccess {String}  message information regarding authentication
+    *@apiSuccess {json}  data where the orders are allocated
+    *@apiSuccessExample {json} Successful Response Example
+    *{
+    *   status :201,  
+    *   error: false,
+    *   message: 'authenticated',
+    *   data: {
+    *        [
+    *                   "_id": "XKCH1288400",
+    *                  "_rev": "9-ff6372b4f975c763b07b106cfc749e03",
+    *                 "patient": {
+    *                       "national_patient_id": "00000",
+    *                       "first_name": "f-name",
+    *                      "middle_name": "m-name",
+    *                       "last_name": " l-name",
+    *                       "date_of_birth": "0000",
+    *                       "gender": "M",
+    *                       "phone_number": "000"
+    *                   },
+    *                   "sample_type": "Blood",
+    *                   "who_order_test": {
+    *                       "first_name": "f-name",
+    *                       "last_name": "l-name",
+    *                       "id_number": "0000",
+    *                       "phone_number": "0000"
+    *                   },
+    *                   "date_drawn": "20160614094212",
+    *                   "date_dispatched": "",
+    *                   "art_start_date": "",
+    *                   "date_received": "20160614094212",
+    *                   "sending_facility": "Kamuzu Central Hospital",
+    *                   "receiving_facility": "Kamuzu Central Hospital",
+    *                   "reason_for_test": "",
+    *                   "test_types": [
+    *                       "Test Name",
+    *                       "Test Name"
+    *                   ],
+    *                   "status": "specimen-accepted",
+    *                   "district": "Lilongwe",
+    *                   "priority": "Routine",
+    *                   "order_location": "4B",
+    *                   "results": {
+    *                       "Test Name": {
+    *                           "20160514094212": {
+    *                               "test_status": "Drawn",
+    *                               "remarks": "",
+    *                               "datetime_started": "20160514094212",
+    *                               "datetime_completed": "",
+    *                               "results": {
+    *                               }
+    *                           },
+    *                           "20160514094213": {
+    *                               "test_status": "pending",
+    *                               "remarks": "",
+    *                               "datetime_started": "",
+    *                               "datetime_completed": "",
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "00"
+    *                           },
+    *                           "20160514101736": {
+    *                               "test_status": "started",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 10:17:36",
+    *                               "datetime_completed": null,
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "00"
+    *                               },
+    *                               "results": [
+    *                               ]
+    *                           },
+    *                           "20160514101806": {
+    *                               "test_status": "completed",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 10:17:36",
+    *                               "datetime_completed": "2016-06-14 10:18:06",
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "00"
+    *                               },
+    *                               "results": {
+    *                                   "K": "6.36 mmol/L",
+    *                                   "Na": "132.2 mmol/L",
+    *                                   "Cl": "98.1 mmol/L"
+    *                               }
+    *                           }
+    *                       },
+    *                       "Test Name": {
+    *                           "20160514094212": {
+    *                               "test_status": "Drawn",
+    *                               "remarks": "",
+    *                               "datetime_started": "20160514094212",
+    *                               "datetime_completed": "",
+    *                               "results": {
+    *                               }
+    *                           },
+    *                           "20160514094220": {
+    *                               "test_status": "pending",
+    *                               "remarks": "",
+    *                               "datetime_started": "",
+    *                               "datetime_completed": "",
+    *                              "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "000"
+    *                               }
+    *                           },
+    *                          "20160514145459": {
+    *                               "test_status": "started",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 14:54:59",
+    *                               "datetime_completed": null,
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "000"
+    *                               },
+    *                               "results": [
+    *                               ]
+    *                           },
+    *                           "20160514145520": {
+    *                               "test_status": "completed",
+    *                               "remarks": "",
+    *                               "datetime_started": "2016-06-14 14:54:59",
+    *                               "datetime_completed": "2016-06-14 14:55:20",
+    *                               "who_updated": {
+    *                                   "first_name": "f-name",
+    *                                   "last_name": "l-name",
+    *                                   "ID_number": "0000"
+    *                               },
+    *                               "results": {
+    *                                   "Urea": "133.5 mg/dl",
+    *                                   "Creatinine": "0"
+    *                               }
+    *                           }
+    *                       }
+    *                   },
+    *                   "date_time": "20160614094212"
+    *                   ],
+    *                   [
+    *                        {
+    *                           "_id": "XKCH1718234",
+    *                           "_rev": "3-8017d4d27975ab1fb617a06ca23cd20d",
+    *                           "test_types": [
+    *                               "Test Name"
+    *                           ],
+    *                           "results": {
+    *                              "Hepatitis C Test": {
+    *                                   "20171106092004": {
+    *                                       "test_status": "Drawn",
+    *                                       "remarks": "",
+    *                                       "datetime_started": "20171106092004",
+    *                                       "datetime_completed": "",
+    *                                       "results": {
+    *                                       }
+    *                                   }
+    *                               }
+    *                           },
+    *                           "who_dispatched": {
+    *                               "id_number": "000",
+    *                               "first_name": "f-name",
+    *                               "last_name": "l-name",
+    *                               "phone_number": "0000"
+    *                           },
+    *                           "date_dispatched": "20171106102644",
+    *                           "patient": {
+    *                               "national_patient_id": "00000",
+    *                               "first_name": "f-name",
+    *                               "middle_name": " ",
+    *                               "last_name": "l-name",
+    *                              "date_of_birth": "0000",
+    *                               "gender": "F",
+    *                               "phone_number": "0000"
+    *                           },
+    *                           "sample_type": "Blood",
+    *                           "who_order_test": {
+    *                               "first_name": "f-name",
+    *                               "last_name": "l-name",
+    *                               "id_number": "0000",
+    *                               "phone_number": "00000"
+    *                           },
+    *                           "date_drawn": "000",
+    *                           "art_start_date": "000",
+    *                           "date_received": "0000",
+    *                           "sending_facility": "Kamuzu Central Hospital",
+    *                           "receiving_facility": "KCH",
+    *                           "reason_for_test": "Routin",
+    *                           "status": "Drawn",
+    *                           "district": "Lilongwe",
+    *                           "priority": "Routin",
+    *                           "order_location": "1A",
+    *                           "date_time": "20171106092004",
+    *                           "rejection_reason": "",
+    *                           "who_updated": {
+    *                               "id_number": "000",
+    *                               "first_name": "f-name",
+    *                               "last_name": "l-name",
+    *                               "phone_number": "000"
+    *                           }
+    *                        }
+    *                   ]
+    *                
+    *   }   
+    *}
+    *
+    *
+    *@apiError (Error 400) national_patient_id_missing patient national id not provided
+    *@apiError (Error 400) token_missing token not provided
+    *@apiError (Error 400) token_expired token not provided,re-authenticate for valid token
+    *@apiErrorExample {json} Error Responce Example
+    *{
+    *   status :400,  
+    *   error: true,
+    *   message: 'national patient id missing',
+    *}
+    *
+    */
+
+
+
+    router.route('/query_order_by_npid/:id/:token')
         .get(function (req, res) {
+            
+            if(!req.params.id){
+             
+                res.status(200).json({
+                    status: 200,
+                    error: true,
+                    message: 'patient  national id not provided'
+                })
+            }
+            else if (!req.params.token)
+            {
+                 res.status(200).json({
+                    status: 200,
+                    error: true,
+                    message: 'token not provided'
+                })
+            }
+            else
+            {
+                 s.authenticate_partner(req.params.token,function(exp){
+                        var exp = exp;
+                        var nw = (new Date()).getTime();
+                        if (exp < nw)
+                        {
+                            res.status(200).json({
+                                    status: 405,
+                                    error: true,
+                                    message: "token expired"                                    
+                            })
+                        }else{ 
+                            doReadByNPID(req.params.id, function (result) {
 
-            doReadByNPID(req.params.id, function (result) {
+                                res.status(200).json({
+                                    status : 200,
+                                    error : false,
+                                    message: 'order retrived',
+                                    data: { order: result}
+                                });
 
-                res.status(200).json(result);
-
-            })
+                            })
+                        }
+                });
+            }
 
         })
+
+
 
     router.route('/update_order')
         .post(function (req, res) {
@@ -694,6 +1202,8 @@ module.exports = function (router) {
 
         })
 
+
+
     router.route('/sample_tests/:id')
         .get(function (req, res) {
 
@@ -709,6 +1219,60 @@ module.exports = function (router) {
             res.status(200).json(sample_types[req.params.id.trim().toLowerCase()]);
 
         })
+
+
+
+    /**
+    *@api {post} /create_nlims_account Create Account
+    *@apiName Create Account
+    *@apiGroup Account-APIs
+    *@apiParam {String} partner name of partner to be consuming api service
+    *@apiParam {String} app_name name of application to be accessing the api service
+    *@apiParam {String} location partner location
+    *@apiParam {String} password password set for the account to be used for re-aunthentication when token expires
+    *@apiParam {String} username username set for the account to be used for re-aunthentication when token expires
+    *@apiParam {String} token token given when authenticated
+    *@apiParamExample Example of Request with Parameters
+    * {
+    *   partner  : 'baobab health trust',
+    *   app_name : 'iblis',
+    *   location : 'lilongwe',  
+    *   username : 'aaaa',
+    *   password : 'xxxx',
+    *   token    : 'XQWTDPK29900'
+    * }
+    *@apiSuccess {String} status status of the request
+    *@apiSuccess {String}  error indicating whether the response is an error or not
+    *@apiSuccess {String}  message information regarding account creation
+    *@apiSuccess {json}  data where token is allocated, to be used for accessing the api resources when is valid
+    *@apiSuccessExample {json} Successful Response Example
+    *{
+    *   status :201,  
+    *   error: false,
+    *   message: 'account created',
+    *   data: {
+    *       token: "XaTB939478P2"
+    *   }   
+    *}
+    *
+    *
+    *@apiError (Error 400) username_missing username is not provided
+    *@apiError (Error 400) password_missing password is not provided
+    *@apiError (Error 400) location is not provided
+    *@apiError (Error 400) partner partner name is not provided
+    *@apiError (Error 400) app_nam application name is not provided
+    *@apiError (Error 400) token token is not provided
+    *@apiError (Error 400) account_already_exist account already exist
+    *@apiError (Error 400) token_expired token expired,re-authenticate for valid token
+    *@apiErrorExample {json} Error Responce Example
+    *{
+    *   status :400,  
+    *   error: true,
+    *   message: 'account already exist',
+    *}
+    *
+    */
+
 
     router.route('/create_nlims_account').post(function(req,res){
         
@@ -737,6 +1301,10 @@ module.exports = function (router) {
         {
             err_msg = "username not provided";
         }
+        else if(!data.token)
+        {
+            err_msg = "token not provided";
+        }
         else
         {            
             var token = data['token'];
@@ -753,16 +1321,15 @@ module.exports = function (router) {
 
                     if (got_to == token && got_exp > tim)
                     {   
-                        da.splice(da.indexOf(el),1);
+                        
                         checker = true;
                         s.create_account(data['partner'],data['app_name'],data['location'],data['password'],data['username'], function(err,re){
                             if (err == false)
-                            {      
+                            {   da.splice(da.indexOf(el),1);   
                                     res.status(200).json({
                                             "status": 200,
-                                            "message": "created",
+                                            "message": "account created",
                                             "error": false,
-                                            "description": "",
                                             "data": {
                                                 token: re
                                             }
@@ -772,12 +1339,8 @@ module.exports = function (router) {
                             {
                                     res.status(200).json({
                                                 "status": 400,
-                                                "message": "account already exists",
+                                                "message": "account already exist",
                                                 "error": true,
-                                                "description": "",
-                                                "data": {
-                                                    token: ""
-                                                }
                                         });
                             }
                             
@@ -820,45 +1383,83 @@ module.exports = function (router) {
                         "status": 400,
                         "message": err_msg,
                         "error": true,
-                        "description": err_msg,
-                        "data": {}
                     });
-        }
-        var da = {
-               "_id": "baobab1",
-               "_rev": "5-d20a614041f61a8809ac8a0a2c1723b1",
-               "username": "username",
-               "salt": "salt",
-               "application": "iblis",
-               "site_code": "KCH",
-               "password": "passcode",
-               "type": "User12",
-               "token": "token",
-               "contact_details": {
-                   "name": "gift",
-                   "email": "gift@gmail"
-               },
-               "origin": "Lilongwe",
-               "partner": "baobab",
-               "voided": false
-            };         
-             
+        }                 
 
     })
 
-    router.route('/authenticate').post(function(req,res){
 
-        var username = req.body.username;
-        var password = req.body.password;
+
+
+
+
+
+
+
+    /**
+    *@api {get} /authenticate/:username/:password Authenticate for new Account
+    *@apiName Authenticate
+    *@apiGroup Account-APIs
+    *@apiParam {String} username default username for the api service
+    *@apiParam {String} password default password for the api service
+    *@apiParamExample Example of Request with Parameters
+    * /authenticate/ooooo/xxxxxx
+    *@apiSuccess {String} status status of the request
+    *@apiSuccess {String}  error indicating whether the response is an error or not
+    *@apiSuccess {String}  message information regarding authentication
+    *@apiSuccess {json}  data where token is allocated, to be used for account creation
+    *@apiSuccessExample {json} Successful Response Example
+    *{
+    *   status :201,  
+    *   error: false,
+    *   message: 'authenticated',
+    *   data: {
+    *       token: "XaTB939478P2"
+    *   }   
+    *}
+    *
+    *
+    *@apiError (Error 400) username_missing username to get access to account creation not provided
+    *@apiError (Error 400) password_missing password to get access to account creation not provided
+    *@apiError (Error 400) not_authenticated have no access to the account creation
+    *@apiErrorExample {json} Error Responce Example
+    *{
+    *   status :400,  
+    *   error: true,
+    *   message: 'not authenticated',
+    *}
+    *
+    */
+
+
+
+    router.route('/authenticate/:username/:password').get(function(req,res){
+
+        var username = req.params.username;
+        var password = req.params.password;
         var msg = null;
 
         if (!username)
         {
             msg = "username missing";
+            var response ={
+                        status: "405",
+                        error: "true",
+                        message: "username missing"
+                    }
+
+                    res.status(200).json(response);
         }
         else if (!password)
         {
             msg = "password missing";
+            var response ={
+                        status: "405",
+                        error: "true",
+                        message: "password missing"
+                    }
+
+                    res.status(200).json(response);
         }
         else{
           
@@ -886,10 +1487,7 @@ module.exports = function (router) {
                     var response ={
                         status: "405",
                         error: "true",
-                        message: "not authenticated",
-                        data: {
-                                token: ""
-                               }
+                        message: "not authenticated"
                     }
 
                     res.status(200).json(response);
@@ -903,31 +1501,202 @@ module.exports = function (router) {
 
     })
 
-    router.route('/check_token').post(function(req,res){
-        s.authenticate_partner("Y50KJRVUTDpX",function(exp){
-            var exp = exp;
-            var nw = (new Date()).getTime();
-            if (exp < nw)
-            {
-                res.status(200).json({
-                        status: "405",
-                        error: "true",
-                        message: "token expired",
-                        
-                })
-            }
-            else
-            {
-                res.status(200).json({
-                        status: "405",
-                        error: "false",
-                        message: "authenticated",
-                        
-                })
-            }
-            
-        });
+
+
+
+
+/**
+*@api {get} /check_token_validity/:token Check Token Validity
+*@apiName Check Token Validity
+*@apiGroup Account-APIs
+*@apiParam {String} token token to be checked
+*@apiParamExample Example of Request with Parameters
+* /check_token_validity/gihwkDTE8vTV
+*@apiSuccess {String} status status of the request
+*@apiSuccess {String}  error indicating whether the response is an error or not
+*@apiSuccess {String}  message information regarding validity of token
+*@apiSuccessExample {json} Successful Response Example
+*{
+* status :200,  
+* error: false,
+* message: 'token valid'
+*}
+*
+*
+*
+*@apiError (Error 400) token_missing token used to access the resource is not provided
+*@apiError (Error 400) token_expired token used to access the resoruce is expired
+*@apiErrorExample {json} Error Responce Example
+*{
+* status :400,  
+* error: true,
+* message: 'token expired'   
+*}
+*
+*/
+
+    router.route('/check_token_validity/:token').get(function(req,res){
+        var token = req.params.token;
+
+        if (req.params.token){
+            s.authenticate_partner(token,function(exp){
+                var exp = exp;
+                var nw = (new Date()).getTime();
+                if (exp < nw)
+                {
+                    res.status(200).json({
+                            status: "405",
+                            error: "true",
+                            message: "token expired",
+                            
+                    })
+                }
+                else
+                {
+                    res.status(200).json({
+                            status: "200",
+                            error: "false",
+                            message: "token valid",
+                            
+                    })
+                }
+                
+            });
+        }else
+        {
+            res.status(200).json({
+                            status: "405",
+                            error: true,
+                            message: "token is not provided"             
+            })
+        }
+
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+*@api {post} /create_hl7_order Create Order
+*@apiName Create hl7 Order 
+*@apiGroup Order-APIs
+*@apiParam {String} first_name first name of patient to whom order belongs
+*@apiParam {String} last_name  last name of patient to whom order belongs
+*@apiParam {String} middle_name middle name of patient to whom order belongs
+*@apiParam {String} phone_number phone number of patient to whom order belongs
+*@apiParam {String} date_of_birth date of birth of patient to whom order belongs
+*@apiParam {String} gender gender of patient to whom order belongs
+*@apiParam {String} national_patient_id national patient id of patient to whom order belongs
+*@apiParam {String} sample_collector_last_name first name of person collecting the order's sample
+*@apiParam {String} sample_collector_first_name last name of person collecting the order's sample
+*@apiParam {String} sample_collector_phone_number phone number of person collecting the order's sample
+*@apiParam {String} sample_collector_id id of person collecting the order's sample
+*@apiParam {String} sample_order_location location at which the order is placed (like ward)
+*@apiParam {String} date_sample_drawn date at which sample was drawn
+*@apiParam {String} [art_start_date] art start date of patient if patient is enrolled in art program
+*@apiParam {String} [date_received] date at which the sample was received
+*@apiParam {String} health_facility_name facility name at which the order is ordered
+*@apiParam {String} sample_priority priority level of the sample
+*@apiParam {String} tests tests ordered from the sample
+*@apiParam {String} district district of the health facility at which the order is placed
+*@apiParam {String} target_lab the lab at which the sample is to be analysed                     
+*@apiParam {String} reason_for_test 
+*@apiParam {String} token token in order to access this resource
+*@apiParam {String} return_json specifying if want response in json (true/false)
+*@apiParamExample Example of Request with Parameters 
+* {
+*          "district": "lilongwe",
+*          "health_facility_name": "Kawale Health Centre",
+*          "first_name": "f-name",
+*          "last_name": "l-name",
+*          "middle_name": "m-name",
+*          "date_of_birth": "00000000",
+*          "gender": "m",
+*          "national_patient_id": "00007R",
+*          "requesting_clinician": "John Doe",
+*          "sample_type": "Blood",
+*          "tests": ['Renal Function Test', 'Viral Load', 'FBC'],
+*          "date_sample_drawn": "0000000",
+*          "sample_priority": "routine",
+*          "target_lab": "Kamuzu Central Hospital",       
+*          "sample_collector_last_name": "f-name",
+*          "sample_collector_first_name": "l-name",
+*          "sample_collector_phone_number": "00000",
+*          "sample_collector_id": "10015",
+*          "sample_order_location": "OPD",
+*          "reason_for_test": "",
+*          "art_start_date": "00000",
+*          "date_received":  "00000000",             
+*          "return_json": 'true'   
+* }
+*
+*@apiSuccess {String} status status of the request
+*@apiSuccess {String}  error indicating whether the response is an error or not
+*@apiSuccess {String}  message information regarding the response
+*@apiSuccess {json} data where tracking number of the order is located
+*@apiSuccessExample {json} Successful Responce Example
+*{
+* status :200,  
+* error: false,
+* message: 'order created successfuly',
+* data: {
+*       tracking_number: XJDKE99090    
+*   }
+*}
+*
+*@apiError (Error 400) token_expired token used to access the resoruce is expired
+*@apiError (Error 400) district_missing district not provided
+*@apiError (Error 400) health_facility_name health facility not provided
+*@apiError (Error 400) first_name first patient first name not provided
+*@apiError (Error 400) last_name last patient last name not provided
+*@apiError (Error 400) phone_number patient phone number not provided
+*@apiError (Error 400) gender patient patient gender not provided
+*@apiError (Error 400) national_patient_id patient national id not provided
+*@apiError (Error 400) sample_type order sample type not provided
+*@apiError (Error 400) tests order order tests not provided
+*@apiError (Error 400) date_drawn date sample drawn not provided
+*@apiError (Error 400) sample_priority sample priority not provided 
+*@apiError (Error 400) target_lab target lab not provided
+*@apiError (Error 400) date_drawn date sample drawn not provided
+*@apiError (Error 400) sample_order_location location for sample ordering not provided
+*@apiError (Error 400) sample_collector_first_name first name for sample collector not provided
+*@apiError (Error 400) sample_collector_last_name last name for sample collector not 
+*@apiError (Error 400) token token for resource accessing not provided 
+*
+*
+*
+*@apiErrorExample {json} Error Responce Example
+*{
+* status :400,  
+* error: true,
+* message: 'token missing'   
+*}
+*
+*/
 
 
     router.route('/create_hl7_order')
@@ -1015,11 +1784,7 @@ module.exports = function (router) {
                                 {
                                     msg = "sample order location not provided";
                                 }
-                                 else if(!params['sample_priority'])
-                                {
-                                    msg = "sample_priority not provided";
-                                }
-                                 else if(!params['sample_collector_first_name'])
+                                else if(!params['sample_collector_first_name'])
                                 {
                                     msg = "first name for person ordering not provided";
                                 }
@@ -1269,7 +2034,8 @@ module.exports = function (router) {
                                             
 
                                             (new Client()).put(mirth.mirth_host, args, function (data, response) {
-
+                                                console.log(response);
+                                                console.log("--------------------------------");
                                                 var output = data.toString();
                                                 console.log(output);               
                                                 var resultHL7 = hl7e.parseString(output);
@@ -1296,7 +2062,11 @@ module.exports = function (router) {
 
                                                 if (params.return_json == 'true') {
 
-                                                    res.status(200).json(params);
+                                                    res.status(200).json({
+                                                            status: 200,
+                                                            error: false,
+                                                            data: params.tracking_number
+                                                        });
 
                                                 } else {
 
@@ -1359,9 +2129,7 @@ module.exports = function (router) {
                                                     status: "405",
                                                     error: "true",
                                                     message: msg,
-                                                    data: {
-                                                           
-                                                           }          
+                                                        
                                     })
                                 }
                         }
@@ -1395,330 +2163,20 @@ module.exports = function (router) {
                                }
                 })
             }
-
-        /*
-            var template = "MSH|^~&||^^||^^|||OML^O21^OML_O21||T|2.5\r" +
-                "PID|1||~^^^^^^||^^|||||||||||||\r" +
-                "ORC||||||||||^^^|||^^^^^^^^||||||||^^^^^^^|^^^^^^^\r" +
-                "TQ1|1||||||||^^^\r" +
-                "SPM|1|||^\r";
-            /*+
-             "OBR|1|||^^||||||||||||^^^\r" +
-             "NTE|1|P|\r";*/
-        /*
-            var hl7e = require("hl7");
-
-            var hl7 = hl7e.parseString(template);
-
-            var date = (new Date());
-
-            hl7[0][4][0][0] = (params.health_facility_name || "");
-
-            hl7[0][6][0][0] = (params.target_lab || "");
-
-            hl7[0][7][0][0] = date.YYYYMMDDHHMMSS();
-
-            hl7[0][10][0][0] = date.YYYYMMDDHHMMSS();
-
-            // hl7[1][3][0][0] = (params.national_patient_id || "");
-
-            hl7[1][5][0][0] = (params.last_name || "");
-
-            hl7[1][5][0][1] = (params.first_name || "");
-
-            hl7[1][5][0][2] = (params.middle_name || "");
-
-            hl7[1][13][0][0] = (params.phone_number || "");
-
-            if (params.date_of_birth) {
-
-                var dob = (new Date(params.date_of_birth));
-
-                var formattedDob = dob.YYYYMMDDHHMMSS();
-
-                hl7[1][7][0][0] = (formattedDob || "");
-
-            }
-
-            hl7[1][8][0][0] = (params.gender || "");
-
-            hl7[1][3][0][0] = (params.national_patient_id || "");
-
-            hl7[4][2][0][0] = (params.tracking_number || "");
-
-            hl7[2][21][0][0] = (params.health_facility_name || "");
-
-            hl7[2][10][0][0] = (params.sample_collector_id || "");
-
-            hl7[2][10][0][1] = (params.sample_collector_last_name || "");
-
-            hl7[2][10][0][2] = (params.sample_collector_first_name || "");
-
-            hl7[2][14][0][0] = (params.sample_collector_phone_number || "");
-
-            hl7[2][22][0][2] = ((params.district && params.district.length > 0) ? params.district : JSON.parse(configs)["district"]);
-
-            hl7[2][13][0][1] = (params.sample_order_location || "");
-
-            var timestamp = moment(new Date()).format("YYYYMMDDHHmmss");
-
-            hl7[2][9][0][0] = timestamp;
-
-            // hl7[3][9][0][1] = (params.sample_priority || "");
-
-            hl7[4][4][0][1] = (params.sample_type || "");
-
-            
-            for (var i = 0; i < params.tests.length; i++) {
-
-                hl7.push([
-                    'OBR',
-                    [
-                        [ (i + 1).toString() ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '',
-                            '',
-                            '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '',
-                            '',
-                            '',
-                            '']
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ '' ]
-                    ],
-                    [
-                        [ 'F' ]
-                    ],
-                    [
-                        [ ' ' ]
-                    ] ]);
-
-                hl7.push([ 'NTE',
-                    [
-                        [ (i + 1).toString() ]
-                    ],
-                    [
-                        [ 'P' ]
-                    ],
-                    [
-                        [ '' ]
-                    ] ]);
-
-                hl7[5 + (2 * i)][4][0][1] = (params.tests[i].replace(/\&/g, "ampersand") || "");
-
-                var today = (new Date());
-
-                var dateDrawn = ((new Date(params.date_sample_drawn)) || (new Date()));
-
-                var dateDrawnFormatted = dateDrawn.YYYYMMDDHHMMSS();
-
-                hl7[5 + (2 * i)][7][0][0] = (!isNaN(dateDrawn.getFullYear()) ? dateDrawnFormatted : "");
-
-                var artStartDate = ((new Date(params.art_start_date)) || (new Date()));
-
-                var artStartDateFormatted = artStartDate.YYYYMMDDHHMMSS();
-
-                hl7[5 + (2 * i)][6][0][0] = (!isNaN(artStartDate.getFullYear()) ? artStartDateFormatted : "");
-
-                var dateReceived = ((new Date(params.date_received)) || (new Date()));
-
-                var dateReceivedFormatted = dateReceived.YYYYMMDDHHMMSS();
-
-                hl7[5 + (2 * i)][14][0][0] = (!isNaN(dateReceived.getFullYear()) ? dateReceivedFormatted : "");
-
-                var dateDispatched = ((new Date(params.date_dispatched)) || (new Date()));
-
-                var dateDispatchedFormatted = dateDispatched.YYYYMMDDHHMMSS();
-
-                hl7[5 + (2 * i)][8][0][0] = (!isNaN(dateDispatched.getFullYear()) ? dateDispatchedFormatted : "");
-
-                hl7[5 + (2 * i)][5][0][0] = (params.sample_priority || "");
-
-                hl7[5 + (2 * i)][13][0][0] = (params.reason_for_test || "");
-
-                hl7[5 + (2 * i)][16][0][0] = (params.sample_collector_id || "");
-
-                hl7[5 + (2 * i)][16][0][1] = (params.sample_collector_last_name || "");
-
-                hl7[5 + (2 * i)][16][0][2] = (params.sample_collector_first_name || "");
-
-                hl7[5 + (2 * i)][16][0][3] = (params.sample_collector_phone_number || "");
-
-                hl7[6 + (2 * i)][3][0][0] = (params.status || "Drawn");
-
-            }
-
-            var hl7Str = hl7e.serializeJSON(hl7);
-           
-            var mirth = JSON.parse(configs);
-
-            var options_auth = {user: mirth.mirth_username, password: mirth.mirth_password};
-
-            var Client = require('node-rest-client').Client;
-
-            var args = {
-                data: hl7Str,
-                headers: {"Content-Type": "text/plain"}
-            };
-
-
-            var trackingNumberExists = false;
-
-            if (params.tracking_number && params.tracking_number.trim().length > 0) {
-
-                trackingNumberExists = true;
-
-            }           
-        
-            (new Client()).put(mirth.mirth_host, args, function (data, response) {
-
-                var output = data.toString();
-                console.log(hl7Str);               
-                var resultHL7 = hl7e.parseString(output);
-               
-                var tracking_number = resultHL7[4][2][0][0];
-
-                params.tracking_number = tracking_number;
-
-                var localCreateURL = params.localCreateURL;
-
-                var link = params.return_path + "?";
-
-                var keys = Object.keys(params);
-
-                for (var i = 0; i < keys.length; i++) {
-
-                    var key = keys[i];
-
-                    if (key == "return_path") continue;
-
-                    link += (link.trim().match(/\?$/) ? "" : "&") + key + "=" + encodeURI(params[key]);
-
-                }
-
-                if (params.return_json == 'true') {
-
-                    res.status(200).json(params);
-
-                } else {
-
-                    if (!trackingNumberExists) {
-
-                        var json = {
-                            "_id": params.tracking_number,
-                            "accession_number": params.accession_number,
-                            "patient": {
-                                "national_patient_id": params.national_patient_id,
-                                "first_name": params.first_name,
-                                "middle_name": params.middle_name,
-                                "last_name": params.last_name,
-                                "date_of_birth": params.date_of_birth,
-                                "gender": params.gender,
-                                "phone_number": params.phone_number
-                            },
-                            "sample_type": params.sample_type,
-                            "who_order_test": {
-                                "first_name": params.sample_collector_first_name,
-                                "last_name": params.sample_collector_last_name,
-                                "id_number": params.sample_collector_id,
-                                "phone_number": params.sample_collector_phone_number
-                            },
-                            "date_drawn": params.date_sample_drawn,
-                            "date_dispatched": params.date_dispatched,
-                            "art_start_date": params.art_start_date,
-                            "date_received": params.date_received,
-                            "sending_facility": params.health_facility_name,
-                            "receiving_facility": params.target_lab,
-                            "reason_for_test": params.reason_for_test,
-                            "test_types": params.tests,
-                            "status": (params.status || "Drawn"),
-                            "district": params.district,
-                            "priority": params.sample_priority,
-                            "order_location": params.sample_order_location,
-                            "results": {
-                            },
-                            "date_time": (params.date_time || "")
-                        };
-
-                        res.render("print", {id: params.tracking_number, path: link, params: JSON.stringify(json),
-                            localCreateURL: localCreateURL});
-
-                    } else {
-
-                        res.redirect(link);
-
-                    }
-
-                }
-
-            });
-        */
+     
 
         });          
+
+
+
+
+
+
+
+
+
+
+
 
     router.route('/print/:id')
         .get(function (req, res) {
@@ -1786,9 +2244,19 @@ module.exports = function (router) {
 
                 res.end();
 
+                res.status(200).json(label);
+
             })
 
         });
+
+
+
+
+
+
+
+
 
 
     router.route('/print')
@@ -1802,59 +2270,279 @@ module.exports = function (router) {
 
         });
 
-    router.route('/query_results/:id')
+
+
+
+
+
+
+
+
+
+
+/**
+*@api {get} /query_results/:tracking_number/:token Query Order Results
+*@apiName Query Order Results
+*@apiGroup Order-APIs
+*@apiParam {String} tracking_number order tracking number
+*@apiParam {String} token token in order to access the resource
+*@apiParamExample Example of Request with Parameters 
+* /query_results/XQCH178E371/gihwkDTE8vTV
+*@apiSuccess {String} status status of the request
+*@apiSuccess {String}  error indicating whether the response is an error or not
+*@apiSuccess {String}  message information regarding the response
+*@apiSuccess {json} data order results
+*@apiSuccessExample {json} Successful Response Example
+*{
+* status :200,  
+* error: false,
+* message: 'results retrived successfuly',
+* data: 
+*   {
+*     {
+*      "Test Name": {
+*       "20170714090806": {
+*          "test_status": "Drawn",
+*           "remarks": "",
+*           "datetime_started": "20170714090806",
+*           "datetime_completed": "",
+*           "results": {
+*           }
+*       },
+*       "20170814120201": {
+*           "test_status": "started",
+*           "remarks": "",
+*           "datetime_started": "2017-08-14 12:02:00",
+*           "datetime_completed": null,
+*           "who_updated": {
+*               "first_name": "f-name",
+*               "last_name": "l-name",
+*               "ID_number": "000"
+*           },
+*           "results": [
+*           ]
+*       },
+*       "20170814120211": {
+*           "test_status": "completed",
+*           "remarks": "",
+*           "datetime_started": "2017-08-14 12:02:00",
+*           "datetime_completed": "2017-08-14 12:02:08",
+*           "who_updated": {
+*               "first_name": "f-name",
+*               "last_name": "l-name",
+*               "ID_number": "000"
+*           },
+*           "results": {
+*               "GPT/ALT": "29.46 U/L",
+*               "GOT/AST": "60.02 U/L",
+*               "Alkaline Phosphate(ALP)": "151.80 U/L",
+*               "GGT/r-GT": "414.79 U/L",
+*               "Bilirubin Direct(DBIL-DSA)": "0.34 mg/dl",
+*               "Bilirubin Total(TBIL-DSA))": "0.38 mg/dl",
+*               "Albumin(ALB)": "2.52 mg/dl",
+*               "Protein(TP)": "7.08 mg/dl",
+*               "LDH": "538.65 U/L"
+*           }
+*       },
+*       "20170814150632": {
+*           "test_status": "verified",
+*           "remarks": "",
+*           "datetime_started": "2017-08-14 12:02:00",
+*           "datetime_completed": "2017-08-14 12:02:08",
+*           "who_updated": {
+*               "first_name": "f-name",
+*               "last_name": "l-name",
+*               "ID_number": "000"
+*           },
+*           "results": {
+*               "GPT/ALT": "29.46 U/L",
+*               "GOT/AST": "60.02 U/L",
+*               "Alkaline Phosphate(ALP)": "151.80 U/L",
+*               "GGT/r-GT": "414.79 U/L",
+*               "Bilirubin Direct(DBIL-DSA)": "0.34 mg/dl",
+*               "Bilirubin Total(TBIL-DSA))": "0.38 mg/dl",
+*               "Albumin(ALB)": "2.52 mg/dl",
+*               "Protein(TP)": "7.08 mg/dl",
+*               "LDH": "538.65 U/L"
+*           }
+*       }
+*   },
+*   "Test Name": {
+*       "20170714090806": {
+*           "test_status": "Drawn",
+*           "remarks": "",
+*           "datetime_started": "20170714090806",
+*           "datetime_completed": "",
+*           "results": {
+*           }
+*       },
+*       "20170814120215": {
+*           "test_status": "started",
+*           "remarks": "",
+*           "datetime_started": "2017-08-14 12:02:14",
+*           "datetime_completed": null,
+*           "who_updated": {
+*               "first_name": "f-name",
+*               "last_name": "l-name",
+*               "ID_number": "000"
+*           },
+*           "results": [
+*           ]
+*       },
+*       "20170814150621": {
+*           "test_status": "completed",
+*           "remarks": "",
+*           "datetime_started": "2017-08-14 12:02:14",
+*           "datetime_completed": "2017-08-14 12:02:29",
+*           "who_updated": {
+*               "first_name": "f-name",
+*               "last_name": "l-name",
+*               "ID_number": "000"
+*           },
+*           "results": {
+*               "Urea": "297.93 mg/dl",
+*               "Creatinine": "",
+*               "CREA-J": "13.24 mg/dl"
+*           }
+*       },
+*       "20170814150632": {
+*           "test_status": "verified",
+*           "remarks": "",
+*           "datetime_started": "2017-08-14 12:02:14",
+*           "datetime_completed": "2017-08-14 12:02:29",
+*           "who_updated": {
+*               "first_name": "f-name",
+*               "last_name": "l-name",
+*               "ID_number": "000"
+*           },
+*           "results": {
+*               "Urea": "297.93 mg/dl",
+*               "Creatinine": "",
+*               "CREA-J": "13.24 mg/dl"
+*           }
+*       }
+*   }
+*}
+*   }
+*}
+*
+*
+*@apiError (Error 400) token_missing token used to access the resource is not provided
+*@apiError (Error 400) token_expired token used to access the resoruce is expired
+*@apiError (Error 400) tracking_number_missing tracking number for the order whose results are needed in not provided
+*@apiError (Error 400) order_not_available order with such tracking number is unavailable
+*@apiErrorExample {json} Error Responce Example
+*{
+* status :400,  
+* error: true,
+* message: 'token missing'   
+*}
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
+
+
+
+
+
+
+
+
+    router.route('/query_results/:id/:token')
         .get(function (req, res) {
 
-            doRead(req.params.id, function (result) {
+          
+            if (!req.params.token)
+            {
+                res.status(401).json({
+                    status: 401,
+                    error: true,
+                    message: "token is missing"
+                }); 
+            }
+            else{
 
-                if (!result.test_types) {
+                if (!req.params.id)
+                {
+                    res.status(401).json({
+                        status: 401,
+                        error: true,
+                        message: "order's tracking number is missing"
+                    });
+                }else {
 
-                    console.log(result);
+                    s.authenticate_partner(req.params.token,function(exp){
+                        var exp = exp;
+                        var nw = (new Date()).getTime();
+                        if (exp < nw)
+                        {
+                            res.status(200).json({
+                                    status: 405,
+                                    error: true,
+                                    message: "token expired"                                    
+                            })
+                        }else{                   
 
-                    res.status(200).json({});
+                            doRead(req.params.id, function (result) {
 
-                    return;
+                                if (!result.test_types) {
 
+                                    res.status(200).json({
+                                            status: 405,
+                                            error: true,
+                                            message: "no order with such tracking number"
+                                    });
+                                    return;
+                                }
+
+                                var results = {};
+
+                                for (var i = 0; i < result.test_types.length; i++) {
+
+                                    if (!result.results[result.test_types[i]]) {
+                                        continue;
+                                    }
+                                    var timestamps = Object.keys(result.results[result.test_types[i]]).sort();
+
+                                    results[result.test_types[i]] = {};
+
+                                    results[result.test_types[i]][timestamps[timestamps.length - 1]] = result.results[result.test_types[i]][timestamps[timestamps.length - 1]]
+
+                                }
+
+                                console.log(JSON.stringify(results));
+
+                                // Overwrite the rest of the results with our selected set only
+                                result.results = results;
+                                res.status(200).json({
+                                    status: 201,
+                                    error: false,
+                                    message: 'results retrived successfuly',
+                                    data: result.results
+                                });
+
+                            }, true)
+                        }
+                    });
                 }
+            }            
 
-                var results = {};
+        });
 
-                for (var i = 0; i < result.test_types.length; i++) {
 
-                    if (!result.results[result.test_types[i]]) {
+/*--------------------------------------end--------------------------------------------*/
 
-                        continue;
 
-                    }
 
-                    var timestamps = Object.keys(result.results[result.test_types[i]]).sort();
-
-                    results[result.test_types[i]] = {};
-
-                    results[result.test_types[i]][timestamps[timestamps.length - 1]] = result.results[result.test_types[i]][timestamps[timestamps.length - 1]]
-
-                }
-
-                console.log(JSON.stringify(results));
-
-                // Overwrite the rest of the results with our selected set only
-                result.results = results;
-
-                res.status(200).json(result);
-
-            }, true)
-
-        })
 
     return router;
-
-
-
-
-
-
-
-
 }
 
 /*exports.index = function(req, res){

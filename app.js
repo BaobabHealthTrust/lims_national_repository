@@ -10,6 +10,7 @@ var path = require("path");
 var router = express.Router();
 
 var couch = require(path.resolve('public', 'library', 'javascripts', 'couch.js'));
+var s = require("./lib/nlims_partner.js");
 
 var fs = require("fs");
 var md5 = require('md5');
@@ -80,7 +81,9 @@ if(process.env.BHT_MODULE) {
 
             });
 
-            
+             s.create_user_view(function(r){
+                console.log(r);
+            });
 
             app.listen(port, function () {
                 console.log("✔ LIMS REPO server listening on port %d in %s mode", port, app.get('env'));
